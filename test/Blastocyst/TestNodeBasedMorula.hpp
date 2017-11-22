@@ -87,7 +87,13 @@ class TestNodeBasedMorula : public AbstractCellBasedTestSuite
 private:
     double SIMULATOR_END_TIME = 80.0;
     
-    //Function to call when we wish to make trophectoderm specification at E3.5. Trophectoderm Cells are also given initial polarity vectors  
+    /*
+    *Function to call when we wish to make trophectoderm specification at E3.5. This is done via assigining
+    *cells the polarity cell property, a cell label and the trophectoderm cell proliferative type.
+    *
+    *Trophectoderm Cells are also given initial polarity angles which are initialised to point away from the
+    *centroid of the cell population.
+    */
     void LabelTrophectodermCells(NodeBasedCellPopulation<2>& cell_population)
     {
         const c_vector<double, 2> morula_centre = cell_population.GetCentroidOfCellPopulation();
@@ -98,19 +104,15 @@ private:
         
         //Make pointer to the trophectoderm cell proliferative type
         MAKE_PTR(TrophectodermCellProliferativeType, p_troph);
+	
+	//re-set all polarity angles to zero
+	cell_population.SetDataOnAllCells("Polarity Angle", 0.0);
 
-	    //Make pointer to the Cell Polarity SRN Model
-	    CellPolaritySrnModel* p_pol_srn = new CellPolaritySrnModel();
-
-	    for (typename AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
+	for (typename AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
              cell_iter != cell_population.End();
              ++cell_iter)
-        {
-            //Set initial polarity vectors on every cell to zero
-            cell_iter->GetCellData()->SetItem("Polarity Angle", 0.0);
-            
+        {  
             std::vector<double> initial_conditions;
-            initial_conditions.push_back(0.0);
 
             if (cell_population.GetNeighbouringNodeIndices(cell_population.GetLocationIndexUsingCell(*cell_iter)).size() <= 5.0)
             {
@@ -139,13 +141,10 @@ private:
 
                 //Initialise a std::vector to store the calculated initial angle as the initial condition for
                 //the srn model
-                initial_conditions[0] = angle;
-                p_pol_srn->SetInitialConditions(initial_conditions);
+                initial_conditions.push_back = angle;
+                p_srn_model->SetInitialConditions(initial_conditions);
 
             }
-            
-            //Give the cell the polarity srn model
-            cell_iter->SetSrnModel(p_pol_srn);
         }
     }
 
@@ -153,18 +152,54 @@ private:
 
 
 public:
-    void TestNodeBasedEarlyMorula() throw (Exception)
+    void TestNodeBasedEarlyMorula(double x) throw (Exception)
     {
-    	//Give the cell the polarity srn model
-        cell_iter->SetSrnModel(p_pol_srn);
-	
 	//Node Based simulations don't work in parallel
     	EXIT_IF_PARALLEL;
 
-        //Re-seed Random Number Generator
-        RandomNumberGenerator::Instance()->Reseed(57);
+        //Re-seed Random Number Generator to run multiple ctest runs witout recompiling 
+        RandomNumberGenerator::Instance()->Reseed(x);
 
-    	//Instantiate a cell mesh generator of dimension 1x1
+    	/*
+	* Set of methods to generate our initial cell with WildTypeMutationState and TransitCellProliferativeType, the 
+	* cell polarity srn model, birthed at time 0.0, in 2 dimensions, with a target area of 1.0
+	*/
+	
+	//shared pointers to the mutation state and proliferative type
+	boost::shared_ptr<AbstractCellProperty> p_state(CellPropertyRegistry::Instance()->Get<WildTypeCellMutationState>());
+        boost::shared_ptr<AbstractCellProperty> p_prolif_type(CellPropertyRegistry::Instance()->Get<TransitCellProliferativeType>());
+	
+	//initial condition for the polarity angle
+	std::vector<double> initial_polarity_angle;
+	initial_polarity_angle.push_back(0.0);
+        
+	//Initialise pointers to the cell cycle model and the srn model for the cell
+	PreCompactionCellCycleModel* p_cc_model = new PreCompactionCellCycleModel();
+	p_cc_model->SetDimension(2);
+	
+	CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
+	p_srn_model->SetInitialConditions(initial_polarity_angle);
+	
+	//Create a pointer to the cell with the given srn, cell cycle and mutation state, set it's proliferative type to transit
+	CellPtr p_cell(new Cell(p_state, p_cc_model, p_srn_model));
+        p_cell->SetCellProliferativeType(p_prolif_type);
+	
+	//Set the cell's birth time to 0.0
+	double birth_time = 0.0;
+        p_cell->SetBirthTime(birth_time);
+	
+	//Make the target area of the cells 1.0 (non-dimensionalised), the polarity angle 0.0 and add to the vector of cells
+	p_cell->GetCellData()->SetItem("target area", 1.0);
+	p_cell->GetCellData()->SetItem("Polarity Angle", 0.0);
+	
+	std::vector<CellPtr> rCells; 
+        rCells.push_back(p_cell);
+	
+	/*
+	* Methods to generate the mesh on which our initialised cell will be associated with. We want to make a Nodes only
+	* Mesh. 
+	*/
+	//Instantiate a cell mesh generator of dimension 1x1
     	HoneycombMeshGenerator generator(1, 1);
     	MutableMesh<2,2>* p_generating_mesh = generator.GetMesh();
 
@@ -173,26 +208,17 @@ public:
     	NodesOnlyMesh<2> mesh;
     	mesh.ConstructNodesWithoutMesh(*p_generating_mesh,2.5);
 
-    	//Instantiate vector to store cell pointers, create pointer to the cellproliferativetype
-    	std::vector<CellPtr> cells;
-    	MAKE_PTR(TransitCellProliferativeType, p_transit_type);
-
-    	//Create a cell generator with cells obeying the PreCompactionCycleModel/UniformCellCycleModel in 2 dimensions and
-    	//generate the cells obeying p_transit_type
-    	CellsGenerator<PreCompactionCellCycleModel, 2> cells_generator;
-    	cells_generator.GenerateBasicRandom(cells, mesh.GetNumNodes(), p_transit_type);
-
-    	//Link the cells with the mesh created at the start
-    	NodeBasedCellPopulation<2> cell_population(mesh, cells);
+        
+	/*
+	 * Joining our cell population to our mesh, Instantiating a simulator and setting the time-steps, sampling steps,
+	 * simulation time, etc. 
+	 */
 	
-
-        for(unsigned index=0; index < cell_population.rGetMesh().GetNumNodes(); index++)
-     	{
-		cell_population.rGetMesh().GetNode(index)->SetRadius(0.5);
-        }
+    	//Link the cells with the mesh created at the start
+    	NodeBasedCellPopulation<2> cell_population(mesh, rCells);
 
     	//Instantiate the simulator cell_population, saving results in NodeBasedMorula,
-    	//simulating for 30 seconds
+    	//simulating for with SIMULATOR_END_TIME hours
     	OffLatticeSimulation<2> simulator(cell_population);
     	simulator.SetOutputDirectory("NodeBasedMorula");
     	simulator.SetSamplingTimestepMultiple(24);
@@ -202,8 +228,7 @@ public:
     	simulator.SetEndTime(SIMULATOR_END_TIME);
 
     	//Make pointer to the NissenForce and add it to the simulator
-    	
-        MAKE_PTR(NissenForceRepulsion<2>, p_force_repulsion);
+    	MAKE_PTR(NissenForceRepulsion<2>, p_force_repulsion);
         MAKE_PTR(NissenForceAttractionTest<2>, p_force_attraction);
 
         p_force_repulsion->SetCutOffLength(2.5);
@@ -216,17 +241,23 @@ public:
         //Make pointer to the NissenNoiseForce and add it to the simulator
         MAKE_PTR(NissenNoiseForce<2>, p_noise_force);
         simulator.AddForce(p_noise_force);
+	
+	//Make sure to add the simulation modifier for tracking cell polarity
+        MAKE_PTR(CellPolarityTrackingModifier<2>, p_pol_tracking_modifier);
+        simulator.AddSimulationModifier(p_pol_tracking_modifier);
 
-    	//Solve the simulation
+    	//Solve the simulation the first time round
     	simulator.Solve();
+	
+	/*
+	* At this point we should be at an early morula stage of development and ready to specify our outer cells as
+	* trophectoderm which we do via the private member function LabelTrophectodermCells to which we pass our\
+	* cell_population.
+	*/
         
         //Make trophectoderm specification and add a writer for cell proliferative types
         LabelTrophectodermCells(cell_population);
         cell_population.AddCellPopulationCountWriter<CellProliferativeTypesCountWriter>();
-
-        //Make sure to add the simulation modifier for tracking cell polarity
-        MAKE_PTR(CellPolarityTrackingModifier<2>, p_pol_tracking_modifier);
-        simulator.AddSimulationModifier(p_pol_tracking_modifier);
         
         //Run Simulator for a small amount more time in order to allow trophectoderm cells to reach equilibirum
         simulator.SetEndTime(SIMULATOR_END_TIME + 10.0);
