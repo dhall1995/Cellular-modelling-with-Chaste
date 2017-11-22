@@ -155,7 +155,10 @@ private:
 public:
     void TestNodeBasedEarlyMorula() throw (Exception)
     {
-    	//Node Based simulations don't work in parallel
+    	//Give the cell the polarity srn model
+        cell_iter->SetSrnModel(p_pol_srn);
+	
+	//Node Based simulations don't work in parallel
     	EXIT_IF_PARALLEL;
 
         //Re-seed Random Number Generator
