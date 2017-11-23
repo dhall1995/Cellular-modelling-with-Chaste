@@ -109,11 +109,9 @@ void CellPolaritySrnModel::UpdatePolarityAngle()
 double CellPolaritySrnModel::GetPolarityAngle()
 {
     if(mpOdeSystem == NULL)
-    {
-	std::cout<<SimulationTime::Instance()->GetTime()<<std::endl;
-    }
+
     assert(mpOdeSystem != NULL);
-    double Polarity_Angle = mpOdeSystem->GetStateVariable("Polarity Angle");
+    double Polarity_Angle = mpOdeSystem->rGetStateVariables()[0];
     
     return Polarity_Angle;
 }
