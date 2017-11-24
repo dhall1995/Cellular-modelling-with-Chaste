@@ -4,9 +4,10 @@
 
 #include "AbstractTwoBodyInteractionForce.hpp"
 
-
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/base_object.hpp>
+
+// NOTE: It is not a good idea to include "Test" in a class name, to avoid confusion with test suite names
 
 template<unsigned  ELEMENT_DIM, unsigned SPACE_DIM=ELEMENT_DIM>
 class NissenForceAttractionTest : public AbstractTwoBodyInteractionForce<ELEMENT_DIM, SPACE_DIM>
@@ -32,7 +33,7 @@ private:
         archive & mGrowthDuration;
     }
 
-    //define all the relevant attraction factors for our force law 
+    // Define all the relevant attraction factors for our force law
     double mS_ICM_ICM;
     double mS_TE_ICM;
     double mS_TE_EPI;
