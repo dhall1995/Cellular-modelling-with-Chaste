@@ -7,7 +7,7 @@
 CellPolaritySrnModel::CellPolaritySrnModel(boost::shared_ptr<AbstractCellCycleModelOdeSolver> pOdeSolver)
     : DHALLAbstractOdeSrnModel(1, pOdeSolver)
 {
-    TRACE("Now attempting to initialise the Srn Model");
+//    TRACE("Now attempting to initialise the Srn Model");
     if (mpOdeSolver == boost::shared_ptr<AbstractCellCycleModelOdeSolver>())
     {
 #ifdef CHASTE_CVODE
@@ -40,8 +40,8 @@ CellPolaritySrnModel::CellPolaritySrnModel(const CellPolaritySrnModel& rModel)
      * Note 3: Only set the variables defined in this class. Variables defined
      * in parent classes will be defined there.
      */
-    	TRACE("Now constructing srn Model. We have the following state variables for our ODE");
-    	PRINT_VECTOR(rModel.GetOdeSystem()->rGetStateVariables());
+//    	TRACE("Now constructing srn Model. We have the following state variables for our ODE");
+//    	PRINT_VECTOR(rModel.GetOdeSystem()->rGetStateVariables());
     	assert(rModel.GetOdeSystem());
     	SetOdeSystem(new CellPolarityOdeSystem(rModel.GetOdeSystem()->rGetStateVariables()));
 }
@@ -53,7 +53,7 @@ AbstractSrnModel* CellPolaritySrnModel::CreateSrnModel()
 
 void CellPolaritySrnModel::SimulateToCurrentTime()
 {
-    TRACE("Now attempting SimulateToCurrentTime within CellPolaritySrnModel");
+//    TRACE("Now attempting SimulateToCurrentTime within CellPolaritySrnModel");
 
 	// Custom behaviour
     UpdatedVpdAlpha();
@@ -64,24 +64,24 @@ void CellPolaritySrnModel::SimulateToCurrentTime()
 
 void CellPolaritySrnModel::Initialise()
 {
-    TRACE("Now attempting CellPolaritySrnModel::initialise within CellPolaritySrnModel");
+//    TRACE("Now attempting CellPolaritySrnModel::initialise within CellPolaritySrnModel");
 	
 	DHALLAbstractOdeSrnModel::Initialise(new CellPolarityOdeSystem);
 	
-	TRACE("Does the Ode System exist in this cell? 1 for true, 0 for false")
-	if (mpOdeSystem != NULL)
-	{
-		TRACE("1");
-	}
-	else
-	{
-		TRACE("0");
-	}
+//	TRACE("Does the Ode System exist in this cell? 1 for true, 0 for false")
+//	if (mpOdeSystem != NULL)
+//	{
+//		TRACE("1");
+//	}
+//	else
+//	{
+//		TRACE("0");
+//	}
 }
 
 void CellPolaritySrnModel::UpdatedVpdAlpha()
 {
-    TRACE("Now attempting UpdatePolarityAngle within CellPolaritySrnModel");
+//    TRACE("Now attempting UpdatePolarityAngle within CellPolaritySrnModel");
     assert(mpOdeSystem != NULL);
     assert(mpCell != NULL);
 
@@ -92,17 +92,17 @@ void CellPolaritySrnModel::UpdatedVpdAlpha()
 
 double CellPolaritySrnModel::GetPolarityAngle()
 {
-    TRACE("Now attempting GetPolarityAngle within CellPolaritySrnModel");
+//    TRACE("Now attempting GetPolarityAngle within CellPolaritySrnModel");
 	assert(mpOdeSystem != NULL);
-	TRACE("OdeSystem Exists");
+//	TRACE("OdeSystem Exists");
     double Polarity_Angle = mpOdeSystem->rGetStateVariables()[0];
-    PRINT_VARIABLE(Polarity_Angle);
+//    PRINT_VARIABLE(Polarity_Angle);
     return Polarity_Angle;
 }
 
 double CellPolaritySrnModel::GetdVpdAlpha()
 {
-    TRACE("Now attempting GetdVdAlpha within CellPolaritySrnModel");
+//    TRACE("Now attempting GetdVdAlpha within CellPolaritySrnModel");
 	assert(mpOdeSystem != NULL);
     double dVpdAlpha = mpOdeSystem->GetParameter("dVp/dAlpha");
     return dVpdAlpha;

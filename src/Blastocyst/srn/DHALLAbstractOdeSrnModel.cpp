@@ -37,7 +37,7 @@ DHALLAbstractOdeSrnModel::~DHALLAbstractOdeSrnModel()
 
 void DHALLAbstractOdeSrnModel::SimulateToCurrentTime()
 {
-    TRACE("Now attempting simulate to current time within DHALLAbstractOdeSrnModel");
+//    TRACE("Now attempting simulate to current time within DHALLAbstractOdeSrnModel");
     assert(mpOdeSystem != nullptr);
     assert(SimulationTime::Instance()->IsStartTimeSetUp());
 
@@ -64,21 +64,21 @@ void DHALLAbstractOdeSrnModel::SimulateToCurrentTime()
 
 void DHALLAbstractOdeSrnModel::Initialise(AbstractOdeSystem* pOdeSystem)
 {
-    TRACE("Now within AbstractOdeSrnModel::Initialise");
+//    TRACE("Now within AbstractOdeSrnModel::Initialise");
     assert(mpOdeSystem == nullptr);
     assert(mpCell != nullptr);
 
     mpOdeSystem = pOdeSystem;
-    TRACE("ODE system has been initialised");
+//    TRACE("ODE system has been initialised");
     if (mInitialConditions == std::vector<double>())
     {
         mpOdeSystem->SetStateVariables(mpOdeSystem->GetInitialConditions());
-        TRACE("Initial conditions have been set");
+//        TRACE("Initial conditions have been set");
     }
     else
     {
         mpOdeSystem->SetStateVariables(mInitialConditions);
-        TRACE("Initial conditions have been set");
+//        TRACE("Initial conditions have been set");
     }
 
     SetLastTime(mSimulatedToTime);

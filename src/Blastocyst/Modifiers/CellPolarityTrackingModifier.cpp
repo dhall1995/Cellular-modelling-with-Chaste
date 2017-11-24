@@ -18,14 +18,14 @@ CellPolarityTrackingModifier<DIM>::~CellPolarityTrackingModifier()
 template<unsigned DIM>
 void CellPolarityTrackingModifier<DIM>::UpdateAtEndOfTimeStep(AbstractCellPopulation<DIM,DIM>& rCellPopulation)
 {
-    TRACE("Now attempting UpdateAtEndOfTimeStep within the CellPolarityTrackingModifier");
+//    TRACE("Now attempting UpdateAtEndOfTimeStep within the CellPolarityTrackingModifier");
 	UpdateCellData(rCellPopulation);
 }
 
 template<unsigned DIM>
 void CellPolarityTrackingModifier<DIM>::SetupSolve(AbstractCellPopulation<DIM,DIM>& rCellPopulation, std::string outputDirectory)
 {
-    TRACE("Now attempting SetupSolve within the CellPolarityTrackingModifier");
+//    TRACE("Now attempting SetupSolve within the CellPolarityTrackingModifier");
      /*
      * We must update CellData in SetupSolve(), otherwise it will not have been
      * fully initialised by the time we enter the main time loop.
@@ -36,7 +36,7 @@ void CellPolarityTrackingModifier<DIM>::SetupSolve(AbstractCellPopulation<DIM,DI
 template<unsigned DIM>
 void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DIM,DIM>& rCellPopulation)
 {
-    TRACE("Now attempting to update cell data within CellPolarityTrackingModifier");
+//    TRACE("Now attempting to update cell data within CellPolarityTrackingModifier");
     // Make sure the cell population is updated
     rCellPopulation.Update();
 
@@ -47,12 +47,16 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
-		TRACE("Now attempting to get a cell's polarity angle within UpdateCellData within CellPolarityTrackingModifier");
-		bool variable = cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>();
-		TRACE("Are we working with a trophectoderm cell??");
-		PRINT_VARIABLE(variable);
-		CellPolaritySrnModel* p_model = static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel());
-        this_alpha = p_model->GetPolarityAngle();
+//		TRACE("Now attempting to get a cell's polarity angle within UpdateCellData within CellPolarityTrackingModifier");
+//		bool variable = cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>();
+//		TRACE("Are we working with a trophectoderm cell??");
+//		PRINT_VARIABLE(variable);
+		CellPolaritySrnModel* p_srn_model = static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel());
+
+		// NOTE: Here we assert that the cell does actually have the right SRN model
+		assert(p_srn_model != nullptr);
+
+        this_alpha = p_srn_model->GetPolarityAngle();
 
         // Note that the state variables must be in the same order as listed in DeltaNotchOdeSystem
         cell_iter->GetCellData()->SetItem("Polarity Angle", this_alpha);
@@ -72,7 +76,7 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
             // CellData the sin of the angle differences
             if (!neighbour_indices.empty())
             {
-                TRACE("Now working out the polarity potential for a trophectoderm cell")
+//                TRACE("Now working out the polarity potential for a trophectoderm cell")
 		        double sum_sin_angles = 0.0;
                 
                 for (std::set<unsigned>::iterator iter = neighbour_indices.begin();
@@ -97,7 +101,7 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
         }
         else
         {
-            // for non-trophectoderm cells we just set the polarity potential to zero - we don't care what happens to their polarity angle so we just let it evolve via random noise
+            // For non-trophectoderm cells we just set the polarity potential to zero - we don't care what happens to their polarity angle so we just let it evolve via random noise
             cell_iter->GetCellData()->SetItem("dVp/dAlpha",0.0);
         }
     }
