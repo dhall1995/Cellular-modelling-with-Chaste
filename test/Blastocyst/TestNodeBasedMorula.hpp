@@ -106,7 +106,7 @@ private:
         MAKE_PTR(TrophectodermCellProliferativeType, p_troph);
 	
 	//re-set all polarity angles to zero
-	cell_population.SetDataOnAllCells("Polarity Angle", 0.0);
+	//cell_population.SetDataOnAllCells("Polarity Angle", 0.0);
 
 	for (typename AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
              cell_iter != cell_population.End();
@@ -116,8 +116,8 @@ private:
             if (cell_population.GetNeighbouringNodeIndices(cell_population.GetLocationIndexUsingCell(*cell_iter)).size() <= 5.0)
             {
 		//Initialise and set the srn model on the cell
-	    	CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
-                
+	    	//CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
+
                 //Add cell properties for labels, and polarity
                 cell_iter->AddCellProperty(p_pol);
                 cell_iter->AddCellProperty(p_label);
@@ -128,7 +128,7 @@ private:
                 c_vector<double,2> unit_vector_from_centroid_to_cell = morula_centre - cell_location;
 			
                 //norm of the distance from the centroid to the cell
-                double d = sqrt(unit_vector_from_centroid_to_cell[0]*unit_vector_from_centroid_to_cell[0] + unit_vector_from_centroid_to_cell[1]*unit_vector_from_centroid_to_cell[1]);
+                double d = sqrt(unit_vector_from_centroid_to_cell[0]*unit_vector_from_centroid_to_cell[0] + unit_vector_from_centroid_to_cell[1]*unit_vector_from_centroid_to_cell[1]); 
 
                 //Normalise our vector from centroid to cell
                 unit_vector_from_centroid_to_cell /= d;
@@ -142,8 +142,12 @@ private:
 
 		std::vector<double> initial_condition;
 		initial_condition.push_back(angle);
-		p_srn_model->SetInitialConditions(initial_polarity_angle);
-	    	cell_iter->SetSrnModel(p_srn_model); 
+		//p_srn_model->SetInitialConditions(initial_condition);
+	    	//cell_iter->SetSrnModel(p_srn_model);
+		//cell_iter->GetSrnModel()->SetInitialConditions(initial_condition);
+		TRACE("Are we dealing with a trophectoderm cell?");
+		bool variable = cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>();
+		PRINT_VARIABLE(variable);
 
             }
 	
@@ -177,9 +181,14 @@ public:
 	PreCompactionCellCycleModel* p_cc_model = new PreCompactionCellCycleModel();
 	p_cc_model->SetDimension(2);
 	
+	CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
+	std::vector<double> initial_conditions;
+	initial_conditions.push_back(0.0);
+	p_srn_model->SetInitialConditions(initial_conditions);
+	
 	
 	//Create a pointer to the cell with the given cell cycle and mutation state, set it's proliferative type to transit
-	CellPtr p_cell(new Cell(p_state, p_cc_model));
+	CellPtr p_cell(new Cell(p_state, p_cc_model, p_srn_model));
         p_cell->SetCellProliferativeType(p_prolif_type);
 	
 	//Set the cell's birth time to 0.0
@@ -188,7 +197,6 @@ public:
 	
 	//Make the target area of the cells 1.0 (non-dimensionalised), the polarity angle 0.0 and add to the vector of cells
 	p_cell->GetCellData()->SetItem("target area", 1.0);
-	p_cell->GetCellData()->SetItem("Polarity Angle", 0.0);
 	
 	std::vector<CellPtr> rCells; 
         rCells.push_back(p_cell);
@@ -240,8 +248,13 @@ public:
         MAKE_PTR(NissenNoiseForce<2>, p_noise_force);
         simulator.AddForce(p_noise_force);
 
+	//Make sure to add the simulation modifier for tracking cell polarity
+        MAKE_PTR(CellPolarityTrackingModifier<2>, p_pol_tracking_modifier);
+        simulator.AddSimulationModifier(p_pol_tracking_modifier);
+
     	//Solve the simulation the first time round
     	simulator.Solve();
+	TRACE("finished first simulation up to early morula");
 	
 	/*
 	* At this point we should be at an early morula stage of development and ready to specify our outer cells as
@@ -254,8 +267,8 @@ public:
         cell_population.AddCellPopulationCountWriter<CellProliferativeTypesCountWriter>();
 
 	//Make sure to add the simulation modifier for tracking cell polarity
-        MAKE_PTR(CellPolarityTrackingModifier<2>, p_pol_tracking_modifier);
-        simulator.AddSimulationModifier(p_pol_tracking_modifier);
+        //MAKE_PTR(CellPolarityTrackingModifier<2>, p_pol_tracking_modifier);
+        //simulator.AddSimulationModifier(p_pol_tracking_modifier);
         
         //Run Simulator for a small amount more time in order to allow trophectoderm cells to reach equilibirum
         simulator.SetEndTime(SIMULATOR_END_TIME + 10.0);
@@ -266,4 +279,3 @@ public:
 };
 
 #endif // TESTNODEBASEDMORULA_HPP_
-
