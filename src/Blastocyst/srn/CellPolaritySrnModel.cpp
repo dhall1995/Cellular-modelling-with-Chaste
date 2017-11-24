@@ -34,12 +34,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "CellPolaritySrnModel.hpp"
+#include "Debug.hpp"
 
 #include <cassert>
 
 CellPolaritySrnModel::CellPolaritySrnModel(boost::shared_ptr<AbstractCellCycleModelOdeSolver> pOdeSolver)
-    : AbstractOdeSrnModel(1, pOdeSolver)
+    : DHALLAbstractOdeSrnModel(1, pOdeSolver)
 {
+    TRACE("Now attempting to initialise the Srn Model");
     if (mpOdeSolver == boost::shared_ptr<AbstractCellCycleModelOdeSolver>())
     {
 #ifdef CHASTE_CVODE
@@ -56,7 +58,7 @@ CellPolaritySrnModel::CellPolaritySrnModel(boost::shared_ptr<AbstractCellCycleMo
 }
 
 CellPolaritySrnModel::CellPolaritySrnModel(const CellPolaritySrnModel& rModel)
-    : AbstractOdeSrnModel(rModel)
+    : DHALLAbstractOdeSrnModel(rModel)
 {
     /*
      * Set each member variable of the new SRN model that inherits
@@ -72,9 +74,10 @@ CellPolaritySrnModel::CellPolaritySrnModel(const CellPolaritySrnModel& rModel)
      * Note 3: Only set the variables defined in this class. Variables defined
      * in parent classes will be defined there.
      */
-
-    assert(rModel.GetOdeSystem());
-    SetOdeSystem(new CellPolarityOdeSystem(rModel.GetOdeSystem()->rGetStateVariables()));
+    	TRACE("Now constructing srn Model. We have the following state variables for our ODE");
+	PRINT_VECTOR(rModel.GetOdeSystem()->rGetStateVariables());
+    	assert(rModel.GetOdeSystem());
+    	SetOdeSystem(new CellPolarityOdeSystem(rModel.GetOdeSystem()->rGetStateVariables()));
 }
 
 AbstractSrnModel* CellPolaritySrnModel::CreateSrnModel()
@@ -84,49 +87,65 @@ AbstractSrnModel* CellPolaritySrnModel::CreateSrnModel()
 
 void CellPolaritySrnModel::SimulateToCurrentTime()
 {
-    // Custom behaviour
-    UpdatePolarityAngle();
+    	TRACE("Now attempting SimulateToCurrentTime within CellPolaritySrnModel");
+	
+	// Custom behaviour
+    	UpdatedVpdAlpha();
 
-    // Run the ODE simulation as needed
-    AbstractOdeSrnModel::SimulateToCurrentTime();
+    	// Run the ODE simulation as needed
+    	DHALLAbstractOdeSrnModel::SimulateToCurrentTime();
 }
 
 void CellPolaritySrnModel::Initialise()
 {
-    AbstractOdeSrnModel::Initialise(new CellPolarityOdeSystem);
+    	TRACE("Now attempting CellPolaritySrnModel::initialise within CellPolaritySrnModel");
+	
+	DHALLAbstractOdeSrnModel::Initialise(new CellPolarityOdeSystem);
+	
+	TRACE("Does the Ode System exist in this cell? 1 for true, 0 for false")
+	if (mpOdeSystem != NULL)
+	{
+		TRACE("1");
+	}
+	else
+	{
+		TRACE("0");
+	}
 }
 
-void CellPolaritySrnModel::UpdatePolarityAngle()
+void CellPolaritySrnModel::UpdatedVpdAlpha()
 {
+    TRACE("Now attempting UpdatePolarityAngle within CellPolaritySrnModel");
     assert(mpOdeSystem != NULL);
     assert(mpCell != NULL);
 
-    double polarity_angle = mpCell->GetCellData()->GetItem("Polarity Angle");
+    double dVpdAlpha = mpCell->GetCellData()->GetItem("dVp/dAlpha");
     
-    mpOdeSystem->SetParameter("Polarity Angle", polarity_angle);
+    mpOdeSystem->SetParameter("dVp/dAlpha", dVpdAlpha);
 }
 
 double CellPolaritySrnModel::GetPolarityAngle()
 {
-    if(mpOdeSystem == NULL)
-
-    assert(mpOdeSystem != NULL);
-    double Polarity_Angle = mpOdeSystem->rGetStateVariables()[0];
-    
-    return Polarity_Angle;
+    	TRACE("Now attempting GetPolarityAngle within CellPolaritySrnModel");
+	assert(mpOdeSystem != NULL);
+	TRACE("OdeSystem Exists");
+    	double Polarity_Angle = mpOdeSystem->rGetStateVariables()[0];
+    	PRINT_VARIABLE(Polarity_Angle);
+    	return Polarity_Angle;
 }
 
 double CellPolaritySrnModel::GetdVpdAlpha()
 {
-    assert(mpOdeSystem != NULL);
-    double dVpdAlpha = mpOdeSystem->GetParameter("dVp/dAlpha");
-    return dVpdAlpha;
+    	TRACE("Now attempting GetdVdAlpha within CellPolaritySrnModel");
+	assert(mpOdeSystem != NULL);
+    	double dVpdAlpha = mpOdeSystem->GetParameter("dVp/dAlpha");
+    	return dVpdAlpha;
 }
 
 void CellPolaritySrnModel::OutputSrnModelParameters(out_stream& rParamsFile)
 {
     // No new parameters to output, so just call method on direct parent class
-    AbstractOdeSrnModel::OutputSrnModelParameters(rParamsFile);
+    DHALLAbstractOdeSrnModel::OutputSrnModelParameters(rParamsFile);
 }
 
 // Declare identifier for the serializer
