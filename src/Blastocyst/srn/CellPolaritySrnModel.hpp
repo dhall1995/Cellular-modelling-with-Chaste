@@ -40,14 +40,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/serialization/base_object.hpp>
 
 #include "CellPolarityOdeSystem.hpp"
-#include "AbstractOdeSrnModel.hpp"
+#include "DHALLAbstractOdeSrnModel.hpp"
 
 /**
  * A subclass of AbstractOdeSrnModel that includes a Delta-Notch ODE system in the sub-cellular reaction network.
  *
  * \todo #2752 document this class more thoroughly here
  */
-class CellPolaritySrnModel : public AbstractOdeSrnModel
+class CellPolaritySrnModel : public DHALLAbstractOdeSrnModel
 {
 private:
 
@@ -62,7 +62,7 @@ private:
     template<class Archive>
     void serialize(Archive & archive, const unsigned int version)
     {
-        archive & boost::serialization::base_object<AbstractOdeSrnModel>(*this);
+        archive & boost::serialization::base_object<DHALLAbstractOdeSrnModel>(*this);
     }
 
 protected:
@@ -114,7 +114,7 @@ public:
     /**
      * Update the current levels of Delta and Notch in the cell.
      */
-    void UpdatePolarityAngle();
+    void UpdatedVpdAlpha();
 
     /**
      * @return the current polarity vector X value in this cell.
@@ -138,6 +138,3 @@ public:
 #include "SerializationExportWrapper.hpp"
 CHASTE_CLASS_EXPORT(CellPolaritySrnModel)
 #include "CellCycleModelOdeSolverExportWrapper.hpp"
-EXPORT_CELL_CYCLE_MODEL_ODE_SOLVER(CellPolaritySrnModel)
-
-#endif /* CELLPOLARITYSRNMODEL_HPP_ */
