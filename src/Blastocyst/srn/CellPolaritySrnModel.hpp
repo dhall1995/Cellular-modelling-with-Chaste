@@ -1,37 +1,3 @@
-/*
-
-Copyright (c) 2005-2016, University of Oxford.
-All rights reserved.
-
-University of Oxford means the Chancellor, Masters and Scholars of the
-University of Oxford, having an administrative office at Wellington
-Square, Oxford OX1 2JD, UK.
-
-This file is part of Chaste.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
- * Redistributions of source code must retain the above copyright notice,
-   this list of conditions and the following disclaimer.
- * Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
- * Neither the name of the University of Oxford nor the names of its
-   contributors may be used to endorse or promote products derived from this
-   software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
-GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
-OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-*/
 
 #ifndef CELLPOLARITYSRNMODEL_HPP_
 #define CELLPOLARITYSRNMODEL_HPP_
@@ -40,14 +6,14 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <boost/serialization/base_object.hpp>
 
 #include "CellPolarityOdeSystem.hpp"
-#include "AbstractOdeSrnModel.hpp"
+#include "DHALLAbstractOdeSrnModel.hpp"
 
 /**
  * A subclass of AbstractOdeSrnModel that includes a Delta-Notch ODE system in the sub-cellular reaction network.
  *
  * \todo #2752 document this class more thoroughly here
  */
-class CellPolaritySrnModel : public AbstractOdeSrnModel
+class CellPolaritySrnModel : public DHALLAbstractOdeSrnModel
 {
 private:
 
@@ -62,7 +28,7 @@ private:
     template<class Archive>
     void serialize(Archive & archive, const unsigned int version)
     {
-        archive & boost::serialization::base_object<AbstractOdeSrnModel>(*this);
+        archive & boost::serialization::base_object<DHALLAbstractOdeSrnModel>(*this);
     }
 
 protected:
@@ -114,12 +80,19 @@ public:
     /**
      * Update the current levels of Delta and Notch in the cell.
      */
-    void UpdatePolarityAngle();
+    void UpdatedVpdAlpha();
 
     /**
      * @return the current polarity vector X value in this cell.
      */
     double GetPolarityAngle();
+
+    /**
+     * Set the polarity angle.
+     *
+     * @param polarityAngle the new valueof the polarity angle
+     */
+    void SetPolarityAngle(double polarityAngle);
 
     /**
      * @return the current sum of the sine of the polarity angles between the cell in question and the neighbouring cells (used on the RHS of the polarity ODE)
@@ -138,6 +111,5 @@ public:
 #include "SerializationExportWrapper.hpp"
 CHASTE_CLASS_EXPORT(CellPolaritySrnModel)
 #include "CellCycleModelOdeSolverExportWrapper.hpp"
-EXPORT_CELL_CYCLE_MODEL_ODE_SOLVER(CellPolaritySrnModel)
 
-#endif /* CELLPOLARITYSRNMODEL_HPP_ */
+#endif /*CELLPOLARITYSRNMODEL_HPP_*/
