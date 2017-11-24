@@ -48,7 +48,7 @@ void CellwiseOdeSystemInformation<CellPolarityOdeSystem>::Initialise()
 
     // If this is ever not the first parameter change the line
     // double mean_delta = this->mParameters[0]; in EvaluateYDerivatives().
-    this->mParameterNames.push_back("dVp/dAlpha");
+    this->mParameterNames.push_back("dVpdAlpha");
     this->mParameterUnits.push_back("non-dim");
 
     this->mInitialised = true;

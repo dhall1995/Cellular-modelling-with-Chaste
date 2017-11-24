@@ -91,18 +91,18 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
                         sum_sin_angles += sin(this_alpha - alpha_p_cell);
                     }
                 }
-                cell_iter->GetCellData()->SetItem("dVp/dAlpha", sum_sin_angles);
+                cell_iter->GetCellData()->SetItem("dVpdAlpha", sum_sin_angles);
             }
             else
             {
                 // If this cell has no neighbours, such as an isolated cell in a CaBasedCellPopulation, store 0.0 for the cell data
-                cell_iter->GetCellData()->SetItem("dVp/dAlpha", 0.0);
+                cell_iter->GetCellData()->SetItem("dVpdAlpha", 0.0);
             }
         }
         else
         {
             // For non-trophectoderm cells we just set the polarity potential to zero - we don't care what happens to their polarity angle so we just let it evolve via random noise
-            cell_iter->GetCellData()->SetItem("dVp/dAlpha",0.0);
+            cell_iter->GetCellData()->SetItem("dVpdAlpha",0.0);
         }
     }
 }

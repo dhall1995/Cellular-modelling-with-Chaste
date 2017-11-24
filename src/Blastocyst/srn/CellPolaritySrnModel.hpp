@@ -88,6 +88,13 @@ public:
     double GetPolarityAngle();
 
     /**
+     * Set the polarity angle.
+     *
+     * @param polarityAngle the new valueof the polarity angle
+     */
+    void SetPolarityAngle(double polarityAngle);
+
+    /**
      * @return the current sum of the sine of the polarity angles between the cell in question and the neighbouring cells (used on the RHS of the polarity ODE)
      */
     double GetdVpdAlpha();

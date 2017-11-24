@@ -82,7 +82,9 @@ private:
              cell_iter != cell_population.End();
              ++cell_iter)
         {
-            if (cell_population.GetNeighbouringNodeIndices(cell_population.GetLocationIndexUsingCell(*cell_iter)).size() <= 5.0)
+            unsigned node_index = cell_population.GetLocationIndexUsingCell(*cell_iter);
+            std::set<unsigned> neighbour_indices = cell_population.GetNeighbouringNodeIndices(node_index);
+            if (neighbour_indices.size() <= 5.0)
             {
                 // Initialise and set the srn model on the cell
     //            CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
@@ -106,11 +108,14 @@ private:
                 double cell_x_value = unit_vector_from_centroid_to_cell[0];
                 double cell_y_value = unit_vector_from_centroid_to_cell[1];
 
-                double angle = atan(cell_y_value/cell_x_value);
+                double angle = atan2(cell_y_value, cell_x_value);
+
                 cell_iter->GetCellData()->SetItem("Polarity Angle", angle);
 
                 std::vector<double> initial_condition;
                 initial_condition.push_back(angle);
+
+                static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel())->SetPolarityAngle(angle);
     //            p_srn_model->SetInitialConditions(initial_condition);
     //            cell_iter->SetSrnModel(p_srn_model);
     //            cell_iter->GetSrnModel()->SetInitialConditions(initial_condition);

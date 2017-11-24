@@ -85,9 +85,9 @@ void CellPolaritySrnModel::UpdatedVpdAlpha()
     assert(mpOdeSystem != NULL);
     assert(mpCell != NULL);
 
-    double dVpdAlpha = mpCell->GetCellData()->GetItem("dVp/dAlpha");
+    double dVpdAlpha = mpCell->GetCellData()->GetItem("dVpdAlpha");
     
-    mpOdeSystem->SetParameter("dVp/dAlpha", dVpdAlpha);
+    mpOdeSystem->SetParameter("dVpdAlpha", dVpdAlpha);
 }
 
 double CellPolaritySrnModel::GetPolarityAngle()
@@ -95,16 +95,22 @@ double CellPolaritySrnModel::GetPolarityAngle()
 //    TRACE("Now attempting GetPolarityAngle within CellPolaritySrnModel");
 	assert(mpOdeSystem != NULL);
 //	TRACE("OdeSystem Exists");
-    double Polarity_Angle = mpOdeSystem->rGetStateVariables()[0];
-//    PRINT_VARIABLE(Polarity_Angle);
-    return Polarity_Angle;
+    double polarity_angle = mpOdeSystem->rGetStateVariables()[0];
+//    PRINT_VARIABLE(polarity_angle);
+    return polarity_angle;
+}
+
+void CellPolaritySrnModel::SetPolarityAngle(double polarityAngle)
+{
+    assert(mpOdeSystem != NULL);
+    mpOdeSystem->rGetStateVariables()[0] = polarityAngle;
 }
 
 double CellPolaritySrnModel::GetdVpdAlpha()
 {
 //    TRACE("Now attempting GetdVdAlpha within CellPolaritySrnModel");
 	assert(mpOdeSystem != NULL);
-    double dVpdAlpha = mpOdeSystem->GetParameter("dVp/dAlpha");
+    double dVpdAlpha = mpOdeSystem->GetParameter("dVpdAlpha");
     return dVpdAlpha;
 }
 

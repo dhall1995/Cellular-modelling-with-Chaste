@@ -2,6 +2,7 @@
 #include "NissenForceAttractionTest.hpp"
 #include "PolarityCellProperty.hpp"
 #include "TrophectodermCellProliferativeType.hpp"
+#include "Debug.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::NissenForceAttractionTest()
@@ -107,6 +108,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
             double angle_A = p_cell_A->GetCellData()->GetItem("Polarity Angle");
             double angle_B = p_cell_B->GetCellData()->GetItem("Polarity Angle");
+
 //            double polarity_factor_node_A[0] = p_node_A->GetCellData()->GetItem("polarity_vector_x_value");
 //            double polarity_factor_node_A[1] = p_node_A->GetCellData()->GetItem("polarity_vector_y_value");
 //
