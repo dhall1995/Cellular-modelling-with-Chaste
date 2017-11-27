@@ -231,6 +231,8 @@ public:
         
         // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
         simulation.SetEndTime(SIMULATOR_END_TIME + 20.0);
+	double NewDt = 0.5*dt;
+	simulation.SetDt(NewDt);
         simulation.Solve();
     }
 };
