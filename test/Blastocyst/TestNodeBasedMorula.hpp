@@ -108,7 +108,8 @@ private:
                 double cell_x_value = unit_vector_from_centroid_to_cell[0];
                 double cell_y_value = unit_vector_from_centroid_to_cell[1];
 
-                double angle = atan2(cell_y_value, cell_x_value);
+                //We measure angles from the vertical so we want (pi/2 - theta)
+		double angle = atan2(cell_x_value, cell_y_value);
 
                 cell_iter->GetCellData()->SetItem("Polarity Angle", angle);
 
