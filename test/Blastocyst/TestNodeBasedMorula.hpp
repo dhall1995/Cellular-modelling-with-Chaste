@@ -84,7 +84,7 @@ private:
         {
             unsigned node_index = cell_population.GetLocationIndexUsingCell(*cell_iter);
             std::set<unsigned> neighbour_indices = cell_population.GetNeighbouringNodeIndices(node_index);
-            if (neighbour_indices.size() < 5.0)
+            if (neighbour_indices.size() <= 6.0)
             {
                 // Initialise and set the srn model on the cell
     //            CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
