@@ -2,6 +2,9 @@
 #include "NissenForceAttractionTest.hpp"
 #include "PolarityCellProperty.hpp"
 #include "TrophectodermCellProliferativeType.hpp"
+#include "EpiblastCellProliferativeType.hpp"
+#include "PrECellProliferativeType.hpp"
+#include "TransitCellProliferativeType.hpp"
 #include "Debug.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
