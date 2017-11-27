@@ -85,13 +85,13 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
      *  - SANITY CHECKS ARE INCLUDED TO MAKE SURE THAT THE POLARITY VECTORS ARE NON-ZERO AND UNIT VECTORS
      */
     
-    // Test Whether nodes are both of the trophectoderm cell proliferative type
-    if(p_cell_A->GetCellProliferativeType() == p_cell_B->GetCellProliferativeType())
+    // CASE 1: Cell A is trophectoderm
+    if(p_cell_A->GetCellProliferativeType() =template IsType<TrophectodermProliferativeType>())
     {
-        // Test whether both nodes have polarity
-        if (p_cell_A->HasCellProperty<PolarityCellProperty>() && p_cell_B->HasCellProperty<PolarityCellProperty>())
-        {
-            // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
+       //CASE 1-1: Cell B is also trophectoderm
+       if(p_cell_B->GetCellProliferativeType() =template IsType<TrophectodermProliferativeType>())
+       {
+          // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
@@ -108,32 +108,41 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
             double angle_A = p_cell_A->GetCellData()->GetItem("Polarity Angle");
             double angle_B = p_cell_B->GetCellData()->GetItem("Polarity Angle");
-
-//            double polarity_factor_node_A[0] = p_node_A->GetCellData()->GetItem("polarity_vector_x_value");
-//            double polarity_factor_node_A[1] = p_node_A->GetCellData()->GetItem("polarity_vector_y_value");
-//
-//            double polarity_factor_node_B[0] = p_node_B->GetCellData()->GetItem("polarity_vector_x_value");
-//            double polarity_factor_node_B[1] = p_node_B->GetCellData()-GetItem("polarity_vector_y_value");
-//
-//            assert((polarity_factor_node_A[0]*polarity_factor_node_A[0] + polarity_factor_node_A[1]*polarity_factor_node_A[1]) == 1.0);
-//            assert((polarity_factor_node_B[0]*polarity_factor_node_B[0] + polarity_factor_node_B[1]*polarity_factor_node_B[1]) == 1.0);
-//
-            double cell_difference_angle = atan(unit_vector_from_A_to_B[1]/unit_vector_from_A_to_B[0]);
-
-            
-            // Need to work out (polarity_factor_node_A X r_AB) . (polarity_factor_node_B X r_BA)
-            // We only need the z-component so we start with (polarity_factor_node_A X r_AB)[2]
-//            double node_A_factor = polarity_factor_node_A[0]*unit_vector_from_A_to_B[1] - polarity_vector_node_A[1]*unit_vector_from_A_to_B[0];
-            
-            // Now we store the z-component of (polarity_factor_node_B X r_BA)
-//            double node_B_factor = polarity_factor_node_B[1]*unit_vector_from_A_to_B[0] - polarity_vector_node_B[0]*unit_vector_from_A_to_B[1];
-            
-            // Finally we store the polarity factor for the pair of TE cells
-//            double polarity_factor = node_A_factor*node_B_factor;
-            
+          
+            double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
+          
             double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
-            
+          
             force = -potential_gradient*mS_TE_TE*polarity_factor;
+          
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       //CASE 1-2: Cell B is epiblast
+       else if(p_cell_B->GetCellProliferativeType() ->template IsType<EpliblastCellProliferativeType>())
+       {
+            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_TE_EPI;
             
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
@@ -148,8 +157,83 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             {
                 return force;
             }
-        }
-        else
+       }
+       //CASE 1-3: Cell B is Undetermined ICM
+       else if(p_cell_B->GetCellProliferativeType() ->template IsType<TransitCellProliferativeType>())
+       {
+            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_TE_ICM;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       //CASE 1-4: Cell B is Primitive Endoderm
+       else if(p_cell_B->GetCellProliferativeType() ->template IsType<PrECellProliferativeType>())
+       {
+            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_TE_PrE;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       else
+       {
+          return 0.0;
+       }
+    }
+   
+   /*
+    * Now we deal with interactions of other cells. For the time being cells have been considered in ordered pairs for clarity.
+    * Individual attraction factors should be set at the top of the document. Listing cell pairs allows easy and precise 
+    * manipulation of attractions between cell lineages. 
+    *
+    * NOTE: whilst all cells carry a CellPolaritySrn Model it should have zero effect unless we specify in this force law
+    */
+    //CASE 2: Cell A is Undertermined ICM
+    else if(p_cell_A->GetCellProliferativeType() ->template IsType<TransitCellProliferativeType>())
+    {
+       //CASE 2-1: Cell B is Undertermined ICM
+       if(p_cell_B->GetCellProliferativeType() ->template IsType<EpliblastCellProliferativeType>())
         {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -177,34 +261,352 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 return force;
             }
         }
-    }
-
-    // WE NOW DEAL WITH INTERACTIONS NOT INVOLVING TROPHECTODERM CELLS. FOR THE TIME BEING THIS ONLY INVOLVES ICM-ICM INTERACTIONS
-
-    // No cells should ever interact beyond the cutoff length
-    if (this->mUseCutOffLength)
-    {
-        if (d/2.0 >= this->GetCutOffLength())  // remember chaste distances given in DIAMETERS
-        {
-            return force;
+       //CASE 2-2: Cell B is Epiblast
+       else if(p_cell_B->GetCellProliferativeType() ->template IsType<EpiblastCellProliferativeType>())
+       {
+            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_EPI_ICM;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
         }
+       //CASE 2-3: Cell B is Primitive Endoderm
+       else if(p_cell_B->GetCellProliferativeType() ->template IsType<PrECellProliferativeType>())
+        {
+            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_PrE_ICM;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+        }
+       //CASE 2-4: Cell B is Trophectoderm
+       else if(p_cell_B->GetCellProliferativeType() ->template IsType<TrophectodermCellProliferativeType>())
+        {
+            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_TE_ICM;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+        }
+       else
+       {
+          return 0.0:
+       }
     }
-    
-    if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+    //CASE 3 Cell A is Epiblast
+    else if(p_cell_A->GetCellProliferativeType() =template IsType<EpiblastCellProliferativeType>())
     {
-        force -= potential_gradient*mS_ICM_ICM;
-        /*
-         * If the cells are both newly divided, then the repulsion between the cells grows linearly
-         * with the age of the cells.
-         */
-        force = (std::min(ageA, ageB)/mGrowthDuration)*force;
-        return force;
+       //CASE 3-1 Cell B is Epiblast
+       if(p_cell_B->GetCellProliferativeType() =template IsType<EpiblastCellProliferativeType>())
+       {
+          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_EPI_EPI;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       //CASE 3-2 Cell B is Undetermined ICM
+       else if(p_cell_B->GetCellProliferativeType() =template IsType<TransitCellProliferativeType>())
+       {
+          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_EPI_ICM;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       //CASE 3-3 Cell B is Primitive Endoderm
+       else if(p_cell_B->GetCellProliferativeType() =template IsType<PrECellProliferativeType>())
+       {
+          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_PrE_EPI;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       //CASE 3-4 Cell B is Trophectoderm
+       else if(p_cell_B->GetCellProliferativeType() =template IsType<TrophectodermCellProliferativeType>())
+       {
+          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_TE_EPI;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       else
+       {
+          return 0.0;
+       }
     }
-    else // if no other conditions are met then return the force from Nissen
+    //CASE 4 Cell A is Primitive Endoderm
+    else if(p_cell_A->GetCellProliferativeType() =template IsType<PrECellProliferativeType>())
     {
-        force -= potential_gradient*mS_ICM_ICM;
-        return force;
+       //CASE 4-1 Cell B is Undetermined ICM
+       if(p_cell_B->GetCellProliferativeType() =template IsType<TransitCellProliferativeType>())
+       {
+          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_PrE_ICM;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       //CASE 4-2 Cell B is Epiblast
+       else if(p_cell_B->GetCellProliferativeType() =template IsType<EpiblastCellProliferativeType>())
+       {
+          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_PrE_EPI;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       //CASE 4-3 Cell B is Primitive Endoderm
+       else if(p_cell_B->GetCellProliferativeType() =template IsType<PrECellProliferativeType>())
+       {
+          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_PrE_PrE;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       //CASE 4-4 Cell B is Trophectoderm
+       else if(p_cell_B->GetCellProliferativeType() =template IsType<TrophectodermCellProliferativeType>())
+       {
+          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+            force = -potential_gradient*mS_TE_PrE;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                return force;
+            }
+            else // if no other conditions are met then return the force
+            {
+                return force;
+            }
+       }
+       else
+       {
+          return 0.0;
+       }
     }
+    else
+    {
+       return 0.0;
+    }
+            
+          
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
