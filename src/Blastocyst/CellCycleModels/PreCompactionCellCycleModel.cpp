@@ -46,7 +46,7 @@ void PreCompactionCellCycleModel::SetCellCycleDuration()
         mCellCycleDuration = DBL_MAX;
 	//Differentiated Cells shouldn't divide
     }
-    else if (mpCell->GetCellProliferativeType()->IsType<TrophectodermCellProliferativeType>())
+    else if (mpCell->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
     {
 	mCellCycleDuration = 0.5*(mMinCellCycleDuration + (mMaxCellCycleDuration - mMinCellCycleDuration) * p_gen->ranf());
 	//Trophectoderm Cell Cycle time should be half that of ICM
