@@ -49,7 +49,7 @@
 class TestNodeBasedMorula : public AbstractCellBasedWithTimingsTestSuite
 {
 private:
-    double SIMULATOR_END_TIME = 80.0;
+    double SIMULATOR_END_TIME = 90.0;
     
     /*
      * Function to call when we wish to make trophectoderm specification at E3.5. This is done by assigning
@@ -226,7 +226,7 @@ public:
 //        simulation.AddSimulationModifier(p_pol_tracking_modifier);
         
         // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
-        simulation.SetEndTime(SIMULATOR_END_TIME + 10.0);
+        simulation.SetEndTime(SIMULATOR_END_TIME + 20.0);
         simulation.Solve();
     }
 };
