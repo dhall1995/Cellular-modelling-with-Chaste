@@ -117,7 +117,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
           
             double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
           
-            force = -potential_gradient*mS_TE_TE*polarity_factor;
+            force = potential_gradient*mS_TE_TE*polarity_factor;
           
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
