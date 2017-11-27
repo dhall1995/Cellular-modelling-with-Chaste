@@ -36,7 +36,7 @@ void CellPolarityOdeSystem::EvaluateYDerivatives(double time, const std::vector<
     std::vector<double> Alpha = rY;
     double dVpdAlpha = this->mParameters[0]; // Shorthand for "this->mParameter("dVpdAlpha");"
     
-    double x = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, (10.0^(-3.0)));
+    double x = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, 3.1415926535*1.0e-3);
     // The next line define the ODE system by Nissen et al.
     rDY[0] = -0.1*dVpdAlpha + x;  // d[V_i]/dAlpha_i
 }
