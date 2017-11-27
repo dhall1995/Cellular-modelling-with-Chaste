@@ -112,8 +112,10 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
             double angle_A = p_cell_A->GetCellData()->GetItem("Polarity Angle");
             double angle_B = p_cell_B->GetCellData()->GetItem("Polarity Angle");
+            
           
-            double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
+            //we measure our angles FROM THE VERTICAL so we are actually working out (pi/2 - theta):
+            double cell_difference_angle = atan2(unit_vector_from_A_to_B[0],unit_vector_from_A_to_B[1]);
           
             double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
           
