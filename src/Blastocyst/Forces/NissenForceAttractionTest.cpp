@@ -73,6 +73,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
     c_vector<double, SPACE_DIM> potential_gradient;
     potential_gradient = -exp(-d/mBeta)*unit_vector_from_A_to_B/mBeta;
     c_vector<double, SPACE_DIM> force;
+    c_vector<double, SPACE_DIM> zeroes;
     
     /*
      * FIRST WE DEAL WITH TROPHECTODERM INTERACTIONS
@@ -218,7 +219,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
        }
        else
        {
-          return 0.0;
+          return zeroes;
        }
     }
    
@@ -350,7 +351,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
         }
        else
        {
-          return 0.0:
+          return zeroes:
        }
     }
     //CASE 3 Cell A is Epiblast
@@ -474,7 +475,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
        }
        else
        {
-          return 0.0;
+          return zeroes;
        }
     }
     //CASE 4 Cell A is Primitive Endoderm
@@ -598,12 +599,12 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
        }
        else
        {
-          return 0.0;
+          return zeroes;
        }
     }
     else
     {
-       return 0.0;
+       return zeroes;
     }
             
           
