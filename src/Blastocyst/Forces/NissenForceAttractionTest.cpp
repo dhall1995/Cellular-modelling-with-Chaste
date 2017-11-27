@@ -87,10 +87,10 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
      */
     
     // CASE 1: Cell A is trophectoderm
-    if(p_cell_A->GetCellProliferativeType()->template IsType<TrophectodermProliferativeType>())
+    if(p_cell_A->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
     {
        //CASE 1-1: Cell B is also trophectoderm
-       if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermProliferativeType>())
+       if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
           // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
             // No cells should ever interact beyond the cutoff length
@@ -234,7 +234,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
     else if(p_cell_A->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
     {
        //CASE 2-1: Cell B is Undertermined ICM
-       if(p_cell_B->GetCellProliferativeType()->template IsType<EpliblastCellProliferativeType>())
+       if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
         {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
