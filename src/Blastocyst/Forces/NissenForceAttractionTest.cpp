@@ -87,10 +87,10 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
      */
     
     // CASE 1: Cell A is trophectoderm
-    if(p_cell_A->GetCellProliferativeType() =template IsType<TrophectodermProliferativeType>())
+    if(p_cell_A->GetCellProliferativeType()->template IsType<TrophectodermProliferativeType>())
     {
        //CASE 1-1: Cell B is also trophectoderm
-       if(p_cell_B->GetCellProliferativeType() =template IsType<TrophectodermProliferativeType>())
+       if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermProliferativeType>())
        {
           // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
             // No cells should ever interact beyond the cutoff length
@@ -131,7 +131,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
        }
        //CASE 1-2: Cell B is epiblast
-       else if(p_cell_B->GetCellProliferativeType() ->template IsType<EpliblastCellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<EpliblastCellProliferativeType>())
        {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -160,7 +160,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
        }
        //CASE 1-3: Cell B is Undetermined ICM
-       else if(p_cell_B->GetCellProliferativeType() ->template IsType<TransitCellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
        {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -189,7 +189,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
        }
        //CASE 1-4: Cell B is Primitive Endoderm
-       else if(p_cell_B->GetCellProliferativeType() ->template IsType<PrECellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
        {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -231,10 +231,10 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
     * NOTE: whilst all cells carry a CellPolaritySrn Model it should have zero effect unless we specify in this force law
     */
     //CASE 2: Cell A is Undertermined ICM
-    else if(p_cell_A->GetCellProliferativeType() ->template IsType<TransitCellProliferativeType>())
+    else if(p_cell_A->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
     {
        //CASE 2-1: Cell B is Undertermined ICM
-       if(p_cell_B->GetCellProliferativeType() ->template IsType<EpliblastCellProliferativeType>())
+       if(p_cell_B->GetCellProliferativeType()->template IsType<EpliblastCellProliferativeType>())
         {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -263,7 +263,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
         }
        //CASE 2-2: Cell B is Epiblast
-       else if(p_cell_B->GetCellProliferativeType() ->template IsType<EpiblastCellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
        {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -292,7 +292,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
         }
        //CASE 2-3: Cell B is Primitive Endoderm
-       else if(p_cell_B->GetCellProliferativeType() ->template IsType<PrECellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
         {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -321,7 +321,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
         }
        //CASE 2-4: Cell B is Trophectoderm
-       else if(p_cell_B->GetCellProliferativeType() ->template IsType<TrophectodermCellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
         {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -355,10 +355,10 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
        }
     }
     //CASE 3 Cell A is Epiblast
-    else if(p_cell_A->GetCellProliferativeType() =template IsType<EpiblastCellProliferativeType>())
+    else if(p_cell_A->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
     {
        //CASE 3-1 Cell B is Epiblast
-       if(p_cell_B->GetCellProliferativeType() =template IsType<EpiblastCellProliferativeType>())
+       if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
        {
           // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -387,7 +387,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
        }
        //CASE 3-2 Cell B is Undetermined ICM
-       else if(p_cell_B->GetCellProliferativeType() =template IsType<TransitCellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
        {
           // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -416,7 +416,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
        }
        //CASE 3-3 Cell B is Primitive Endoderm
-       else if(p_cell_B->GetCellProliferativeType() =template IsType<PrECellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
        {
           // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -445,7 +445,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
        }
        //CASE 3-4 Cell B is Trophectoderm
-       else if(p_cell_B->GetCellProliferativeType() =template IsType<TrophectodermCellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
           // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -479,10 +479,10 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
        }
     }
     //CASE 4 Cell A is Primitive Endoderm
-    else if(p_cell_A->GetCellProliferativeType() =template IsType<PrECellProliferativeType>())
+    else if(p_cell_A->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
     {
        //CASE 4-1 Cell B is Undetermined ICM
-       if(p_cell_B->GetCellProliferativeType() =template IsType<TransitCellProliferativeType>())
+       if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
        {
           // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -511,7 +511,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
        }
        //CASE 4-2 Cell B is Epiblast
-       else if(p_cell_B->GetCellProliferativeType() =template IsType<EpiblastCellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
        {
           // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -540,7 +540,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
        }
        //CASE 4-3 Cell B is Primitive Endoderm
-       else if(p_cell_B->GetCellProliferativeType() =template IsType<PrECellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
        {
           // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -569,7 +569,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
        }
        //CASE 4-4 Cell B is Trophectoderm
-       else if(p_cell_B->GetCellProliferativeType() =template IsType<TrophectodermCellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
           // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
