@@ -106,10 +106,13 @@ private:
 
                 // Store the vector x and y values in cell data for that cell
                 double cell_x_value = unit_vector_from_centroid_to_cell[0];
+		PRINT_VARIABLE(cell_x_value);
                 double cell_y_value = unit_vector_from_centroid_to_cell[1];
+		PRINT_VARIABLE(cell_y_value);
 
                 //We measure angles from the vertical so we want (pi/2 - theta)
 		double angle = atan2(cell_x_value, cell_y_value);
+		PRINT_VARIABLE(angle);
 
                 cell_iter->GetCellData()->SetItem("Polarity Angle", angle);
 
