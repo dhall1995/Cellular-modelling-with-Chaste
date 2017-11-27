@@ -134,7 +134,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             }
        }
        //CASE 1-2: Cell B is epiblast
-       else if(p_cell_B->GetCellProliferativeType()->template IsType<EpliblastCellProliferativeType>())
+       else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
        {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -237,7 +237,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
     else if(p_cell_A->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
     {
        //CASE 2-1: Cell B is Undertermined ICM
-       if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
+       if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
         {
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
