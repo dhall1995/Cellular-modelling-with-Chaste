@@ -36,16 +36,15 @@ void CellPolarityTrackingModifier<DIM>::SetupSolve(AbstractCellPopulation<DIM,DI
 template<unsigned DIM>
 void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DIM,DIM>& rCellPopulation)
 {
-    NodeBasedCellPopulation<DIM>* p_population = static_cast<NodeBasedCellPopulation<DIM>*>(&rCellPopulation);
     //TRACE("Now attempting to update cell data within CellPolarityTrackingModifier");
     // Make sure the cell population is updated
-    p_population->Update();
+    rCellPopulation.Update();
 
     // First recover each cell's polarity angle from the ODEs and store in CellData. Keep the polarity angle as a variable outside the scope of the for loop
     double this_alpha = 0.0;
     
-    for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = p_population->Begin();
-         cell_iter != p_population->End();
+    for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();
+         cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
 //		TRACE("Now attempting to get a cell's polarity angle within UpdateCellData within CellPolarityTrackingModifier");
@@ -64,15 +63,15 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
     }
 
     // Next iterate over the population to compute and store each cell's neighbouring Delta concentration in CellData
-    for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = p_population->Begin();
-         cell_iter != p_population->End();
+    for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();
+         cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
         if (cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
         {
             // Get the set of neighbouring location indices
-            //std::set<unsigned> neighbour_indices = rCellPopulation.GetNeighbouringNodeIndices(rCellPopulation.GetLocationIndexUsingCell(*cell_iter));
-            std::set<unsigned> neighbour_indices = p_population->GetNodesWithinNeighbourhoodRadius(p_population->GetLocationIndexUsingCell(*cell_iter),1.25);
+            std::set<unsigned> neighbour_indices = rCellPopulation.GetNeighbouringNodeIndices(rCellPopulation.GetLocationIndexUsingCell(*cell_iter));
+            //std::set<unsigned> neighbour_indices = rCellPopulation.GetNodesWithinNeighbourhoodRadius(rCellPopulation.GetLocationIndexUsingCell(*cell_iter),1.25);
             
 	    // Compute this trophectoderm cell's neighbouring trophectoderm cells and store in
             // CellData the sin of the angle differences
