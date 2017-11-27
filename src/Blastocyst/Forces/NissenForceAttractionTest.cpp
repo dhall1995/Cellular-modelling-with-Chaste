@@ -99,28 +99,9 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
                 {
                     return force;
-                }
-                else if(d >= this->GetCutOffLength())
-                {
-                   // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-                   force = -potential_gradient*mS_ICM_ICM;
-            
-                   if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-                   {
-                     /*
-                      * If the cells are both newly divided, then the repulsion between the cells grows linearly
-                      * with the age of the cells.
-                      */
-                      force = (std::min(ageA, ageB)/mGrowthDuration)*force;
-                      return force;
-                   }
-                   else // if no other conditions are met then return the force
-                   {
-                      return force;
-                   }
                 }
             } 
             // Inititalise vectors to work out polarity interaction
