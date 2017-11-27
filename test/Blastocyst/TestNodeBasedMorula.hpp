@@ -111,7 +111,7 @@ private:
 		PRINT_VARIABLE(cell_y_value);
 
                 //We measure angles from the vertical so we want (pi/2 - theta)
-		double angle = atan2(cell_x_value, cell_y_value);
+		double angle = atan2(cell_y_value, cell_x_value);
 		PRINT_VARIABLE(angle);
 
                 cell_iter->GetCellData()->SetItem("Polarity Angle", angle);
