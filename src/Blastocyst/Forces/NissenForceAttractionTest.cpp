@@ -354,7 +354,7 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
         }
        else
        {
-          return zeroes:
+          return zeroes;
        }
     }
     //CASE 3 Cell A is Epiblast
