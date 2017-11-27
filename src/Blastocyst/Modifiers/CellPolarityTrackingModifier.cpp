@@ -65,14 +65,14 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
 
     // Next iterate over the population to compute and store each cell's neighbouring Delta concentration in CellData
     for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = p_population->Begin();
-         cell_iter != p_population.End();
+         cell_iter != p_population->End();
          ++cell_iter)
     {
         if (cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
         {
             // Get the set of neighbouring location indices
             //std::set<unsigned> neighbour_indices = rCellPopulation.GetNeighbouringNodeIndices(rCellPopulation.GetLocationIndexUsingCell(*cell_iter));
-            std::set<unsigned> neighbour_indices = p_population->GetNodesWithinNeighbourhoodRadius(p_population.GetLocationIndexUsingCell(*cell_iter),1.25);
+            std::set<unsigned> neighbour_indices = p_population->GetNodesWithinNeighbourhoodRadius(p_population->GetLocationIndexUsingCell(*cell_iter),1.25);
             
 	    // Compute this trophectoderm cell's neighbouring trophectoderm cells and store in
             // CellData the sin of the angle differences
