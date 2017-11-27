@@ -84,7 +84,7 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
                      iter != neighbour_indices.end();
                      ++iter)
                 {
-                    CellPtr p_cell = p_population.GetCellUsingLocationIndex(*iter);
+                    CellPtr p_cell = rCellPopulation.GetCellUsingLocationIndex(*iter);
                     
                     if (cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
                     {
