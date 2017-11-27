@@ -1,6 +1,7 @@
 
 #include "CellPolarityOdeSystem.hpp"
 #include "CellwiseOdeSystemInformation.hpp"
+#include "RandomNumberGenerator.hpp"
 
 CellPolarityOdeSystem::CellPolarityOdeSystem(std::vector<double> stateVariables)
     : AbstractOdeSystem(1)
@@ -34,9 +35,10 @@ void CellPolarityOdeSystem::EvaluateYDerivatives(double time, const std::vector<
 {
     std::vector<double> Alpha = rY;
     double dVpdAlpha = this->mParameters[0]; // Shorthand for "this->mParameter("dVpdAlpha");"
-
+    
+    double x = RandomNumberGenerator::Instance()->NormalRandomDeviate(0.0, (10^(-3.0)));
     // The next line define the ODE system by Nissen et al.
-    rDY[0] = -0.1*dVpdAlpha;  // d[V_i]/dAlpha_i
+    rDY[0] = -0.1*dVpdAlpha + x;  // d[V_i]/dAlpha_i
 }
 
 template<>
