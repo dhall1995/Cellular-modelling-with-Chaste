@@ -120,14 +120,13 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
           
-            force = -potential_gradient*mS_TE_TE*polarity_factor;
-          
+            /*
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
+               
+                 //If the cells are both newly divided, then the repulsion length between the cells grows linearly
+                 // with the age of the cells.
+                 
                 double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
                 double s = 5.0 + (mS_TE_TE - 5.0)*growth_factor;
                 force = -potential_gradient*polarity_factor*s + potential_gradient_repulsion;
@@ -138,6 +137,9 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                 force = -potential_gradient*polarity_factor*s_TE_TE + potential_gradient_repulsion;
                 return force;
             }
+            */
+            force = force = -potential_gradient*polarity_factor*mS_TE_TE + potential_gradient_repulsion;
+                return force;
        }
        //CASE 1-2: Cell B is epiblast
        else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
@@ -164,7 +166,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_TE_EPI + potential_gradient_repulsion;
+                force = -potential_gradient*mS_TE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -193,7 +195,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_TE_ICM + potential_gradient_repulsion;
+                force = -potential_gradient*mS_TE_ICM + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -222,7 +224,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_TE_PRE + potential_gradient_repulsion;
+                force = -potential_gradient*mS_TE_PRE + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -267,7 +269,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_ICM_ICM + potential_gradient_repulsion;
+                force = -potential_gradient*mS_ICM_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -296,7 +298,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_EPI_ICM + potential_gradient_repulsion;
+                force = -potential_gradient*mS_EPI_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -325,7 +327,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_PRE_ICM + potential_gradient_repulsion;
+                force = -potential_gradient*mS_PRE_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -354,7 +356,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_TE_ICM + potential_gradient_repulsion;
+                force = -potential_gradient*mS_TE_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -391,7 +393,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_EPI_EPI + potential_gradient_repulsion;
+                force = -potential_gradient*mS_EPI_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -420,7 +422,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_EPI_ICM + potential_gradient_repulsion;
+                force = -potential_gradient*mS_EPI_ICM + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -449,7 +451,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_PRE_EPI + potential_gradient_repulsion;
+                force = -potential_gradient*mS_PRE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -478,7 +480,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_TE_EPI + potential_gradient_repulsion;
+                force = -potential_gradient*mS_TE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -515,7 +517,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_PRE_ICM + potential_gradient_repulsion;
+                force = -potential_gradient*mS_PRE_ICM + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -544,7 +546,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_PRE_EPI + potential_gradient_repulsion;
+                force = -potential_gradient*mS_PRE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -573,7 +575,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_PRE_PRE + potential_gradient_repulsion;
+                force = -potential_gradient*mS_PRE_PRE + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -602,7 +604,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*s_TE_PRE + potential_gradient_repulsion;
+                force = -potential_gradient*mS_TE_PRE + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -754,6 +756,17 @@ void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetGrowthDuration(double GrowthDuration
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void NissenForce<ELEMENT_DIM,SPACE_DIM>::OutputForceParameters(out_stream& rParamsFile)
 {
+    *rParamsFile << "\t\t\t<S_TE_TE>" << mS_TE_TE << "</S_TE_TE>\n";
+    *rParamsFile << "\t\t\t<S_TE_ICM>" << mS_TE_ICM << "</S_TE_ICM>\n";
+    *rParamsFile << "\t\t\t<S_TE_EPI>" << mS_TE_EPI << "</S_TE_EPI>\n";
+    *rParamsFile << "\t\t\t<S_TE_PRE>" << mS_TE_PRE << "</S_TE_PRE>\n";
+    *rParamsFile << "\t\t\t<S_ICM_ICM>" << mS_ICM_ICM << "</S_ICM_ICM>\n";
+    *rParamsFile << "\t\t\t<S_PRE_ICM>" << mS_PRE_ICM << "</S_PRE_ICM>\n";
+    *rParamsFile << "\t\t\t<S_EPI_ICM>" << mS_EPI_ICM << "</EPI_ICM>\n";
+    *rParamsFile << "\t\t\t<S_PRE_EPI>" << mS_PRE_EPI << "</S_PRE_EPI>\n";
+    *rParamsFile << "\t\t\t<S_PRE_PRE>" << mS_PRE_PRE << "</S_PRE_PRE>\n";
+    *rParamsFile << "\t\t\t<S_ICM_ICM>" << mS_ICM_ICM << "</S_ICM>\n";
+    *rParamsFile << "\t\t\t<GrowthDuration>" << mGrowthDuration << "</GrowthDuration>\n";
     AbstractTwoBodyInteractionForce<ELEMENT_DIM,SPACE_DIM>::OutputForceParameters(rParamsFile);
 }
 
