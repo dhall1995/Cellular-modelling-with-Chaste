@@ -230,4 +230,4 @@ public:
     }
 };
 
-#endif TESTNODEBASEDMORULA_HPP_
+#endif //TESTNODEBASEDMORULA_HPP_
