@@ -744,18 +744,6 @@ void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_EPI_ICM(double s)
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetBeta()
-{
-    return mBeta;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetBeta(double beta)
-{
-    mBeta = beta;
-}
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetGrowthDuration()
 {
     return mGrowthDuration;
