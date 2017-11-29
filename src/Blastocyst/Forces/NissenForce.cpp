@@ -74,8 +74,8 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
     // Work out the actual force acting between A and B (up to a constant defining the adhesion for a cell-cell pair)
     c_vector<double, SPACE_DIM> potential_gradient;
     c_vector<double, SPACE_DIM> potential_gradient_repulsion;
-    potential_gradient = -exp(-d/5.0)*unit_vector_from_A_to_B*5.0;
-    potential_gradient_repulsion = exp(-d)*unit_vector_from_A_to_B;
+    potential_gradient = exp(-d/5.0)*unit_vector_from_A_to_B/5.0;
+    potential_gradient_repulsion = -exp(-d)*unit_vector_from_A_to_B;
     c_vector<double, SPACE_DIM> force;
     c_vector<double, SPACE_DIM> zeroes;
     
@@ -139,7 +139,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                 return force;
             }
             */
-            force = force = -potential_gradient*polarity_factor*mS_TE_TE + potential_gradient_repulsion;
+            force = force = potential_gradient*polarity_factor*mS_TE_TE + potential_gradient_repulsion;
                 return force;
        }
        //CASE 1-2: Cell B is epiblast
@@ -162,12 +162,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_EPI - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_TE_EPI + potential_gradient_repulsion;
+                force = potential_gradient*mS_TE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -191,12 +191,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_ICM - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_TE_ICM + potential_gradient_repulsion;
+                force = potential_gradient*mS_TE_ICM + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -220,12 +220,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_PrE - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_TE_PrE + potential_gradient_repulsion;
+                force = potential_gradient*mS_TE_PrE + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -265,7 +265,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_ICM_ICM - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
@@ -294,12 +294,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_EPI_ICM - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_EPI_ICM + potential_gradient_repulsion;
+                force = potential_gradient*mS_EPI_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -323,12 +323,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_PrE_ICM - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_PrE_ICM + potential_gradient_repulsion;
+                force = potential_gradient*mS_PrE_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -352,12 +352,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_ICM - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_TE_ICM + potential_gradient_repulsion;
+                force = potential_gradient*mS_TE_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -389,12 +389,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_EPI_EPI - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_EPI_EPI + potential_gradient_repulsion;
+                force = potential_gradient*mS_EPI_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -418,12 +418,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_EPI_ICM - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_EPI_ICM + potential_gradient_repulsion;
+                force = potential_gradient*mS_EPI_ICM + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -447,12 +447,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_PrE_EPI - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_PrE_EPI + potential_gradient_repulsion;
+                force = potential_gradient*mS_PrE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -476,12 +476,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_EPI - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_TE_EPI + potential_gradient_repulsion;
+                force = potential_gradient*mS_TE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -513,12 +513,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_PrE_ICM - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_PrE_ICM + potential_gradient_repulsion;
+                force = potential_gradient*mS_PrE_ICM + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -542,12 +542,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_PrE_EPI - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_PrE_EPI + potential_gradient_repulsion;
+                force = potential_gradient*mS_PrE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -571,7 +571,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_PrE_PrE - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
@@ -600,12 +600,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  */
                 double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_PrE - 5.0)*growth_factor;
-                force = -potential_gradient*s + potential_gradient_repulsion;
+                force = potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_TE_PrE + potential_gradient_repulsion;
+                force = potential_gradient*mS_TE_PrE + potential_gradient_repulsion;
                 return force;
             }
        }
