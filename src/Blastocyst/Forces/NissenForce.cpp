@@ -92,10 +92,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
     // CASE 1: Cell A is trophectoderm
     if(p_cell_A->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
     {
-       std::set<unsigned> NearestNeighbourLocations = rCellPopulation.GetNeighbouringLocationIndices(p_cell_A);
-       std::set<unsigned> NearestNeighbourIndices = rCellPopulation.GetNeighbouringNodeIndices(p_cell_A);
-       
-       
        //CASE 1-1: Cell B is also trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
