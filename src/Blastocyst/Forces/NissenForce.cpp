@@ -73,6 +73,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
     
     // Work out the actual force acting between A and B (up to a constant defining the adhesion for a cell-cell pair)
     c_vector<double, SPACE_DIM> potential_gradient;
+    c_vector<double, SPACE_DIM> potential_gradient_repulsion;
     potential_gradient = -exp(-d/5.0)*unit_vector_from_A_to_B*5.0;
     potential_gradient_repulsion = - exp(-d)*unit_vector_from_A_to_B;
     c_vector<double, SPACE_DIM> force;
