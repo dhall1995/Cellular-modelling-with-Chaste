@@ -754,7 +754,6 @@ void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetGrowthDuration(double GrowthDuration
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void NissenForce<ELEMENT_DIM,SPACE_DIM>::OutputForceParameters(out_stream& rParamsFile)
 {
-    *rParamsFile << "\t\t\t<Beta>" << mBeta << "</Beta>\n";
     AbstractTwoBodyInteractionForce<ELEMENT_DIM,SPACE_DIM>::OutputForceParameters(rParamsFile);
 }
 
