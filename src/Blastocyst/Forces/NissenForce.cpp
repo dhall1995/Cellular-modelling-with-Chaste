@@ -58,7 +58,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
     unit_vector_from_A_to_B /= d;
     
     // NISSEN DISTANCES ARE GIVEN IN UNITS OF CELL RADII
-    d = 2.0*d;
+    d = 4.0*d;
     
     // Get ages of cells
     CellPtr p_cell_A = rCellPopulation.GetCellUsingLocationIndex(nodeAGlobalIndex);
