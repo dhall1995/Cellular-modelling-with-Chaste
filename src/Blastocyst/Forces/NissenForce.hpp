@@ -1,6 +1,6 @@
 
-#ifndef NISSENFORCEATTRACTIONTEST_HPP_
-#define NISSENFORCEATTRACTIONTEST_HPP_
+#ifndef NISSENFORCE_HPP_
+#define NISSENFORCE_HPP_
 
 #include "AbstractTwoBodyInteractionForce.hpp"
 
@@ -10,7 +10,7 @@
 // NOTE: It is not a good idea to include "Test" in a class name, to avoid confusion with test suite names.
 
 template<unsigned  ELEMENT_DIM, unsigned SPACE_DIM=ELEMENT_DIM>
-class NissenForceAttractionTest : public AbstractTwoBodyInteractionForce<ELEMENT_DIM, SPACE_DIM>
+class NissenForce : public AbstractTwoBodyInteractionForce<ELEMENT_DIM, SPACE_DIM>
 {
 private:
 
@@ -29,7 +29,6 @@ private:
         archive & mS_PrE_ICM;
         archive & mS_EPI_EPI;
         archive & mS_EPI_ICM;
-        archive & mBeta;
         archive & mGrowthDuration;
     }
 
@@ -44,14 +43,13 @@ private:
     double mS_PrE_ICM;
     double mS_EPI_EPI;
     double mS_EPI_ICM;
-    double mBeta;
     double mGrowthDuration;
 
 public:
 
-    NissenForceAttractionTest();
+    NissenForce();
 
-    virtual ~NissenForceAttractionTest();
+    virtual ~NissenForce();
 
     c_vector<double, SPACE_DIM> CalculateForceBetweenNodes(unsigned nodeAGlobalIndex,
                                                            unsigned nodeBGlobalIndex,
@@ -86,9 +84,6 @@ public:
     
     double GetS_EPI_ICM();
     void SetS_EPI_ICM(double s);
-
-    double GetBeta();
-    void SetBeta(double beta);
     
     double GetGrowthDuration();
     void SetGrowthDuration(double GrowthDuration);
@@ -97,6 +92,6 @@ public:
 };
 
 #include "SerializationExportWrapper.hpp"
-EXPORT_TEMPLATE_CLASS_ALL_DIMS(NissenForceAttractionTest)
+EXPORT_TEMPLATE_CLASS_ALL_DIMS(NissenForce)
 
-#endif /*NISSENFORCEATTRACTIONTEST_HPP_*/
+#endif /*NISSENFORCE_HPP_*/
