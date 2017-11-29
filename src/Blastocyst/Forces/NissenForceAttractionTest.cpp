@@ -95,43 +95,76 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
        //CASE 1-1: Cell B is also trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
-          // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
-            // No cells should ever interact beyond the cutoff length
-            if (this->mUseCutOffLength)
+            if(1==2)
             {
-                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            } 
-            // Inititalise vectors to work out polarity interaction
-            c_vector<double, SPACE_DIM> polarity_factor_node_A;
-            c_vector<double, SPACE_DIM> polarity_factor_node_B;
+               // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
+               // No cells should ever interact beyond the cutoff length
+               if (this->mUseCutOffLength)
+               {
+                   if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                   {
+                     return force;
+                   }
+               } 
+               // Inititalise vectors to work out polarity interaction
+               c_vector<double, SPACE_DIM> polarity_factor_node_A;
+               c_vector<double, SPACE_DIM> polarity_factor_node_B;
             
-            // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
-            double angle_A = p_cell_A->GetCellData()->GetItem("Polarity Angle");
-            double angle_B = p_cell_B->GetCellData()->GetItem("Polarity Angle");
+               // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
+               double angle_A = p_cell_A->GetCellData()->GetItem("Polarity Angle");
+               double angle_B = p_cell_B->GetCellData()->GetItem("Polarity Angle");
             
          
-            double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
+               double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
           
-            double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
+               double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
           
-            force = -potential_gradient*mS_TE_TE*polarity_factor;
+               force = -potential_gradient*mS_TE_TE*polarity_factor;
           
-            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            {
+               if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+               {
                 /*
                  * If the cells are both newly divided, then the repulsion between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
-                return force;
+                  force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                  return force;
+               }
+               else // if no other conditions are met then return the force
+               {
+                  return force;
+               }
+               
             }
-            else // if no other conditions are met then return the force
+            else
             {
-                return force;
+               // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+               if (this->mUseCutOffLength)
+               {
+                  if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                  {
+                     return force;
+                  }
+               }
+            
+               // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
+               force = -potential_gradient*mS_TE_EPI;
+            
+               if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+               {
+                /*
+                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * with the age of the cells.
+                 */
+                  force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                  return force;
+               }
+               else // if no other conditions are met then return the force
+               {
+                  return force;
+               }
             }
+               
        }
        //CASE 1-2: Cell B is epiblast
        else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
