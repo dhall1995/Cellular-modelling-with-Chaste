@@ -127,7 +127,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  //If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  // with the age of the cells.
                  
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_TE - 5.0)*growth_factor;
                 force = -potential_gradient*polarity_factor*s + potential_gradient_repulsion;
                 return force;
@@ -159,7 +159,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_EPI - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -188,7 +188,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_ICM - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -217,7 +217,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_PrE - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -262,7 +262,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_ICM_ICM - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -291,7 +291,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_EPI_ICM - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -320,7 +320,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_PrE_ICM - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -349,7 +349,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_ICM - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -386,7 +386,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_EPI_EPI - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -415,7 +415,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_EPI_ICM - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -444,7 +444,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_PrE_EPI - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -473,7 +473,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_EPI - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -510,7 +510,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_PrE_ICM - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -539,7 +539,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_PrE_EPI - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -568,7 +568,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_PrE_PrE - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -597,7 +597,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
                 double s = 5.0 + (mS_TE_PrE - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
@@ -750,7 +750,7 @@ double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetGrowthDuration()
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetGrowthDuration(double GrowthDuration)
 {
-    mBeta = GrowthDuration;
+    mGrowthDuration = GrowthDuration;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
