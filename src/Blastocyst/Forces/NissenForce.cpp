@@ -1,5 +1,5 @@
 
-#include "NissenForceAttractionTest.hpp"
+#include "NissenForce.hpp"
 #include "PolarityCellProperty.hpp"
 #include "TrophectodermCellProliferativeType.hpp"
 #include "EpiblastCellProliferativeType.hpp"
@@ -8,19 +8,18 @@
 #include "Debug.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::NissenForceAttractionTest()
+NissenForce<ELEMENT_DIM,SPACE_DIM>::NissenForce()
    : AbstractTwoBodyInteractionForce<ELEMENT_DIM,SPACE_DIM>(),
-     mS_ICM_ICM(0.7), // ICM-ICM interaction strength - NOTE: Before TE specification all cells are considered ICM-like in their adhesion properties
-     mS_TE_ICM(0.7),  // TE-ICM interaction strength
-     mS_TE_EPI(0.7),  // TE-EPI interaction strength
+     mS_ICM_ICM(0.6), // ICM-ICM interaction strength - NOTE: Before TE specification all cells are considered ICM-like in their adhesion properties
+     mS_TE_ICM(0.6),  // TE-ICM interaction strength
+     mS_TE_EPI(0.6),  // TE-EPI interaction strength
      mS_TE_PrE(0.4),  // TE-PrE interaction strength
-     mS_TE_TE(-0.9),  // TE-TE interaction strength - NOTE: This is just a prefactor and polarity effects will be included
+     mS_TE_TE(-1.4),  // TE-TE interaction strength - NOTE: This is just a prefactor and polarity effects will be included
      mS_PrE_PrE(0.4), // PrE-PrE interaction strength
      mS_PrE_EPI(0.4), // Pre-EPI interaction strength
      mS_PrE_ICM(0.4), // PrE-ICM interaxction strength
-     mS_EPI_EPI(0.7), // EPI-EPI interaction strength
-     mS_EPI_ICM(0.7), // EPI-ICM interaction strength
-     mBeta(2.0),
+     mS_EPI_EPI(0.6), // EPI-EPI interaction strength
+     mS_EPI_ICM(0.6), // EPI-ICM interaction strength
      mGrowthDuration(3.0)
 {
 }
@@ -28,12 +27,12 @@ NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::NissenForceAttractionTest()
 // NOTE: TROPHECTODERM CUTOFF IS 2.5 CELL RADII (Essentially the cutoff for polarity-polarity interactions)
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::~NissenForceAttractionTest()
+NissenForce<ELEMENT_DIM,SPACE_DIM>::~NissenForce()
 {
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::CalculateForceBetweenNodes(unsigned nodeAGlobalIndex,
+c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBetweenNodes(unsigned nodeAGlobalIndex,
                                                                                             unsigned nodeBGlobalIndex,
                                                                                             AbstractCellPopulation<ELEMENT_DIM,SPACE_DIM>& rCellPopulation)
 {
@@ -74,7 +73,8 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
     
     // Work out the actual force acting between A and B (up to a constant defining the adhesion for a cell-cell pair)
     c_vector<double, SPACE_DIM> potential_gradient;
-    potential_gradient = -exp(-d/mBeta)*unit_vector_from_A_to_B/mBeta;
+    potential_gradient = -exp(-d/5.0)*unit_vector_from_A_to_B*5.0;
+    potential_gradient_repulsion = - exp(-d)*unit_vector_from_A_to_B;
     c_vector<double, SPACE_DIM> force;
     c_vector<double, SPACE_DIM> zeroes;
     
@@ -92,79 +92,56 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
     // CASE 1: Cell A is trophectoderm
     if(p_cell_A->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
     {
+       std::set<unsigned> NearestNeighbourLocations = rCellPopulation.GetNeighbouringLocationIndices(p_cell_A);
+       std::set<unsigned> NearestNeighbourIndices = rCellPopulation.GetNeighbouringNodeIndices(p_cell_A);
+       
+       
        //CASE 1-1: Cell B is also trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
-            if(1==2)
+          // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
+            // No cells should ever interact beyond the cutoff length
+            if (this->mUseCutOffLength)
             {
-               // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
-               // No cells should ever interact beyond the cutoff length
-               if (this->mUseCutOffLength)
-               {
-                   if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                   {
-                     return force;
-                   }
-               } 
-               // Inititalise vectors to work out polarity interaction
-               c_vector<double, SPACE_DIM> polarity_factor_node_A;
-               c_vector<double, SPACE_DIM> polarity_factor_node_B;
+                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            /*
+            * NOTE WE WANT POLAR TROPHECTODERM INTERACTIONS TO ONLY HAPPEN BETWEEN NEAREST NEIGHBOUR CELLS. 
+            * IN ORDER TO AVOID 'BUNCHING' WE SAY THAT TWO TROPHECTODERM CELLS HAVE A POLAR INTERACTION IF THERE IS NO
+            * CELL 'BETWEEN' THEM WITHIN THE INTERACTION DISTANCE I.E. FOR CELLS A AND B THERE DOES NOT EXIST A CELL C 
+            * SUCH THAT (DISTANCE_FROM_A_TO_C)
+            */
             
-               // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
-               double angle_A = p_cell_A->GetCellData()->GetItem("Polarity Angle");
-               double angle_B = p_cell_B->GetCellData()->GetItem("Polarity Angle");
+            // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
+            double angle_A = p_cell_A->GetCellData()->GetItem("Polarity Angle");
+            double angle_B = p_cell_B->GetCellData()->GetItem("Polarity Angle");
             
          
-               double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
+            double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
           
-               double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
+            double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
           
-               force = -potential_gradient*mS_TE_TE*polarity_factor;
+            force = -potential_gradient*mS_TE_TE*polarity_factor;
           
-               if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-               {
-                /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                  force = (std::min(ageA, ageB)/mGrowthDuration)*force;
-                  return force;
-               }
-               else // if no other conditions are met then return the force
-               {
-                  return force;
-               }
-               
-            }
-            else
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
-               // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-               if (this->mUseCutOffLength)
-               {
-                  if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                  {
-                     return force;
-                  }
-               }
-            
-               // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-               force = -potential_gradient*mS_TE_EPI;
-            
-               if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-               {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                  force = (std::min(ageA, ageB)/mGrowthDuration)*force;
-                  return force;
-               }
-               else // if no other conditions are met then return the force
-               {
-                  return force;
-               }
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_TE_TE - 5.0)*growth_factor
+                force = -potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+                return force;
             }
-               
+            else // if no other conditions are met then return the force
+            {
+                force = -potential_gradient*polarity_factor*s_TE_TE + potential_gradient_repulsion;
+                return force;
+            }
        }
        //CASE 1-2: Cell B is epiblast
        else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
@@ -178,20 +155,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_TE_EPI;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_TE_EPI - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_TE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -207,20 +184,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_TE_ICM;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_TE_ICM - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_TE_ICM + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -236,20 +213,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_TE_PrE;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_TE_PRE - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_TE_PRE + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -281,20 +258,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_ICM_ICM;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_ICM_ICM - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_ICM_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -310,20 +287,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_EPI_ICM;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_EPI_ICM - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_EPI_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -339,20 +316,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_PrE_ICM;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_PRE_ICM - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_PRE_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -368,20 +345,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_TE_ICM;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_TE_ICM - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_TE_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -405,20 +382,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_EPI_EPI;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_EPI_EPI - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_EPI_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -434,20 +411,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_EPI_ICM;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_EPI_ICM - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_EPI_ICM + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -463,20 +440,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_PrE_EPI;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_PRE_EPI - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_PRE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -492,20 +469,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_TE_EPI;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_TE_EPI - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_TE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -529,20 +506,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_PrE_ICM;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_PRE_ICM - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_PRE_ICM + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -558,20 +535,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_PrE_EPI;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_PRE_EPI - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_PRE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -587,20 +564,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_PrE_PrE;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_PRE_PRE - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_PRE_PRE + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -616,20 +593,20 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
                 }
             }
             
-            // If one or more of the TE Cells isn't polar for any reason then the attraction reverts back to that of undifferentiated cells
-            force = -potential_gradient*mS_TE_PrE;
-            
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                 /*
-                 * If the cells are both newly divided, then the repulsion between the cells grows linearly
+                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                force = (std::min(ageA, ageB)/mGrowthDuration)*force;
+                double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
+                double s = 5.0 + (mS_TE_PRE - 5.0)*growth_factor
+                force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
+                force = -potential_gradient*s_TE_PRE + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -647,163 +624,163 @@ c_vector<double, SPACE_DIM> NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::Ca
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetS_ICM_ICM()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetS_ICM_ICM()
 {
     return mS_ICM_ICM;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetS_ICM_ICM(double s)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_ICM_ICM(double s)
 {
     mS_ICM_ICM = s;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetS_TE_ICM()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetS_TE_ICM()
 {
     return mS_TE_ICM;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetS_TE_ICM(double s)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_TE_ICM(double s)
 {
     mS_TE_ICM = s;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetS_TE_EPI()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetS_TE_EPI()
 {
     return mS_TE_EPI;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetS_TE_EPI(double s)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_TE_EPI(double s)
 {
     mS_TE_EPI = s;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetS_TE_PrE()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetS_TE_PrE()
 {
     return mS_TE_PrE;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetS_TE_PrE(double s)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_TE_PrE(double s)
 {
     mS_TE_PrE = s;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetS_TE_TE()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetS_TE_TE()
 {
     return mS_TE_TE;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetS_TE_TE(double s)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_TE_TE(double s)
 {
     mS_TE_TE = s;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetS_PrE_PrE()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetS_PrE_PrE()
 {
     return mS_PrE_PrE;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetS_PrE_PrE(double s)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_PrE_PrE(double s)
 {
     mS_PrE_PrE = s;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetS_PrE_EPI()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetS_PrE_EPI()
 {
     return mS_PrE_EPI;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetS_PrE_EPI(double s)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_PrE_EPI(double s)
 {
     mS_PrE_EPI = s;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetS_PrE_ICM()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetS_PrE_ICM()
 {
     return mS_PrE_ICM;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetS_PrE_ICM(double s)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_PrE_ICM(double s)
 {
     mS_PrE_ICM = s;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetS_EPI_EPI()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetS_EPI_EPI()
 {
     return mS_EPI_EPI;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetS_EPI_EPI(double s)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_EPI_EPI(double s)
 {
     mS_EPI_EPI = s;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetS_EPI_ICM()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetS_EPI_ICM()
 {
     return mS_EPI_ICM;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetS_EPI_ICM(double s)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetS_EPI_ICM(double s)
 {
     mS_EPI_ICM = s;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetBeta()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetBeta()
 {
     return mBeta;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetBeta(double beta)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetBeta(double beta)
 {
     mBeta = beta;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::GetGrowthDuration()
+double NissenForce<ELEMENT_DIM,SPACE_DIM>::GetGrowthDuration()
 {
     return mGrowthDuration;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::SetGrowthDuration(double GrowthDuration)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::SetGrowthDuration(double GrowthDuration)
 {
     mBeta = GrowthDuration;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void NissenForceAttractionTest<ELEMENT_DIM,SPACE_DIM>::OutputForceParameters(out_stream& rParamsFile)
+void NissenForce<ELEMENT_DIM,SPACE_DIM>::OutputForceParameters(out_stream& rParamsFile)
 {
     *rParamsFile << "\t\t\t<Beta>" << mBeta << "</Beta>\n";
     AbstractTwoBodyInteractionForce<ELEMENT_DIM,SPACE_DIM>::OutputForceParameters(rParamsFile);
 }
 
 //Explicit Instantiation of the Force
-template class NissenForceAttractionTest<1,1>;
-template class NissenForceAttractionTest<1,2>;
-template class NissenForceAttractionTest<2,2>;
-template class NissenForceAttractionTest<1,3>;
-template class NissenForceAttractionTest<2,3>;
-template class NissenForceAttractionTest<3,3>;
+template class NissenForce<1,1>;
+template class NissenForce<1,2>;
+template class NissenForce<2,2>;
+template class NissenForce<1,3>;
+template class NissenForce<2,3>;
+template class NissenForce<3,3>;
 
 #include "SerializationExportWrapperForCpp.hpp"
-EXPORT_TEMPLATE_CLASS_ALL_DIMS(NissenForceAttractionTest)
+EXPORT_TEMPLATE_CLASS_ALL_DIMS(NissenForce)
