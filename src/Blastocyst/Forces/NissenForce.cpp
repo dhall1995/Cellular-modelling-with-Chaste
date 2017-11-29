@@ -121,8 +121,32 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
           
-            force = force = potential_gradient*polarity_factor*mS_TE_TE + potential_gradient_repulsion;
-                return force;
+            double s = mS_TE_TE;
+            
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+               AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>* p_static_cast_cell_population = static_cast<AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>*>(&rCellPopulation);
+
+               std::pair<CellPtr,CellPtr> cell_pair = p_static_cast_cell_population->CreateCellPair(p_cell_A, p_cell_B);
+
+               if (p_static_cast_cell_population->IsMarkedSpring(cell_pair))
+               {
+                  // Spring rest length increases from a small value to the normal rest length over 1 hour
+                  s = 5.0 + (mS_TE_TE - 5.0) * ageA/mGrowthDuration;
+               }
+               if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
+               {
+                  // This spring is about to go out of scope
+                  p_static_cast_cell_population->UnmarkSpring(cell_pair);
+               }
+            }
+            
+          
+          
+            force = force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+            return force;
+          
+             
        }
        //CASE 1-2: Cell B is epiblast
        else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
