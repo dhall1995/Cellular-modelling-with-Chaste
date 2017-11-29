@@ -28,8 +28,7 @@
 #include "HoneycombMeshGenerator.hpp"
 
 // Force models
-#include "NissenForceAttractionTest.hpp"
-#include "NissenForceRepulsion.hpp"
+#include "NissenForce.hpp"
 #include "NissenNoiseForce.hpp"
 
 // Simulation files
@@ -194,14 +193,10 @@ public:
     	simulation.SetEndTime(SIMULATOR_END_TIME);
 
     	// Make pointer to the NissenForce and add it to the simulation
-    	MAKE_PTR(NissenForceRepulsion<2>, p_force_repulsion);
-        MAKE_PTR(NissenForceAttractionTest<2>, p_force_attraction);
+    	MAKE_PTR(NissenForce<2>, p_force);
+	p_force->SetCutOffLength(2.5);
 
-        p_force_repulsion->SetCutOffLength(2.5);
-        p_force_attraction->SetCutOffLength(2.5);
-
-    	simulation.AddForce(p_force_attraction);
-        simulation.AddForce(p_force_repulsion);
+        simulation.AddForce(p_force);
 
         // Make pointer to the NissenNoiseForce and add it to the simulation
         MAKE_PTR(NissenNoiseForce<2>, p_noise_force);
