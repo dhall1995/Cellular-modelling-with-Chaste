@@ -218,13 +218,13 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * with the age of the cells.
                  */
                 double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
-                double s = 5.0 + (mS_TE_PRE - 5.0)*growth_factor;
+                double s = 5.0 + (mS_TE_PrE - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_TE_PRE + potential_gradient_repulsion;
+                force = -potential_gradient*mS_TE_PrE + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -321,13 +321,13 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * with the age of the cells.
                  */
                 double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
-                double s = 5.0 + (mS_PRE_ICM - 5.0)*growth_factor;
+                double s = 5.0 + (mS_PrE_ICM - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_PRE_ICM + potential_gradient_repulsion;
+                force = -potential_gradient*mS_PrE_ICM + potential_gradient_repulsion;
                 return force;
             }
         }
@@ -445,13 +445,13 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * with the age of the cells.
                  */
                 double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
-                double s = 5.0 + (mS_PRE_EPI - 5.0)*growth_factor;
+                double s = 5.0 + (mS_PrE_EPI - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_PRE_EPI + potential_gradient_repulsion;
+                force = -potential_gradient*mS_PrE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -511,13 +511,13 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * with the age of the cells.
                  */
                 double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
-                double s = 5.0 + (mS_PRE_ICM - 5.0)*growth_factor;
+                double s = 5.0 + (mS_PrE_ICM - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_PRE_ICM + potential_gradient_repulsion;
+                force = -potential_gradient*mS_PrE_ICM + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -540,13 +540,13 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * with the age of the cells.
                  */
                 double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
-                double s = 5.0 + (mS_PRE_EPI - 5.0)*growth_factor;
+                double s = 5.0 + (mS_PrE_EPI - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_PRE_EPI + potential_gradient_repulsion;
+                force = -potential_gradient*mS_PrE_EPI + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -569,13 +569,13 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * with the age of the cells.
                  */
                 double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
-                double s = 5.0 + (mS_PRE_PRE - 5.0)*growth_factor;
+                double s = 5.0 + (mS_PrE_PrE - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_PRE_PRE + potential_gradient_repulsion;
+                force = -potential_gradient*mS_PrE_PrE + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -598,13 +598,13 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                  * with the age of the cells.
                  */
                 double growth_factor = std::min(ageA, ageB)/mGrowthDuration);
-                double s = 5.0 + (mS_TE_PRE - 5.0)*growth_factor;
+                double s = 5.0 + (mS_TE_PrE - 5.0)*growth_factor;
                 force = -potential_gradient*s + potential_gradient_repulsion;
                 return force;
             }
             else // if no other conditions are met then return the force
             {
-                force = -potential_gradient*mS_TE_PRE + potential_gradient_repulsion;
+                force = -potential_gradient*mS_TE_PrE + potential_gradient_repulsion;
                 return force;
             }
        }
@@ -759,12 +759,12 @@ void NissenForce<ELEMENT_DIM,SPACE_DIM>::OutputForceParameters(out_stream& rPara
     *rParamsFile << "\t\t\t<S_TE_TE>" << mS_TE_TE << "</S_TE_TE>\n";
     *rParamsFile << "\t\t\t<S_TE_ICM>" << mS_TE_ICM << "</S_TE_ICM>\n";
     *rParamsFile << "\t\t\t<S_TE_EPI>" << mS_TE_EPI << "</S_TE_EPI>\n";
-    *rParamsFile << "\t\t\t<S_TE_PRE>" << mS_TE_PRE << "</S_TE_PRE>\n";
+    *rParamsFile << "\t\t\t<S_TE_PrE>" << mS_TE_PrE << "</S_TE_PrE>\n";
     *rParamsFile << "\t\t\t<S_ICM_ICM>" << mS_ICM_ICM << "</S_ICM_ICM>\n";
-    *rParamsFile << "\t\t\t<S_PRE_ICM>" << mS_PRE_ICM << "</S_PRE_ICM>\n";
+    *rParamsFile << "\t\t\t<S_PrE_ICM>" << mS_PrE_ICM << "</S_PrE_ICM>\n";
     *rParamsFile << "\t\t\t<S_EPI_ICM>" << mS_EPI_ICM << "</EPI_ICM>\n";
-    *rParamsFile << "\t\t\t<S_PRE_EPI>" << mS_PRE_EPI << "</S_PRE_EPI>\n";
-    *rParamsFile << "\t\t\t<S_PRE_PRE>" << mS_PRE_PRE << "</S_PRE_PRE>\n";
+    *rParamsFile << "\t\t\t<S_PrE_EPI>" << mS_PrE_EPI << "</S_PrE_EPI>\n";
+    *rParamsFile << "\t\t\t<S_PrE_PrE>" << mS_PrE_PrE << "</S_PrE_PrE>\n";
     *rParamsFile << "\t\t\t<S_ICM_ICM>" << mS_ICM_ICM << "</S_ICM>\n";
     *rParamsFile << "\t\t\t<GrowthDuration>" << mGrowthDuration << "</GrowthDuration>\n";
     AbstractTwoBodyInteractionForce<ELEMENT_DIM,SPACE_DIM>::OutputForceParameters(rParamsFile);
