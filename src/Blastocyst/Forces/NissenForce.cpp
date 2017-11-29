@@ -58,7 +58,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
     unit_vector_from_A_to_B /= d;
     
     // NISSEN DISTANCES ARE GIVEN IN UNITS OF CELL RADII
-    d = 4.0*d;
+    d = 2.0*d;
     
     // Get ages of cells
     CellPtr p_cell_A = rCellPopulation.GetCellUsingLocationIndex(nodeAGlobalIndex);
@@ -153,23 +153,46 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                     return force;
                 }
             }
+          
+            double s = mS_TE_EPI;
             
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
+               AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>* p_static_cast_cell_population = static_cast<AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>*>(&rCellPopulation);
+
+               std::pair<CellPtr,CellPtr> cell_pair = p_static_cast_cell_population->CreateCellPair(p_cell_A, p_cell_B);
+
+               if (p_static_cast_cell_population->IsMarkedSpring(cell_pair))
+               {
+                  // Spring rest length increases from a small value to the normal rest length over 1 hour
+                  double s = 5.0 + (mS_TE_EPI - 5.0) * ageA/mGrowthDuration;
+               }
+               if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
+               {
+                  // This spring is about to go out of scope
+                  p_static_cast_cell_population->UnmarkSpring(cell_pair);
+               }
+            }
+          
+            force = potential_gradient*s + potential_gradient_repulsion;
+            return force;
+          
+            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            //{
                 /*
                  * If the cells are both newly divided, then the repulsion length between the cells grows linearly
                  * with the age of the cells.
                  */
-                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                double s = 5.0 + (mS_TE_EPI - 5.0)*growth_factor;
-                force = potential_gradient*s + potential_gradient_repulsion;
-                return force;
-            }
-            else // if no other conditions are met then return the force
-            {
-                force = potential_gradient*mS_TE_EPI + potential_gradient_repulsion;
-                return force;
-            }
+                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
+                //double s = 5.0 + (mS_TE_EPI - 5.0)*growth_factor;
+                //force = potential_gradient*s + potential_gradient_repulsion;
+                //return force;
+            //}
+            //else // if no other conditions are met then return the force
+            //{
+                //force = potential_gradient*mS_TE_EPI + potential_gradient_repulsion;
+                //return force;
+            //}
        }
        //CASE 1-3: Cell B is Undetermined ICM
        else if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
