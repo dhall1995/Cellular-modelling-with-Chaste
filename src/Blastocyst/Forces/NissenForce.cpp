@@ -121,24 +121,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
           
-            /*
-            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            {
-               
-                 //If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 // with the age of the cells.
-                 
-                double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                double s = 5.0 + (mS_TE_TE - 5.0)*growth_factor;
-                force = -potential_gradient*polarity_factor*s + potential_gradient_repulsion;
-                return force;
-            }
-            else // if no other conditions are met then return the force
-            {
-                force = -potential_gradient*polarity_factor*s_TE_TE + potential_gradient_repulsion;
-                return force;
-            }
-            */
             force = force = potential_gradient*polarity_factor*mS_TE_TE + potential_gradient_repulsion;
                 return force;
        }
@@ -155,44 +137,10 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             }
           
             double s = mS_TE_EPI;
-            
-            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            {
-               AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>* p_static_cast_cell_population = static_cast<AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>*>(&rCellPopulation);
-
-               std::pair<CellPtr,CellPtr> cell_pair = p_static_cast_cell_population->CreateCellPair(p_cell_A, p_cell_B);
-
-               if (p_static_cast_cell_population->IsMarkedSpring(cell_pair))
-               {
-                  // Spring rest length increases from a small value to the normal rest length over 1 hour
-                  s = 5.0 + (mS_TE_EPI - 5.0) * ageA/mGrowthDuration;
-               }
-               if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
-               {
-                  // This spring is about to go out of scope
-                  p_static_cast_cell_population->UnmarkSpring(cell_pair);
-               }
-            }
           
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_TE_EPI - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_TE_EPI + potential_gradient_repulsion;
-                //return force;
-            //}
+ 
        }
        //CASE 1-3: Cell B is Undetermined ICM
        else if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
@@ -210,23 +158,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_TE_ICM - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_TE_ICM + potential_gradient_repulsion;
-                //return force;
-            //}
+
        }
        //CASE 1-4: Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
@@ -244,23 +176,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
      
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_TE_PrE - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_TE_PrE + potential_gradient_repulsion;
-                //return force;
-            //}
+
        }
        else
        {
@@ -312,23 +228,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_ICM_ICM - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_ICM_ICM + potential_gradient_repulsion;
-                //return force;
-            //}
         }
        //CASE 2-2: Cell B is Epiblast
        else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
@@ -346,23 +245,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_EPI_ICM - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_EPI_ICM + potential_gradient_repulsion;
-                //return force;
-            //}
         }
        //CASE 2-3: Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
@@ -380,23 +262,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
 
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_PrE_ICM - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_PrE_ICM + potential_gradient_repulsion;
-                //return force;
-            //}
         }
        //CASE 2-4: Cell B is Trophectoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
@@ -415,22 +280,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
           
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_TE_ICM - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_TE_ICM + potential_gradient_repulsion;
-                //return force;
-            //}
         }
        else
        {
@@ -474,23 +323,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_EPI_EPI - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_EPI_EPI + potential_gradient_repulsion;
-                //return force;
-            //}
        }
        //CASE 3-2 Cell B is Undetermined ICM
        else if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
@@ -508,23 +340,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
     
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_EPI_ICM - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_EPI_ICM + potential_gradient_repulsion;
-                //return force;
-            //}
        }
        //CASE 3-3 Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
@@ -542,23 +357,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
          
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_PrE_EPI - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_PrE_EPI + potential_gradient_repulsion;
-                //return force;
-            //}
        }
        //CASE 3-4 Cell B is Trophectoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
@@ -576,23 +374,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_TE_EPI - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_TE_EPI + potential_gradient_repulsion;
-                //return force;
-            //}
        }
        else
        {
@@ -618,23 +399,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_PrE_ICM - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_PrE_ICM + potential_gradient_repulsion;
-                //return force;
-            //}
        }
        //CASE 4-2 Cell B is Epiblast
        else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
@@ -652,23 +416,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_PrE_EPI - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_PrE_EPI + potential_gradient_repulsion;
-                //return force;
-            //}
        }
        //CASE 4-3 Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
@@ -704,23 +451,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_PrE_PrE - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_PrE_PrE + potential_gradient_repulsion;
-                //return force;
-            //}
        }
        //CASE 4-4 Cell B is Trophectoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
@@ -738,23 +468,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-          
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-                /*
-                 * If the cells are both newly divided, then the repulsion length between the cells grows linearly
-                 * with the age of the cells.
-                 */
-                //double growth_factor = std::min(ageA, ageB)/(mGrowthDuration);
-                //double s = 5.0 + (mS_TE_PrE - 5.0)*growth_factor;
-                //force = potential_gradient*s + potential_gradient_repulsion;
-                //return force;
-            //}
-            //else // if no other conditions are met then return the force
-            //{
-                //force = potential_gradient*mS_TE_PrE + potential_gradient_repulsion;
-                //return force;
-            //}
+
        }
        else
        {
