@@ -48,12 +48,12 @@ void PreCompactionCellCycleModel::SetCellCycleDuration()
     }
     else if (mpCell->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
     {
-	mCellCycleDuration = 0.5*(mMinCellCycleDuration + (mMaxCellCycleDuration - mMinCellCycleDuration) * p_gen->ranf());
+	mCellCycleDuration = (mMinCellCycleDuration + (mMaxCellCycleDuration - mMinCellCycleDuration) * p_gen->ranf());
 	//Trophectoderm Cell Cycle time should be half that of ICM
     }
     else
     {
-        mCellCycleDuration = mMinCellCycleDuration + (mMaxCellCycleDuration - mMinCellCycleDuration) * p_gen->ranf();
+        mCellCycleDuration = 2*(mMinCellCycleDuration + (mMaxCellCycleDuration - mMinCellCycleDuration) * p_gen->ranf());
         // U[MinCCD,MaxCCD]
     }
 }
