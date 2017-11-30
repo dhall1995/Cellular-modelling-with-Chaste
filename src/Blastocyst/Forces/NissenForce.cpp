@@ -134,7 +134,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                   // Spring rest length increases from a small value to the normal rest length over 1 hour
                   if(polarity_factor < 0.0)
                   {
-                     s = 5.0 + (-mS_TE_TE - 5.0) * ageA/mGrowthDuration;
+                     s = -5.0 + (mS_TE_TE + 5.0) * ageA/mGrowthDuration;
                   }
                }
                if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
