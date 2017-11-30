@@ -113,7 +113,7 @@ private:
 		double angle = atan2(cell_y_value, cell_x_value);
 		PRINT_VARIABLE(angle);
 
-                cell_iter->GetCellData()->SetItem("Polarity Angle", angle);
+                //cell_iter->GetCellData()->SetItem("Polarity Angle", angle);
 
                 static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel())->SetPolarityAngle(angle);
     //            TRACE("Are we dealing with a trophectoderm cell?");
