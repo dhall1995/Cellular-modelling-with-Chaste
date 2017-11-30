@@ -119,7 +119,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
          
             double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
           
-            double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*(angle_A + angle_B - 2.0*cell_difference_angle);
+            double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*cos(angle_A + angle_B - 2.0*cell_difference_angle);
           
             double s = mS_TE_TE;
             
