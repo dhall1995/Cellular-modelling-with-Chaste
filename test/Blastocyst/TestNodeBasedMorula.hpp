@@ -48,7 +48,7 @@
 class TestNodeBasedMorula : public AbstractCellBasedWithTimingsTestSuite
 {
 private:
-    double SIMULATOR_END_TIME = 110.0;
+    double SIMULATOR_END_TIME = 90.0;
     
     /*
      * Function to call when we wish to make trophectoderm specification at E3.5. This is done by assigning
@@ -209,6 +209,7 @@ public:
     	// Solve the simulation the first time round
     	simulation.Solve();
 //    	TRACE("finished first simulation up to early morula");
+        
 	
         /*
          * At this point we should be at an early morula stage of development and ready to specify our outer cells as
