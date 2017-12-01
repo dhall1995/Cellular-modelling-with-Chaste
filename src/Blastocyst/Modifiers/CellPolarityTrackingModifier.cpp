@@ -2,6 +2,7 @@
 #include "CellPolarityTrackingModifier.hpp"
 #include "CellPolaritySrnModel.hpp"
 #include "TrophectodermCellProliferativeType.hpp"
+#include "NodeBasedCellPopulation.hpp"
 #include "Debug.hpp"
 
 template<unsigned DIM>
