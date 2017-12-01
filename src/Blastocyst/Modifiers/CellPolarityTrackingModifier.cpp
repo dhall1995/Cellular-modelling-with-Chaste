@@ -81,10 +81,6 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
 	    {
 		    unsigned cell_B_index = rCellPopulation.GetLocationIndexUsingCell(*cell_B_iter);
 
-		    
-		    // We should only ever calculate the force between two distinct nodes
-    		    assert(cell_B_index != cell_A_index);
-    
     		    // Assign labels to each node in the pair
     		    Node<DIM>* p_node_A = rCellPopulation.GetNode(cell_A_index);
    		    Node<DIM>* p_node_B = rCellPopulation.GetNode(cell_B_index);
