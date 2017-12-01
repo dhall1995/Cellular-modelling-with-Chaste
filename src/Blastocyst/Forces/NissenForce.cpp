@@ -11,10 +11,10 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 NissenForce<ELEMENT_DIM,SPACE_DIM>::NissenForce()
    : AbstractTwoBodyInteractionForce<ELEMENT_DIM,SPACE_DIM>(),
      mS_ICM_ICM(0.6), // ICM-ICM interaction strength - NOTE: Before TE specification all cells are considered ICM-like in their adhesion properties
-     mS_TE_ICM(0.35),  // TE-ICM interaction strength
-     mS_TE_EPI(0.35),  // TE-EPI interaction strength
-     mS_TE_PrE(0.35),  // TE-PrE interaction strength
-     mS_TE_TE(-0.45),  // TE-TE interaction strength - NOTE: This is just a prefactor and polarity effects will be included
+     mS_TE_ICM(0.6),  // TE-ICM interaction strength
+     mS_TE_EPI(0.6),  // TE-EPI interaction strength
+     mS_TE_PrE(0.6),  // TE-PrE interaction strength
+     mS_TE_TE(-1.4),  // TE-TE interaction strength - NOTE: This is just a prefactor and polarity effects will be included
      mS_PrE_PrE(0.4), // PrE-PrE interaction strength
      mS_PrE_EPI(0.4), // Pre-EPI interaction strength
      mS_PrE_ICM(0.4), // PrE-ICM interaxction strength
@@ -100,7 +100,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
                 {
                     return force;
                 }
@@ -113,15 +113,18 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             */
             
             // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
-            double angle_A = p_cell_A->GetCellData()->GetItem("Polarity Angle");
-            double angle_B = p_cell_B->GetCellData()->GetItem("Polarity Angle");
+            //double angle_A = p_cell_A->GetCellData()->GetItem("Polarity Angle");
+            CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(p_cell_A->GetSrnModel());
+            double angle_A = p_srn_model_A->GetPolarityAngle();
+            //double angle_B = p_cell_B->GetCellData()->GetItem("Polarity Angle");
+            CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
+            double angle_B = p_srn_model_B->GetPolarityAngle();
             
          
             double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
           
             double polarity_factor = (cos(angle_A)*sin(cell_difference_angle) - sin(angle_A)*cos(cell_difference_angle))*
                                      (sin(angle_B)*cos(cell_difference_angle) - cos(angle_B)*cos(cell_difference_angle));
-            //double polarity_factor = -0.5*cos(angle_A - angle_B) + 0.5*cos(angle_A + angle_B - 2.0*cell_difference_angle);
           
             double s = mS_TE_TE;
             
