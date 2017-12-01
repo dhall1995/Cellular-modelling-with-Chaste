@@ -115,7 +115,7 @@ private:
 
                 //cell_iter->GetCellData()->SetItem("Polarity Angle", angle);
 		cell_iter->GetCellData()->SetItem("target area", 4.0);
-		node_index->SetRadius(2.0);
+		cell_population.GetNode(node_index)->SetRadius(2.0);
 
                 static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel())->SetPolarityAngle(angle);
     //            TRACE("Are we dealing with a trophectoderm cell?");
