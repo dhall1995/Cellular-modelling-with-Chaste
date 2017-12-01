@@ -114,7 +114,7 @@ private:
 		PRINT_VARIABLE(angle);
 
                 //cell_iter->GetCellData()->SetItem("Polarity Angle", angle);
-		p_cell->GetCellData()->SetItem("target area", 4.0);
+		cell_iter->GetCellData()->SetItem("target area", 4.0);
 
                 static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel())->SetPolarityAngle(angle);
     //            TRACE("Are we dealing with a trophectoderm cell?");
