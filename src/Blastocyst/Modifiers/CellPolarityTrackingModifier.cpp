@@ -36,7 +36,7 @@ void CellPolarityTrackingModifier<DIM>::SetupSolve(AbstractCellPopulation<DIM,DI
 template<unsigned DIM>
 void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DIM,DIM>& rCellPopulation)
 {
-    NodeBasedCellPopulation<DIM>& pCellPopulation = template static_cast<NodeBasedCellPopulation>&(rCellPopulation);
+    NodeBasedCellPopulation<DIM>& pCellPopulation = static_cast<NodeBasedCellPopulation>&(rCellPopulation);
     //TRACE("Now attempting to update cell data within CellPolarityTrackingModifier");
     // Make sure the cell population is updated
     rCellPopulation.Update();
