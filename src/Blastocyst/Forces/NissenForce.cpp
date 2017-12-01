@@ -5,6 +5,7 @@
 #include "EpiblastCellProliferativeType.hpp"
 #include "PrECellProliferativeType.hpp"
 #include "TransitCellProliferativeType.hpp"
+#include "CellPolaritySrnModel.hpp"
 #include "Debug.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
