@@ -72,15 +72,18 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
         {
 	    //If the cell is trophectoderm then initialise the sum of neighbouring polarities to update the current polarity
 	    double sum_sin_angles = 0.0;
+	    //Get cell index for the cell in question	
+	    unsigned cell_A_index = rCellPopulation.GetLocationIndexUsingCell(cell_iter);
+	    
 	    //Iterate through the cells again to first check if a taget cell is close and then if it is trophectoderm  
 	    for (typename AbstractCellPopulation<DIM>::Iterator cell_B_iter = rCellPopulation.Begin();
 		 cell_B_iter != rCellPopulation.End(); ++cell_B_iter)
 	    {
 		    unsigned cell_B_index = rCellPopulation.GetLocationIndexUsingCell(cell_B_iter);
-		    unsigned cell_A_index = rCellPopulation.GetLocationIndexUsingCell(cell_iter);
+
 		    
 		    // We should only ever calculate the force between two distinct nodes
-    		    assert(nodeAGlobalIndex != nodeBGlobalIndex);
+    		    assert(cell_B_index != cell_A_index);
     
     		    // Assign labels to each node in the pair
     		    Node<DIM>* p_node_A = rCellPopulation.GetNode(cell_A_index);
