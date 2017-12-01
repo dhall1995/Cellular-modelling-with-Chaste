@@ -12,7 +12,7 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 NissenForce<ELEMENT_DIM,SPACE_DIM>::NissenForce()
    : AbstractTwoBodyInteractionForce<ELEMENT_DIM,SPACE_DIM>(),
      mS_ICM_ICM(0.6), // ICM-ICM interaction strength - NOTE: Before TE specification all cells are considered ICM-like in their adhesion properties
-     mS_TE_ICM(0.6),  // TE-ICM interaction strength
+     mS_TE_ICM(0.5),  // TE-ICM interaction strength
      mS_TE_EPI(0.6),  // TE-EPI interaction strength
      mS_TE_PrE(0.6),  // TE-PrE interaction strength
      mS_TE_TE(-1.4),  // TE-TE interaction strength - NOTE: This is just a prefactor and polarity effects will be included
@@ -101,7 +101,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
-                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
                 {
                     return force;
                 }
@@ -114,10 +114,8 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             */
             
             // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
-            //double angle_A = p_cell_A->GetCellData()->GetItem("Polarity Angle");
             CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(p_cell_A->GetSrnModel());
             double angle_A = p_srn_model_A->GetPolarityAngle();
-            //double angle_B = p_cell_B->GetCellData()->GetItem("Polarity Angle");
             CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
             double angle_B = p_srn_model_B->GetPolarityAngle();
             
@@ -152,7 +150,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             
           
           
-            force = force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+            force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
             return force;
           
              
