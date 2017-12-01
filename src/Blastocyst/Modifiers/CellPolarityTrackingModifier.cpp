@@ -2,7 +2,6 @@
 #include "CellPolarityTrackingModifier.hpp"
 #include "CellPolaritySrnModel.hpp"
 #include "TrophectodermCellProliferativeType.hpp"
-#include "NodeBasedCellPopulation.hpp"
 #include "Debug.hpp"
 
 template<unsigned DIM>
@@ -35,7 +34,7 @@ void CellPolarityTrackingModifier<DIM>::SetupSolve(AbstractCellPopulation<DIM,DI
 }
 
 template<unsigned DIM>
-void CellPolarityTrackingModifier<DIM>::UpdateCellData(NodeBasedCellPopulation<DIM>& rCellPopulation)
+void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DIM,DIM>& rCellPopulation)
 {
     //TRACE("Now attempting to update cell data within CellPolarityTrackingModifier");
     // Make sure the cell population is updated
@@ -68,38 +67,46 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(NodeBasedCellPopulation<D
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
-        if (cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
+        //Test if the cell is trophectoderm
+	if (cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
         {
-            // Get the set of neighbouring location indices
-            //std::set<unsigned> neighbour_indices = rCellPopulation.GetNeighbouringNodeIndices(rCellPopulation.GetLocationIndexUsingCell(*cell_iter));
-            std::set<unsigned> neighbour_indices = rCellPopulation.GetNodesWithinNeighbourhoodRadius(rCellPopulation.GetLocationIndexUsingCell(*cell_iter),1.25);
-            
-	    // Compute this trophectoderm cell's neighbouring trophectoderm cells and store in
-            // CellData the sin of the angle differences
-            if (!neighbour_indices.empty())
-            {
-//                TRACE("Now working out the polarity potential for a trophectoderm cell")
-		        double sum_sin_angles = 0.0;
-                
-                for (std::set<unsigned>::iterator iter = neighbour_indices.begin();
-                     iter != neighbour_indices.end();
-                     ++iter)
-                {
-                    CellPtr p_cell = rCellPopulation.GetCellUsingLocationIndex(*iter);
-                    
-                    if (cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
-                    {
-                        double alpha_p_cell = p_cell->GetCellData()->GetItem("Polarity Angle");
-                        sum_sin_angles += sin(this_alpha - alpha_p_cell);
-                    }
-                }
-                cell_iter->GetCellData()->SetItem("dVpdAlpha", sum_sin_angles);
-            }
-            else
-            {
-                // If this cell has no neighbours, such as an isolated cell in a CaBasedCellPopulation, store 0.0 for the cell data
-                cell_iter->GetCellData()->SetItem("dVpdAlpha", 0.0);
-            }
+	    //If the cell is trophectoderm then initialise the sum of neighbouring polarities to update the current polarity
+	    double sum_sin_angles = 0.0;
+	    //Iterate through the cells again to first check if a taget cell is close and then if it is trophectoderm  
+	    for (typename AbstractCellPopulation<DIM>::Iterator cell_B_iter = rCellPopulation.Begin();
+		 cell_B_iter != rCellPopulation.End(); ++cell_B_iter)
+	    {
+		    unsigned cell_B_index = rCellPopulation.GetLocationIndexUsingCell(cell_B_iter);
+		    unsigned cell_A_index = rCellPopulation.GetLocationIndexUsingCell(cell_iter);
+		    
+		    // We should only ever calculate the force between two distinct nodes
+    		    assert(nodeAGlobalIndex != nodeBGlobalIndex);
+    
+    		    // Assign labels to each node in the pair
+    		    Node<DIM>* p_node_A = rCellPopulation.GetNode(cell_A_index);
+   		    Node<DIM>* p_node_B = rCellPopulation.GetNode(cell_B_index);
+		    
+		    // Find locations of each node in the pair
+    		    const c_vector<double, DIM>& r_node_A_location = p_node_A->rGetLocation();
+    		    const c_vector<double, DIM>& r_node_B_location = p_node_B->rGetLocation();
+
+    		    // Work out the vector from node A to node B and use the GetVector method from rGetMesh
+    		    c_vector<double, DIM> vector_from_A_to_B;
+                    vector_from_A_to_B = rCellPopulation.rGetMesh().GetVectorFromAtoB(r_node_A_location, r_node_B_location);
+
+    	            // Distance between the two nodes
+    		    double d = norm_2(vector_from_A_to_B);
+		    if (d < 1.25)
+		    {
+			    if(cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
+			    {
+				  double alpha_B_cell = cell_B_iter->GetCellData()->GetItem("Polarity Angle");
+                        	  sum_sin_angles += sin(this_alpha - alpha_B_cell); 
+			    }
+		    }
+	    }
+	    //whatever our final sum_sin_angles is must be applied to the current trophectoderm cell
+	    cell_iter->GetCellData()->SetItem("dVpdAlpha", sum_sin_angles);
         }
         else
         {
