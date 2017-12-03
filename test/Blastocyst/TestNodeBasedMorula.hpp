@@ -31,6 +31,9 @@
 #include "NissenForce.hpp"
 #include "NissenNoiseForce.hpp"
 
+// Division Rules
+#include "NissenBasedDivisionRule.hpp"
+
 // Simulation files
 #include "OffLatticeSimulation.hpp"
 #include "CellPolaritySrnModel.hpp"
@@ -181,6 +184,7 @@ public:
 	
     	// Link the cells with the mesh created at the start
     	NodeBasedCellPopulation<2> cell_population(mesh, rCells);
+	cell_population.SetCentreBasedDivisionRule(NissenBasedDivisionRule);
 
     	// Instantiate the simulation, saving results in NodeBasedMorula, simulating for SIMULATOR_END_TIME hours
     	OffLatticeSimulation<2> simulation(cell_population);
