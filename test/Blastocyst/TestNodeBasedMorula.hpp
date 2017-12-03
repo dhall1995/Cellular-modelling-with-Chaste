@@ -184,7 +184,10 @@ public:
 	
     	// Link the cells with the mesh created at the start
     	NodeBasedCellPopulation<2> cell_population(mesh, rCells);
-	cell_population.SetCentreBasedDivisionRule(NissenBasedDivisionRule);
+	
+	//Initialise the Nissen Division Rules and apply to the cell population
+	NissenBasedDivisionRule<2,2>* Nissen_Division_Rule;
+	cell_population.SetCentreBasedDivisionRule(Nissen_Division_Rule);
 
     	// Instantiate the simulation, saving results in NodeBasedMorula, simulating for SIMULATOR_END_TIME hours
     	OffLatticeSimulation<2> simulation(cell_population);
