@@ -67,7 +67,7 @@ std::pair<c_vector<double, SPACE_DIM>, c_vector<double, SPACE_DIM> > NissenBased
         {
             //If the parent cell is a trophectodem cell with a directed polarity then we want divisions to occur
             //perpendicular to the polarity axis
-            if (pParentCell->GetCellProliferativeType->template IsType<TrophectodermCellProliferativeType>())
+            if (pParentCell->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
             {
                 CellPolaritySrnModel* pParent_Srn_Model = static_cast<CellPolaritySrnModel*>(pParentCell->GetSrnModel());
                 double directed_angle = pParent_Srn_Model->GetPolarityAngle() + M_PI/2.0;
