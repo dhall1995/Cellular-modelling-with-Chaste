@@ -186,7 +186,7 @@ public:
     	NodeBasedCellPopulation<2> cell_population(mesh, rCells);
 	
 	//Initialise the Nissen Division Rules and apply to the cell population
-	boost::shared_ptr<AbstractCentreBasedDivisionRule<2,2>> Nissen_Division_Rule(new NissenBasedDivisionRule<2,2>);
+	boost::shared_ptr<AbstractCentreBasedDivisionRule<2,2> > Nissen_Division_Rule(new NissenBasedDivisionRule<2,2>());
 	cell_population.SetCentreBasedDivisionRule(Nissen_Division_Rule);
 
     	// Instantiate the simulation, saving results in NodeBasedMorula, simulating for SIMULATOR_END_TIME hours
