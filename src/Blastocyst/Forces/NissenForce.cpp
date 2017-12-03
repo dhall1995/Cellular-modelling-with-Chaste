@@ -101,7 +101,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
-                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                if (d/1.25 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
                 {
                     return force;
                 }
