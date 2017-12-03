@@ -35,6 +35,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "NissenBasedDivisionRule.hpp"
 #include "RandomNumberGenerator.hpp"
+#include "TrophectodermCellProliferativeType.hpp"
+#include "CellPolaritySrnModel.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 std::pair<c_vector<double, SPACE_DIM>, c_vector<double, SPACE_DIM> > NissenBasedDivisionRule<ELEMENT_DIM, SPACE_DIM>::CalculateCellDivisionVector(
