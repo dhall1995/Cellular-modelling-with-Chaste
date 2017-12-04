@@ -217,7 +217,7 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
         // polarity factor have a lower rest length, cells with zero polarity factor have a slightly longer rest lenght, and cells with a negative
         // polarity factor has a larger and larger rest length
         double rest_length = std::min(this->GetCutOffLength(),1.5*(rest_length/(1.0 + polarity_factor)))
-        double overlap distance_between_nodes - rest_length;
+        double overlap = distance_between_nodes - rest_length;
                                                     
         bool is_closer_than_rest_length = (overlap <= 0);
         double multiplication_factor = VariableSpringConstantMultiplicationFactor(nodeAGlobalIndex, nodeBGlobalIndex, rCellPopulation, is_closer_than_rest_length);
