@@ -216,7 +216,7 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
         // subclasses it can depend on properties of each of the cells. The rest length is a property of polarity factor - two cells with a high
         // polarity factor have a lower rest length, cells with zero polarity factor have a slightly longer rest lenght, and cells with a negative
         // polarity factor has a larger and larger rest length
-        double rest_length = std::min(this->GetCutOffLength(),1.5*(rest_length/(1.0 + polarity_factor)))
+        double rest_length = std::min(this->GetCutOffLength(),1.5*(rest_length/(1.0 + polarity_factor)));
         double overlap = distance_between_nodes - rest_length;
                                                     
         bool is_closer_than_rest_length = (overlap <= 0);
@@ -249,7 +249,6 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
     {
         // Although in this class the 'spring constant' is a constant parameter, in
         // subclasses it can depend on properties of each of the cells
-        double rest_length = rest_length
         double overlap = distance_between_nodes - rest_length;
 
         bool is_closer_than_rest_length = (overlap <= 0);
