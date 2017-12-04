@@ -203,7 +203,7 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
         
         double polarity_factor = -(cos(angle_A)*sin(cell_difference_angle) - sin(angle_A)*cos(cell_difference_angle))*
         (sin(angle_B)*cos(cell_difference_angle) - cos(angle_B)*cos(cell_difference_angle));
-        
+       
         // Although in this class the 'spring constant' is a constant parameter, in
         // subclasses it can depend on properties of each of the cells. The rest length is a property of polarity factor - two cells with a high
         // polarity factor have a lower rest length, cells with zero polarity factor have a slightly longer rest lenght, and cells with a negative
@@ -225,13 +225,13 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
             {
                 //log(x+1) is undefined for x<=-1
                 assert(overlap > -rest_length_final);
-                c_vector<double, SPACE_DIM> temp = multiplication_factor*spring_stiffness * unit_difference * rest_length_final* log(1.0 + overlap/rest_length_final);
+                c_vector<double, SPACE_DIM> temp = ((1.0 + polarity_factor)/2.0) *multiplication_factor*spring_stiffness * unit_difference * rest_length_final* log(1.0 + overlap/rest_length_final);
                 return temp;
             }
             else
             {
                 double alpha = 5.0;
-                c_vector<double, SPACE_DIM> temp = polarity_factor*multiplication_factor*spring_stiffness * unit_difference * overlap * exp(-alpha * overlap/rest_length_final);
+                c_vector<double, SPACE_DIM> temp = ((1.0 + polarity_factor)/2.0) *multiplication_factor*spring_stiffness * unit_difference * overlap * exp(-alpha * overlap/rest_length_final);
                 return temp;
             }
         }
