@@ -231,7 +231,7 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
             else
             {
                 double alpha = 5.0;
-                c_vector<double, SPACE_DIM> temp = 1.4*polarity_factor*multiplication_factor*spring_stiffness * unit_difference * overlap * exp(-alpha * overlap/rest_length_final);
+                c_vector<double, SPACE_DIM> temp = polarity_factor*multiplication_factor*spring_stiffness * unit_difference * overlap * exp(-alpha * overlap/rest_length_final);
                 return temp;
             }
         }
