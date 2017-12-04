@@ -1,12 +1,4 @@
 /*
-
-Copyright (c) 2005-2017, University of Oxford.
-All rights reserved.
-
-University of Oxford means the Chancellor, Masters and Scholars of the
-University of Oxford, having an administrative office at Wellington
-Square, Oxford OX1 2JD, UK.
-
 This file is part of Chaste.
 
 Redistribution and use in source and binary forms, with or without
@@ -209,7 +201,7 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
         
         double cell_difference_angle = atan2(unit_difference[1],unit_difference[0]);
         
-        polarity_factor = -(cos(angle_A)*sin(cell_difference_angle) - sin(angle_A)*cos(cell_difference_angle))*
+        double polarity_factor = -(cos(angle_A)*sin(cell_difference_angle) - sin(angle_A)*cos(cell_difference_angle))*
         (sin(angle_B)*cos(cell_difference_angle) - cos(angle_B)*cos(cell_difference_angle));
         
         // Although in this class the 'spring constant' is a constant parameter, in
