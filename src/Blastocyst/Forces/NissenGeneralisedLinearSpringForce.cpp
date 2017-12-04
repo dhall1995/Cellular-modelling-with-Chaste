@@ -225,8 +225,8 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
             if (is_closer_than_rest_length) //overlap is negative
             {
                 //log(x+1) is undefined for x<=-1
-                assert(overlap > -rest_length_final);
-                c_vector<double, SPACE_DIM> temp = multiplication_factor*spring_stiffness * unit_difference * rest_length_final* log(1.0 + overlap/rest_length_final);
+                assert(overlap > -rest_length);
+                c_vector<double, SPACE_DIM> temp = multiplication_factor*spring_stiffness * unit_difference * rest_length_final* log(1.0 + overlap/rest_length);
                 return temp;
             }
             else
