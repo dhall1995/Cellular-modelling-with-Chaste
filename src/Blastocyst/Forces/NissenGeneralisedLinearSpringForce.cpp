@@ -98,18 +98,6 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
     unit_difference /= distance_between_nodes;
 
     /*
-     * If mUseCutOffLength has been set, then there is zero force between
-     * two nodes located a distance apart greater than mMechanicsCutOffLength in AbstractTwoBodyInteractionForce.
-     */
-    if (this->mUseCutOffLength)
-    {
-        if (distance_between_nodes >= this->GetCutOffLength())
-        {
-            return zero_vector<double>(SPACE_DIM); // c_vector<double,SPACE_DIM>() is not guaranteed to be fresh memory
-        }
-    }
-
-    /*
      * Calculate the rest length of the spring connecting the two nodes with a default
      * value of 1.0.
      */
@@ -193,6 +181,18 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
     //Initialise a polarity factor which does nothing to the force unless both cell A and cell B are trophectoderm
     if(p_cell_A->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() && p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
     {
+         /*
+         * If mUseCutOffLength has been set, then there is zero force between
+         * two nodes located a distance apart greater than mMechanicsCutOffLength in AbstractTwoBodyInteractionForce.
+          */
+         if (this->mUseCutOffLength)
+         {
+            if (distance_between_nodes >= this->GetCutOffLength()*2.0)
+            {
+                  return zero_vector<double>(SPACE_DIM); // c_vector<double,SPACE_DIM>() is not guaranteed to be fresh memory
+            }
+         }
+       
         CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(p_cell_A->GetSrnModel());
         double angle_A = p_srn_model_A->GetPolarityAngle();
         CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
@@ -238,6 +238,18 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
     }
     else
     {
+          /*
+         * If mUseCutOffLength has been set, then there is zero force between
+         * two nodes located a distance apart greater than mMechanicsCutOffLength in AbstractTwoBodyInteractionForce.
+         */
+         if (this->mUseCutOffLength)
+         {
+            if (distance_between_nodes >= this->GetCutOffLength())
+            {
+                  return zero_vector<double>(SPACE_DIM); // c_vector<double,SPACE_DIM>() is not guaranteed to be fresh memory
+            }
+         }
+       
         // Although in this class the 'spring constant' is a constant parameter, in
         // subclasses it can depend on properties of each of the cells
         double overlap = distance_between_nodes - rest_length;
