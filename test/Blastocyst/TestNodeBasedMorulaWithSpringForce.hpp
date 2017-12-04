@@ -115,7 +115,8 @@ private:
                 double angle = atan2(cell_y_value, cell_x_value);
                 PRINT_VARIABLE(angle);
                 
-                node_index->SetRadius(2.0);
+                Node<SPACE_DIM>* p_node = rCellPopulation.GetNode(node_index);
+                p_node->SetRadius(2.0);
                 
                 static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel())->SetPolarityAngle(angle);
                 //            TRACE("Are we dealing with a trophectoderm cell?");
