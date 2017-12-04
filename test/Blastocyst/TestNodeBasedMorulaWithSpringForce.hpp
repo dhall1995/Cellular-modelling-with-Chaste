@@ -27,7 +27,7 @@
 #include "HoneycombMeshGenerator.hpp"
 
 // Force models
-#include "NissenForce.hpp"
+#include "NissenGeneralisedLinearSpringForce.hpp"
 #include "NissenNoiseForce.hpp"
 
 // Division Rules
