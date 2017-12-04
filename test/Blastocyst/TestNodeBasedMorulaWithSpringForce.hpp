@@ -198,7 +198,7 @@ public:
         
         // Make pointer to the NissenForce and add it to the simulation
         MAKE_PTR(NissenGeneralisedLinearSpringForce<2>, p_force);
-        p_force->SetCutOffLength(2.5);
+        //p_force->SetCutOffLength(2.5);
         
         simulation.AddForce(p_force);
         
