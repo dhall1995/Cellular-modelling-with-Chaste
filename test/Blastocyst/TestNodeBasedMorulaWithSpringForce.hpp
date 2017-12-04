@@ -85,7 +85,7 @@ private:
         {
             unsigned node_index = cell_population.GetLocationIndexUsingCell(*cell_iter);
             std::set<unsigned> neighbour_indices = cell_population.GetNeighbouringNodeIndices(node_index);
-            if (neighbour_indices.size() < 5.0)
+            if (neighbour_indices.size() < 4.0)
             {
                 // Initialise and set the srn model on the cell
                 //            CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
@@ -133,7 +133,7 @@ public:
         EXIT_IF_PARALLEL;
         
         // Re-seed random number generator to run multiple ctest runs without recompiling
-        RandomNumberGenerator::Instance()->Reseed(57);
+        RandomNumberGenerator::Instance()->Reseed(51);
         
         /*
          * Set of methods to generate our initial cell with WildTypeMutationState and TransitCellProliferativeType, the
