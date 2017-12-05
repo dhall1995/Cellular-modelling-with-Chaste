@@ -1,3 +1,4 @@
 TestHello.hpp
 Blastocyst/TestNodeBasedMorula.hpp
 Blastocyst/TestNodeBasedMorulaWithSpringForce.hpp
+Blastocyst/TestNissenPolarity.hpp
