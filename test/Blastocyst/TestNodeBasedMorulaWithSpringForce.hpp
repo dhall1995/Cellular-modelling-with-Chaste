@@ -112,8 +112,13 @@ private:
                 double angle = atan2(cell_y_value, cell_x_value);
                 PRINT_VARIABLE(angle);
                 
+                //As in the Nissen Paper we specify trophectoderm cells which are twice the size of the other cells
                 Node<2>* p_node = cell_population.GetNode(node_index);
                 p_node->SetRadius(1.0);
+                
+                //useful for visualisation when we wish to scale cell glyphs by size
+                cell_iter->GetCellData()->SetItem("target area", 2.0);
+                
                 
                 static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel())->SetPolarityAngle(angle);
                 //            TRACE("Are we dealing with a trophectoderm cell?");
