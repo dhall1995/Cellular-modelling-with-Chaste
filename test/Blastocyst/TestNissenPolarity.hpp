@@ -59,9 +59,9 @@ class TestNodeBasedPolarity : public AbstractCellBasedWithTimingsTestSuite
         for (unsigned i=0; i<num_cells; i++)
         {
             std::vector<double> initial_conditions;
-            initial_conditions.push_back(0.0;
+            initial_conditions.push_back(0.0);
 
-            PreCompactionCellCycleModel* p_cc_model = new PreCompactionCellCycleModel();
+            NoCellCycleModel* p_cc_model = new NoCellCycleModel();
             p_cc_model->SetDimension(2);
 
             CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
@@ -95,7 +95,7 @@ class TestNodeBasedPolarity : public AbstractCellBasedWithTimingsTestSuite
         
         // Set up cells, one for each Node
         std::vector<CellPtr> cells;
-        GenerateCells(mesh.GetNumNodes(),cells);
+        GenerateTrophectodermCells(mesh.GetNumNodes(),cells);
 
         // Create cell population
         NodeBasedCellPopulation<2> cell_population(mesh, cells);
