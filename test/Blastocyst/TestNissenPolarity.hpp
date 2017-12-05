@@ -119,7 +119,7 @@ public:
 
         // Create a force law and pass it to the simulation
         MAKE_PTR(NissenForce<2>, p_force);
-        p_linear_force->SetCutOffLength(2.5);
+        p_force->SetCutOffLength(2.5);
         simulator.AddForce(p_force);
 
 
