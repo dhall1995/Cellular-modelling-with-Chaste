@@ -208,7 +208,8 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
         // subclasses it can depend on properties of each of the cells. The rest length is a property of polarity factor - two cells with a high
         // polarity factor have a lower rest length, cells with zero polarity factor have a slightly longer rest lenght, and cells with a negative
         // polarity factor has a larger and larger rest length
-        double overlap = distance_between_nodes - rest_length;
+        double trophectoderm_rest_length = std::min((rest_length/(1+polarity_angle)),this->GetCutOffLength())
+        double overlap = distance_between_nodes - trophectoderm_rest_length;
                                                     
         bool is_closer_than_rest_length = (overlap <= 0);
         double multiplication_factor = VariableSpringConstantMultiplicationFactor(nodeAGlobalIndex, nodeBGlobalIndex, rCellPopulation, is_closer_than_rest_length);
@@ -224,14 +225,14 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
             if (is_closer_than_rest_length) //overlap is negative
             {
                 //log(x+1) is undefined for x<=-1
-                assert(overlap > -rest_length_final);
-                c_vector<double, SPACE_DIM> temp = ((1.0 + polarity_factor)/2.0) *multiplication_factor*spring_stiffness * unit_difference * rest_length_final* log(1.0 + overlap/rest_length_final);
+                assert(overlap > -this->GetCutOffLength);
+                c_vector<double, SPACE_DIM> temp = multiplication_factor*spring_stiffness * unit_difference * (this->GetCutoffLength())* log(1.0 + overlap/(this->GetCutOffLength()));
                 return temp;
             }
             else
             {
                 double alpha = 5.0;
-                c_vector<double, SPACE_DIM> temp = ((1.0 + polarity_factor)/2.0) *multiplication_factor*spring_stiffness * unit_difference * overlap * exp(-alpha * overlap/rest_length_final);
+                c_vector<double, SPACE_DIM> temp = multiplication_factor*spring_stiffness * unit_difference * overlap * exp(-alpha * overlap/(this->GetCutOffLength()));
                 return temp;
             }
         }
