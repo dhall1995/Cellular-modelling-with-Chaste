@@ -50,35 +50,80 @@
 
 class TestNodeBasedPolarity : public AbstractCellBasedWithTimingsTestSuite
 {
-  public: 
+ private: 
+  void GenerateTrophectodermCells(unsigned num_cells, std::vector<CellPtr>& rCells)
+    {
+        boost::shared_ptr<AbstractCellProperty> p_state(CellPropertyRegistry::Instance()->Get<WildTypeCellMutationState>());
+        boost::shared_ptr<AbstractCellProperty> p_prolif_type(CellPropertyRegistry::Instance()->Get<TrophectodermCellProliferativeType>());
+
+        for (unsigned i=0; i<num_cells; i++)
+        {
+            std::vector<double> initial_conditions;
+            initial_conditions.push_back(0.0;
+
+            PreCompactionCellCycleModel* p_cc_model = new PreCompactionCellCycleModel();
+            p_cc_model->SetDimension(2);
+
+            CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
+            p_srn_model->SetInitialConditions(initial_conditions);
+
+            CellPtr p_cell(new Cell(p_state, p_cc_model, p_srn_model));
+            p_cell->SetCellProliferativeType(p_prolif_type);
+
+            double birth_time = 0.0;
+            p_cell->SetBirthTime(birth_time);
+
+            p_cell->GetCellData()->SetItem("target area", 1.0);
+            rCells.push_back(p_cell);
+        }
+    }
+  
+  public:
     void TestInLine()
     {
-      // Node-based simulations don't work in parallel
-    	EXIT_IF_PARALLEL;
-      
-      HoneycombMeshGenerator generator(1, 10);
-      MutableMesh<2,2>* p_generating_mesh = generator.GetMesh();
-      
-      NodesOnlyMesh<2> mesh;
-      mesh.ConstructNodesWithoutMesh(*p_generating_mesh, 2.5);
-      
-      std::vector<CellPtr> cells;
-      MAKE_PTR(TrophectodermCellProliferativeType, p_troph_type);
-      CellsGenerator<NoCellCycleModel, 2> cells_generator;
-      cells_generator.GenerateBasicRandom(cells, mesh.GetNumNodes(), p_troph_type);
-      
-      NodeBasedCellPopulation<2> cell_population(mesh, cells);
-      
-      OffLatticeSimulation<2> simulator(cell_population);
-      simulator.SetOutputDirectory("NodeBasedNissenPolarityTest");
-      simulator.SetSamplingTimestepMultiple(12);
-      simulator.SetEndTime(30.0);
-      
-      MAKE_PTR(NissenForce<2>, p_force);
-      simulator.AddForce(p_force);
-      
-      simulator.Solve();
-      
+        // Node-based simulations don't work in parallel
+    	  EXIT_IF_PARALLEL;
+        
+        // Create a simple mesh
+        unsigned num_ghosts = 0;
+        HoneycombMeshGenerator generator(1, 10, num_ghosts);
+        MutableMesh<2,2>* p_generating_mesh = generator.GetMesh();
+
+        // Convert this to a NodesOnlyMesh
+        NodesOnlyMesh<2> mesh;
+        mesh.ConstructNodesWithoutMesh(*p_generating_mesh, 2.5);
+        
+        // Set up cells, one for each Node
+        std::vector<CellPtr> cells;
+        GenerateCells(mesh.GetNumNodes(),cells);
+
+        // Create cell population
+        NodeBasedCellPopulation<2> cell_population(mesh, cells);
+        
+        // Set population to output all data to results files
+        cell_population.AddCellWriter<CellIdWriter>();
+        cell_population.AddCellWriter<CellProliferativeTypesCountWriter>();
+
+        // Set up cell-based simulation and output directory
+        OffLatticeSimulation<2> simulator(cell_population);
+        simulator.SetOutputDirectory("NodeBasedNissenPolarityTest");
+        simulator.SetOutputDivisionLocations(true);
+
+        // Set time step and end time for simulation
+        simulator.SetDt(1.0/200.0);
+        simulator.SetSamplingTimestepMultiple(200);
+        simulator.SetEndTime(30.0);
+        
+        MAKE_PTR(NissenForce<2>, p_force);
+        simulator.AddForce(p_force);
+        p_force->SetCutOffLength(2.5);
+        
+        // Add Cell Polarity modifier
+        MAKE_PTR(CellPolarityTrackingModifier<2>, p_modifier);
+        simulator.AddSimulationModifier(p_modifier);
+        
+        simulator.Solve();     
     }
 }
 
+#endif //TESTNISSENPOLARITY_HPP_
