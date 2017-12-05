@@ -208,7 +208,7 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
         // subclasses it can depend on properties of each of the cells. The rest length is a property of polarity factor - two cells with a high
         // polarity factor have a lower rest length, cells with zero polarity factor have a slightly longer rest lenght, and cells with a negative
         // polarity factor has a larger and larger rest length
-        double trophectoderm_rest_length = std::min((rest_length/(1+polarity_angle)),this->GetCutOffLength())
+        double trophectoderm_rest_length = std::min((rest_length/(1+polarity_factor)),this->GetCutOffLength())
         double overlap = distance_between_nodes - trophectoderm_rest_length;
                                                     
         bool is_closer_than_rest_length = (overlap <= 0);
