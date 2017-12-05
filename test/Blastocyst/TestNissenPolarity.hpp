@@ -101,7 +101,6 @@ class TestNodeBasedPolarity : public AbstractCellBasedWithTimingsTestSuite
         NodeBasedCellPopulation<2> cell_population(mesh, cells);
         
         // Set population to output all data to results files
-        cell_population.AddCellWriter<CellIdWriter>();
         cell_population.AddCellWriter<CellProliferativeTypesCountWriter>();
 
         // Set up cell-based simulation and output directory
