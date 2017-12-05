@@ -113,7 +113,7 @@ private:
                 PRINT_VARIABLE(angle);
                 
                 Node<2>* p_node = cell_population.GetNode(node_index);
-                p_node->SetRadius(1.5);
+                p_node->SetRadius(1.0);
                 
                 static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel())->SetPolarityAngle(angle);
                 //            TRACE("Are we dealing with a trophectoderm cell?");
