@@ -58,13 +58,12 @@ class TestNissenPolarity : public AbstractCellBasedWithTimingsTestSuite
 
         for (unsigned i=0; i<num_cells; i++)
         {
-            std::vector<double> initial_conditions;
-            initial_conditions.push_back(0.0);
-
             NoCellCycleModel* p_cc_model = new NoCellCycleModel();
             p_cc_model->SetDimension(2);
 
             CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
+            std::vector<double> initial_conditions;
+            initial_conditions.push_back(0.0);
             p_srn_model->SetInitialConditions(initial_conditions);
 
             CellPtr p_cell(new Cell(p_state, p_cc_model, p_srn_model));
