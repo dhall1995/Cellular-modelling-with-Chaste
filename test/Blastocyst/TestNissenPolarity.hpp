@@ -13,6 +13,7 @@
 
 // Cell cycle models
 #include "PreCompactionCellCycleModel.hpp"
+#include "NoCellCycleModel.hpp"
 
 // Cell properties
 #include "PolarityCellProperty.hpp"
