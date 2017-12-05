@@ -226,7 +226,7 @@ c_vector<double, SPACE_DIM> NissenGeneralisedLinearSpringForce<ELEMENT_DIM,SPACE
             {
                 //log(x+1) is undefined for x<=-1
                 assert(overlap > -this->GetCutOffLength);
-                c_vector<double, SPACE_DIM> temp = multiplication_factor*spring_stiffness * unit_difference * (this->GetCutoffLength())* log(1.0 + overlap/(this->GetCutOffLength()));
+                c_vector<double, SPACE_DIM> temp = multiplication_factor*spring_stiffness * unit_difference * (this->GetCutOffLength())* log(1.0 + overlap/(this->GetCutOffLength()));
                 return temp;
             }
             else
