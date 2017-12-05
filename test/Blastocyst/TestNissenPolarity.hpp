@@ -95,7 +95,7 @@ public:
 
         // Set up cells, one for each Node
         std::vector<CellPtr> cells;
-        GenerateCells(mesh.GetNumNodes(),cells);
+        GenerateTrophectodermCells(mesh.GetNumNodes(),cells);
 
         // Create cell population
         NodeBasedCellPopulation<2> cell_population(mesh, cells);
