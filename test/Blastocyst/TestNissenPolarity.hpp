@@ -48,7 +48,7 @@
 #include "CellProliferativeTypesCountWriter.hpp"
 #include "Debug.hpp"
 
-class TestNodeBasedPolarity : public AbstractCellBasedWithTimingsTestSuite
+class TestNissenPolarity : public AbstractCellBasedWithTimingsTestSuite
 {
  private: 
   void GenerateTrophectodermCells(unsigned num_cells, std::vector<CellPtr>& rCells)
