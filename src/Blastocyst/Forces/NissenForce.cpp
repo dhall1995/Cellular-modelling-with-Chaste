@@ -228,14 +228,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
        //CASE 2-1: Cell B is Undertermined ICM
        if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
         {
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
             
             double s = mS_ICM_ICM;
             
@@ -263,14 +255,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
        //CASE 2-2: Cell B is Epiblast
        else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
        {
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
+
             
             double s = mS_EPI_ICM;
           
@@ -279,16 +264,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
         }
        //CASE 2-3: Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
-        {
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
+        {        
             double s = mS_PrE_ICM;
 
             force = potential_gradient*s + potential_gradient_repulsion;
@@ -322,16 +298,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
     {
        //CASE 3-1 Cell B is Epiblast
        if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
-       {
-          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
+       {    
             double s = mS_EPI_EPI;
             
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
@@ -357,16 +324,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
        }
        //CASE 3-2 Cell B is Undetermined ICM
        else if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
-       {
-          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
+       {        
             double s = mS_EPI_ICM;
     
             force = potential_gradient*s + potential_gradient_repulsion;
@@ -375,15 +333,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
        //CASE 3-3 Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
        {
-          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
             double s = mS_PrE_EPI;
          
             force = potential_gradient*s + potential_gradient_repulsion;
@@ -416,16 +365,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
     {
        //CASE 4-1 Cell B is Undetermined ICM
        if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
-       {
-          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
+       {           
             double s = mS_PrE_ICM;
           
             force = potential_gradient*s + potential_gradient_repulsion;
@@ -434,15 +374,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
        //CASE 4-2 Cell B is Epiblast
        else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
        {
-          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
             double s = mS_PrE_EPI;
             
             force = potential_gradient*s + potential_gradient_repulsion;
@@ -451,15 +382,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
        //CASE 4-3 Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
        {
-          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
             double s = mS_PrE_PrE;
             
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
