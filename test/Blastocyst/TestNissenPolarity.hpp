@@ -58,6 +58,7 @@ private:
 
         for (unsigned i=0; i<num_cells; i++)
         {
+            //In the initial conditions for polarity we have all polarity angles as zero
             std::vector<double> initial_conditions;
             initial_conditions.push_back(0.0);
 
