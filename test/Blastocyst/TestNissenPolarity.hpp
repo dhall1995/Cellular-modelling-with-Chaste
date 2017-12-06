@@ -108,9 +108,9 @@ public:
         simulator.SetOutputDivisionLocations(true);
 
         // Set time step and end time for simulation
-        simulator.SetDt(1.0/200.0);
+        simulator.SetDt(1.0/2000.0);
         simulator.SetSamplingTimestepMultiple(200);
-        simulator.SetEndTime(200.0);
+        simulator.SetEndTime(100.0);
 
         // Add DeltaNotch modifier
         MAKE_PTR(CellPolarityTrackingModifier<2>, p_modifier);
