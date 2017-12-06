@@ -175,7 +175,7 @@ public:
 
     	// Create a nodes only mesh, construct the mesh with a interaction distance of 5 (as specified in Nissen)
     	NodesOnlyMesh<2> mesh;
-    	mesh.ConstructNodesWithoutMesh(*p_generating_mesh,2.5);
+    	mesh.ConstructNodesWithoutMesh(*p_generating_mesh,6.0);
 
         /*
          * Joining our cell population to our mesh, Instantiating a simulation and setting the time-steps, sampling steps,
