@@ -109,14 +109,15 @@ public:
         // Set time step and end time for simulation
         simulator.SetDt(1.0/200.0);
         simulator.SetSamplingTimestepMultiple(200);
-        simulator.SetEndTime(1000.0);
+        simulator.SetEndTime(200.0);
 
         // Add DeltaNotch modifier
         MAKE_PTR(CellPolarityTrackingModifier<2>, p_modifier);
         simulator.AddSimulationModifier(p_modifier);
 
         // Create a force law and pass it to the simulation
-        MAKE_PTR(NissenForce<2>, p_force);
+        //MAKE_PTR(NissenForce<2>, p_force);
+        MAKE_PTR(NissenGeneralisedLinearSpringForce<2>, p_force);
         p_force->SetCutOffLength(2.5);
         simulator.AddForce(p_force);
 
