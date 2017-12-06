@@ -81,7 +81,7 @@ private:
 
 public:
     
-    void TestNissenPolarity() throw (Exception)
+    void TestNissenPolarityInLine() throw (Exception)
     {
 
         // Create a simple mesh
