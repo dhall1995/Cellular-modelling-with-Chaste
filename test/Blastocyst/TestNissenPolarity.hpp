@@ -101,9 +101,6 @@ public:
         // Create cell population
         NodeBasedCellPopulation<2> cell_population(mesh, cells);
 
-        // Set population to output all data to results files
-        cell_population.AddCellWriter<CellProliferativeTypesCountWriter>();
-
         // Set up cell-based simulation and output directory
         OffLatticeSimulation<2> simulator(cell_population);
         simulator.SetOutputDirectory("NodeBasedNissenPolarity");
