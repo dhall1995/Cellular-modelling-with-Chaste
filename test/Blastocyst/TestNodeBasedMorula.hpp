@@ -88,9 +88,6 @@ private:
             std::set<unsigned> neighbour_indices = cell_population.GetNeighbouringNodeIndices(node_index);
             if (neighbour_indices.size() < 5.0)
             {
-                // Initialise and set the srn model on the cell
-    //            CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
-
                 // Add cell properties for labels, and polarity
                 cell_iter->AddCellProperty(p_pol);
                 cell_iter->AddCellProperty(p_label);
@@ -115,6 +112,8 @@ private:
                 //We measure angles from the vertical so we want (pi/2 - theta)
 		double angle = atan2(cell_y_value, cell_x_value);
 		PRINT_VARIABLE(angle);
+		
+		cell_iter->SetCellProperty("target area", 2.0);
 
                 static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel())->SetPolarityAngle(angle);
     //            TRACE("Are we dealing with a trophectoderm cell?");
