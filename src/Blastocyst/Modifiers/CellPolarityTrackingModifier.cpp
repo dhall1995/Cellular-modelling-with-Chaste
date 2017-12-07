@@ -60,23 +60,23 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
-        //Test if the cell is trophectoderm
+        //For our cell get the srn model
+	CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel());
+	
+	// NOTE: Here we assert that the cell does actually have the right SRN model
+	assert(p_srn_model_A != nullptr);
+	//Use the srn model to get the polarity angle for 
+        double this_alpha = p_srn_model_A->GetPolarityAngle();
+	cell_iter->GetCellData()->SetItem("Polarity Angle", this_alpha);
+	    
+	//Test if the cell is trophectoderm
 	if (cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
         {
 	    //If the cell is trophectoderm then initialise the sum of neighbouring polarities to update the current polarity
 	    double sum_sin_angles = 0.0;
 	    //Get cell index for the cell in question	
 	    unsigned cell_A_index = rCellPopulation.GetLocationIndexUsingCell(*cell_iter);
-	    //For our trophectoderm cell get the srn model
-	    CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel());
-	
-	    // NOTE: Here we assert that the cell does actually have the right SRN model
-	    assert(p_srn_model_A != nullptr);
-	    //Use the srn model to get the polarity angle for 
-            double this_alpha = p_srn_model_A->GetPolarityAngle();
-	    cell_iter->GetCellData()->SetItem("Polarity Angle", this_alpha);
-
-	    
+		
 	    //Iterate through the cells again to first check if a taget cell is close and then if it is trophectoderm  
 	    for (typename AbstractCellPopulation<DIM>::Iterator cell_B_iter = rCellPopulation.Begin();
 		 cell_B_iter != rCellPopulation.End(); ++cell_B_iter)
