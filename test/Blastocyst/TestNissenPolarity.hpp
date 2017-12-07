@@ -88,7 +88,7 @@ public:
 
         // Create a simple mesh
         unsigned num_ghosts = 0;
-        HoneycombMeshGenerator generator(1, 20, num_ghosts);
+        HoneycombMeshGenerator generator(1, 5, num_ghosts);
         MutableMesh<2,2>* p_generating_mesh = generator.GetMesh();
 
         // Convert this to a NodesOnlyMesh
