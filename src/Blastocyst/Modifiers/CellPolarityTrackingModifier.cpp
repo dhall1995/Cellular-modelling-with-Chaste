@@ -106,7 +106,7 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
 	    			  assert(p_srn_model_B != nullptr);
 	    			  //Use the srn model to get the polarity angle for cell B
             			  double alpha_B_cell = p_srn_model_B->GetPolarityAngle();
-				  cell__B_iter->GetCellData()->SetItem("Polarity Angle", alpha_B_cell);
+				  cell_B_iter->GetCellData()->SetItem("Polarity Angle", alpha_B_cell);
 				  //Work out the correct polarity force
                         	  sum_sin_angles += sin(this_alpha - alpha_B_cell); 
 			    }
