@@ -12,9 +12,9 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 NissenForce<ELEMENT_DIM,SPACE_DIM>::NissenForce()
    : AbstractTwoBodyInteractionForce<ELEMENT_DIM,SPACE_DIM>(),
      mS_ICM_ICM(0.6), // ICM-ICM interaction strength - NOTE: Before TE specification all cells are considered ICM-like in their adhesion properties
-     mS_TE_ICM(0.5),  // TE-ICM interaction strength
-     mS_TE_EPI(0.5),  // TE-EPI interaction strength
-     mS_TE_PrE(0.5),  // TE-PrE interaction strength
+     mS_TE_ICM(0.6),  // TE-ICM interaction strength
+     mS_TE_EPI(0.6),  // TE-EPI interaction strength
+     mS_TE_PrE(0.6),  // TE-PrE interaction strength
      mS_TE_TE(-1.4),  // TE-TE interaction strength - NOTE: This is just a prefactor and polarity effects will be included
      mS_PrE_PrE(0.4), // PrE-PrE interaction strength
      mS_PrE_EPI(0.4), // Pre-EPI interaction strength
@@ -101,7 +101,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
-                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
                 {
                     return force;
                 }
@@ -113,6 +113,9 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             * CELL 'BETWEEN' THEM WITHIN THE INTERACTION DISTANCE I.E. FOR CELLS A AND B THERE DOES NOT EXIST A CELL C 
             * SUCH THAT (DISTANCE_FROM_A_TO_C)
             */
+          
+            potential_gradient = exp(-d/10.0)*unit_vector_from_A_to_B/5.0;
+            potential_gradient_repulsion = -exp(-d/2.0)*unit_vector_from_A_to_B;
             
             // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
             CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(p_cell_A->GetSrnModel());
