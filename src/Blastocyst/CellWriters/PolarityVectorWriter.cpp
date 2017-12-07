@@ -64,7 +64,7 @@ c_vector<double, SPACE_DIM> PolarityVectorWriter<ELEMENT_DIM, SPACE_DIM>::GetVec
     if(pCell->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
     {
         orientation[0] = cos(angle_A);
-        orientation[1] = sing(angle_A);
+        orientation[1] = sin(angle_A);
     }
     else
     {
