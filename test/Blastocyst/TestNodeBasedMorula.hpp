@@ -96,7 +96,7 @@ private:
 
                 // Get cell location to work out polarity vector
                 const c_vector<double, 2> cell_location = cell_population.GetLocationOfCellCentre(*cell_iter);
-                c_vector<double,2> unit_vector_from_centroid_to_cell = morula_centre - cell_location;
+                c_vector<double,2> unit_vector_from_centroid_to_cell = - morula_centre + cell_location;
 
                 // Norm of the distance from the centroid to the cell
                 double d = sqrt(unit_vector_from_centroid_to_cell[0]*unit_vector_from_centroid_to_cell[0] + unit_vector_from_centroid_to_cell[1]*unit_vector_from_centroid_to_cell[1]);
