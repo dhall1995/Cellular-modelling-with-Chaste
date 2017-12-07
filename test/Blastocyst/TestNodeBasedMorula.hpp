@@ -186,7 +186,7 @@ public:
     	NodeBasedCellPopulation<2> cell_population(mesh, rCells);
 	
 	//Add a writer for cell polarity
-	population.AddCellWriter<PolarityVectorWriter>();
+	cell_population.AddCellWriter<PolarityVectorWriter>();
 	
 	//Initialise the Nissen Division Rules and apply to the cell population
 	boost::shared_ptr<AbstractCentreBasedDivisionRule<2,2> > Nissen_Division_Rule(new NissenBasedDivisionRule<2,2>());
