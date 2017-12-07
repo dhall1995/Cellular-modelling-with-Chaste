@@ -39,26 +39,23 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
     //TRACE("Now attempting to update cell data within CellPolarityTrackingModifier");
     // Make sure the cell population is updated
     rCellPopulation.Update();
-
-    // First recover each cell's polarity angle from the ODEs and store in CellData. Keep the polarity angle as a variable outside the scope of the for loop
-    double this_alpha = 0.0;
     
-    for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();
-         cell_iter != rCellPopulation.End();
-         ++cell_iter)
-    {
-	CellPolaritySrnModel* p_srn_model = static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel());
+    //for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();
+         //cell_iter != rCellPopulation.End();
+         //++cell_iter)
+    //{
+	//CellPolaritySrnModel* p_srn_model = static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel());
 
 	// NOTE: Here we assert that the cell does actually have the right SRN model
-	assert(p_srn_model != nullptr);
+	//assert(p_srn_model != nullptr);
 
-        this_alpha = p_srn_model->GetPolarityAngle();
+        //this_alpha = p_srn_model->GetPolarityAngle();
 
         // Note that the state variables must be in the same order as listed in DeltaNotchOdeSystem
-        cell_iter->GetCellData()->SetItem("Polarity Angle", this_alpha);
-    }
+        //cell_iter->GetCellData()->SetItem("Polarity Angle", this_alpha);
+    //}
 
-    // Next iterate over the population to compute and store each cell's neighbouring Delta concentration in CellData
+    //Iterate over the population to compute and store each cell's neighbouring polarity angle in the srn model
     for (typename AbstractCellPopulation<DIM>::Iterator cell_iter = rCellPopulation.Begin();
          cell_iter != rCellPopulation.End();
          ++cell_iter)
@@ -70,6 +67,14 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
 	    double sum_sin_angles = 0.0;
 	    //Get cell index for the cell in question	
 	    unsigned cell_A_index = rCellPopulation.GetLocationIndexUsingCell(*cell_iter);
+	    //For our trophectoderm cell get the srn model
+	    CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel());
+	
+	    // NOTE: Here we assert that the cell does actually have the right SRN model
+	    assert(p_srn_model_A != nullptr);
+	    //Use the srn model to get the polarity angle for 
+            double this_alpha = p_srn_model_A->GetPolarityAngle();
+
 	    
 	    //Iterate through the cells again to first check if a taget cell is close and then if it is trophectoderm  
 	    for (typename AbstractCellPopulation<DIM>::Iterator cell_B_iter = rCellPopulation.Begin();
@@ -95,8 +100,12 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
 		    {
 			    if(cell_B_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
 			    {
-				  double alpha_B_cell = cell_B_iter->GetCellData()->GetItem("Polarity Angle");
-				  double this_alpha = cell_B_iter->GetCellData()->GetItem("Polarity Angle");
+				  CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(cell_B_iter->GetSrnModel());
+				  // NOTE: Here we assert that the cell does actually have the right SRN model
+	    			  assert(p_srn_model_B != nullptr);
+	    			  //Use the srn model to get the polarity angle for cell B
+            			  double alpha_B_cell = p_srn_model_B->GetPolarityAngle();
+				  //Work out the correct polarity force
                         	  sum_sin_angles += sin(this_alpha - alpha_B_cell); 
 			    }
 		    }
