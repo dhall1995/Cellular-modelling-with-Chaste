@@ -97,7 +97,7 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
     		    double d = norm_2(vector_from_A_to_B);
 		    if (d < 1.25)
 		    {
-			    if(cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
+			    if(cell_B_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
 			    {
 				  double alpha_B_cell = cell_B_iter->GetCellData()->GetItem("Polarity Angle");
                         	  sum_sin_angles += sin(this_alpha - alpha_B_cell); 
