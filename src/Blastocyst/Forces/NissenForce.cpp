@@ -101,7 +101,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
                 {
                     return force;
                 }
@@ -113,9 +113,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             * CELL 'BETWEEN' THEM WITHIN THE INTERACTION DISTANCE I.E. FOR CELLS A AND B THERE DOES NOT EXIST A CELL C 
             * SUCH THAT (DISTANCE_FROM_A_TO_C)
             */
-          
-            potential_gradient = exp(-d/10.0)*unit_vector_from_A_to_B/5.0;
-            potential_gradient_repulsion = -exp(-d/2.0)*unit_vector_from_A_to_B;
             
             // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
             CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(p_cell_A->GetSrnModel());
@@ -126,7 +123,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
          
             double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
           
-            double polarity_factor = sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
+            double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
           
             double s = mS_TE_TE;
             
