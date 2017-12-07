@@ -47,14 +47,10 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
-//		TRACE("Now attempting to get a cell's polarity angle within UpdateCellData within CellPolarityTrackingModifier");
-//		bool variable = cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>();
-//		TRACE("Are we working with a trophectoderm cell??");
-//		PRINT_VARIABLE(variable);
-		CellPolaritySrnModel* p_srn_model = static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel());
+	CellPolaritySrnModel* p_srn_model = static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel());
 
-		// NOTE: Here we assert that the cell does actually have the right SRN model
-		assert(p_srn_model != nullptr);
+	// NOTE: Here we assert that the cell does actually have the right SRN model
+	assert(p_srn_model != nullptr);
 
         this_alpha = p_srn_model->GetPolarityAngle();
 
@@ -100,6 +96,7 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
 			    if(cell_B_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
 			    {
 				  double alpha_B_cell = cell_B_iter->GetCellData()->GetItem("Polarity Angle");
+				  double this_alpha = cell_B_iter->GetCellData()->GetItem("Polarity Angle");
                         	  sum_sin_angles += sin(this_alpha - alpha_B_cell); 
 			    }
 		    }
