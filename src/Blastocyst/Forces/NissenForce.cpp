@@ -101,14 +101,12 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
                 {
                     return force;
                 }
             }
-          
-            potential_gradient = exp(-d/10.0)*unit_vector_from_A_to_B/5.0;
-            potential_gradient_repulsion = -exp(-d/2.0)*unit_vector_from_A_to_B;
+
             /*
             * NOTE WE WANT POLAR TROPHECTODERM INTERACTIONS TO ONLY HAPPEN BETWEEN NEAREST NEIGHBOUR CELLS. 
             * IN ORDER TO AVOID 'BUNCHING' WE SAY THAT TWO TROPHECTODERM CELLS HAVE A POLAR INTERACTION IF THERE IS NO
@@ -125,7 +123,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
          
             double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
           
-            double polarity_factor = (cos(angle_A)*sin(cell_difference_angle) - sin(angle_A)*cos(cell_difference_angle))*
+            double polarity_factor = -(cos(angle_A)*sin(cell_difference_angle) - sin(angle_A)*cos(cell_difference_angle))*
                                      (sin(angle_B)*cos(cell_difference_angle) - cos(angle_B)*cos(cell_difference_angle));
           
             double s = mS_TE_TE;
