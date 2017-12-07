@@ -74,6 +74,7 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
 	    assert(p_srn_model_A != nullptr);
 	    //Use the srn model to get the polarity angle for 
             double this_alpha = p_srn_model_A->GetPolarityAngle();
+	    cell_iter->GetCellData()->SetItem("Polarity Angle", this_alpha);
 
 	    
 	    //Iterate through the cells again to first check if a taget cell is close and then if it is trophectoderm  
@@ -105,6 +106,7 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
 	    			  assert(p_srn_model_B != nullptr);
 	    			  //Use the srn model to get the polarity angle for cell B
             			  double alpha_B_cell = p_srn_model_B->GetPolarityAngle();
+				  cell__B_iter->GetCellData()->SetItem("Polarity Angle", alpha_B_cell);
 				  //Work out the correct polarity force
                         	  sum_sin_angles += sin(this_alpha - alpha_B_cell); 
 			    }
