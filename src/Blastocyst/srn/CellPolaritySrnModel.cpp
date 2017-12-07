@@ -67,16 +67,6 @@ void CellPolaritySrnModel::Initialise()
 //    TRACE("Now attempting CellPolaritySrnModel::initialise within CellPolaritySrnModel");
 	
 	DHALLAbstractOdeSrnModel::Initialise(new CellPolarityOdeSystem);
-	
-//	TRACE("Does the Ode System exist in this cell? 1 for true, 0 for false")
-//	if (mpOdeSystem != NULL)
-//	{
-//		TRACE("1");
-//	}
-//	else
-//	{
-//		TRACE("0");
-//	}
 }
 
 void CellPolaritySrnModel::UpdatedVpdAlpha()
