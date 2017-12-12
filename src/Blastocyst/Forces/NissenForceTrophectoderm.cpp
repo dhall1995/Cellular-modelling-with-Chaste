@@ -144,7 +144,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             
           
           
-            force = 5.0*potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+            force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
             return force;
           
              
