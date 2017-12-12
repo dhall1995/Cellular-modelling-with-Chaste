@@ -79,9 +79,6 @@ private:
         boost::shared_ptr<AbstractCellProperty> p_label = p_registry->Get<CellLabel>();
         boost::shared_ptr<AbstractCellProperty> p_pol = p_registry->Get<PolarityCellProperty>();
         boost::shared_ptr<AbstractCellProperty> p_troph = p_registry->Get<TrophectodermCellProliferativeType>();
-	
-        // Reset all polarity angles to zero
-//        cell_population.SetDataOnAllCells("Polarity Angle", 0.0);
 
         for (typename AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
              cell_iter != cell_population.End();
