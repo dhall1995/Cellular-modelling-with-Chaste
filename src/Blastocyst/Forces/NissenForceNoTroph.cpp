@@ -76,143 +76,8 @@ c_vector<double, SPACE_DIM> NissenForceNoTroph<ELEMENT_DIM,SPACE_DIM>::Calculate
     c_vector<double, SPACE_DIM> force;
     c_vector<double, SPACE_DIM> zeroes;
     
-    /*
-     * FIRST WE DEAL WITH TROPHECTODERM INTERACTIONS
-     *  - WE TEST WHETHER BOTH CELLS ARE TROPHECTODERM AND THEN IF THEY ARE POLAR. IF THEY AREN'T THEN WE ASSUME
-     *    THAT THE INTERACTIONS TAKE THE FORM OF TE-ICM INTERACTIONS FOR THE TIME BEING. AT A LATER TIME I WILL NEED TO IMPLEMENT
-     *    TE-PRE INTERACTIONS WHICH WILL INVOLVE USING A DIFFERENT ADHESION FACTOR
-     *  - IF BOTH CELLS ARE TROPHECTODERM THEN WE TEST WHETHER BOTH CELLS ARE POLAR. IF BY SOME CHANCE THEY AREN'T BOTH POLAR THEN
-     *    INTERACTIONS ARE ASSUMED TO BE MODELLED ON ICM-ICM INTERACTIONS
-     *  - IF BOTH CELLS ARE POLAR THEN WE PROCEED TO WORK OUT THE POLARITY VECTORS AND THE ASSOCIATED ADHESION FACTOR
-     *  - SANITY CHECKS ARE INCLUDED TO MAKE SURE THAT THE POLARITY VECTORS ARE NON-ZERO AND UNIT VECTORS
-     */
-    
-    // CASE 1: Cell A is trophectoderm
-    if(p_cell_A->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
-    {
-       //CASE 1-1: Cell B is also trophectoderm
-       if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
-       {
-          // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
-            // No cells should ever interact beyond the cutoff length
-            if (this->mUseCutOffLength)
-            {
-                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-
-            /*
-            * NOTE WE WANT POLAR TROPHECTODERM INTERACTIONS TO ONLY HAPPEN BETWEEN NEAREST NEIGHBOUR CELLS. 
-            * IN ORDER TO AVOID 'BUNCHING' WE SAY THAT TWO TROPHECTODERM CELLS HAVE A POLAR INTERACTION IF THERE IS NO
-            * CELL 'BETWEEN' THEM WITHIN THE INTERACTION DISTANCE I.E. FOR CELLS A AND B THERE DOES NOT EXIST A CELL C 
-            * SUCH THAT (DISTANCE_FROM_A_TO_C)
-            */
-            
-            // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
-            CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(p_cell_A->GetSrnModel());
-            double angle_A = p_srn_model_A->GetPolarityAngle();
-            CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
-            double angle_B = p_srn_model_B->GetPolarityAngle();
-            
-         
-            double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
-          
-            double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
-          
-            double s = mS_TE_TE;
-            
-            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            {
-               AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>* p_static_cast_cell_population = static_cast<AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>*>(&rCellPopulation);
-
-               std::pair<CellPtr,CellPtr> cell_pair = p_static_cast_cell_population->CreateCellPair(p_cell_A, p_cell_B);
-
-               if (p_static_cast_cell_population->IsMarkedSpring(cell_pair))
-               {
-                  // Spring rest length increases from a small value to the normal rest length over 1 hour
-                  if(polarity_factor < 0.0)
-                  {
-                     s = -5.0 + (mS_TE_TE + 5.0) * ageA/mGrowthDuration;
-                  }
-               }
-               if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
-               {
-                  // This spring is about to go out of scope
-                  p_static_cast_cell_population->UnmarkSpring(cell_pair);
-               }
-            }
-            
-          
-          
-            force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
-            return force;
-          
-             
-       }
-       //CASE 1-2: Cell B is epiblast
-       else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
-       {
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-          
-            double s = mS_TE_EPI;
-          
-            force = potential_gradient*s + potential_gradient_repulsion;
-            return force;
- 
-       }
-       //CASE 1-3: Cell B is Undetermined ICM
-       else if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
-       {
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
-            double s = mS_TE_ICM;
-          
-            force = potential_gradient*s + potential_gradient_repulsion;
-            return force;
-
-       }
-       //CASE 1-4: Cell B is Primitive Endoderm
-       else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
-       {
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
-            double s = mS_TE_PrE;
-     
-            force = potential_gradient*s + potential_gradient_repulsion;
-            return force;
-
-       }
-       else
-       {
-          return zeroes;
-       }
-    }
-   
    /*
-    * Now we deal with interactions of other cells. For the time being cells have been considered in ordered pairs for clarity.
+    * We deal with interactions of other cells. For the time being cells have been considered in ordered pairs for clarity.
     * Individual attraction factors should be set at the top of the document. Listing cell pairs allows easy and precise 
     * manipulation of attractions between cell lineages. 
     *
@@ -266,24 +131,6 @@ c_vector<double, SPACE_DIM> NissenForceNoTroph<ELEMENT_DIM,SPACE_DIM>::Calculate
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
         }
-       //CASE 2-4: Cell B is Trophectoderm
-       else if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
-        {
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
-            double s = mS_TE_ICM;
-
-            force = potential_gradient*s + potential_gradient_repulsion;
-            return force;
-          
-        }
        else
        {
           return zeroes;
@@ -331,23 +178,6 @@ c_vector<double, SPACE_DIM> NissenForceNoTroph<ELEMENT_DIM,SPACE_DIM>::Calculate
        {
             double s = mS_PrE_EPI;
          
-            force = potential_gradient*s + potential_gradient_repulsion;
-            return force;
-       }
-       //CASE 3-4 Cell B is Trophectoderm
-       else if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
-       {
-          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
-            double s = mS_TE_EPI;
-          
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
        }
@@ -400,24 +230,6 @@ c_vector<double, SPACE_DIM> NissenForceNoTroph<ELEMENT_DIM,SPACE_DIM>::Calculate
           
             force = potential_gradient*s + potential_gradient_repulsion;
             return force;
-       }
-       //CASE 4-4 Cell B is Trophectoderm
-       else if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
-       {
-          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-            
-            double s = mS_TE_PrE;
-          
-            force = potential_gradient*s + potential_gradient_repulsion;
-            return force;
-
        }
        else
        {
