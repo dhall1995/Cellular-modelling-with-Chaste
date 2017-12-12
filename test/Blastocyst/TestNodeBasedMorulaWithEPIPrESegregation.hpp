@@ -81,7 +81,8 @@ private:
              cell_iter != cell_population.End();
              ++cell_iter)
         {
-            std::set<unsigned> neighbour_indices = cell_population.GetNeighbouringNodeIndices(node_index);
+            unsigned node_index = cell_population.GetLocationIndexUsingCell(*cell_iter);
+	    std::set<unsigned> neighbour_indices = cell_population.GetNeighbouringNodeIndices(node_index);
             double random = RandomNumberGenerator::Instance()->ranf();
             if (random < 0.5)
             {
