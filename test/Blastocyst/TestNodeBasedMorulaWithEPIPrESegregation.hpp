@@ -167,7 +167,7 @@ public:
 
     	// Instantiate the simulation, saving results in NodeBasedMorula, simulating for SIMULATOR_END_TIME hours
     	OffLatticeSimulation<2> simulation(cell_population);
-    	simulation.SetOutputDirectory("NodeBasedMorula");
+    	simulation.SetOutputDirectory("NodeBasedMorulaWithEPIPrESegregation");
     	simulation.SetSamplingTimestepMultiple(24);
       double dt = 0.5*simulation.GetDt();
       simulation.SetDt(dt);
