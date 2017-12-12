@@ -95,6 +95,7 @@ private:
             {
                 cell_iter->AddCellProperty(p_pre_label);
                 cell_iter->SetCellProliferativeType(p_pre);
+		cell_iter->GetCellData()->SetItem("target area", 1.0);
             }
         }
     }
