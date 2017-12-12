@@ -48,7 +48,7 @@
 #include "PolarityVectorWriter.hpp"
 #include "Debug.hpp"
 
-class TestNodeBasedMorula : public AbstractCellBasedWithTimingsTestSuite
+class TestNodeBasedMorulaWithEPIPrESegregation : public AbstractCellBasedWithTimingsTestSuite
 {
 private:
     double SIMULATOR_END_TIME = 180.0;
@@ -202,7 +202,6 @@ public:
       // Make trophectoderm specification and add a writer for cell proliferative types
       LabelEpiblastPrECells(cell_population);
       cell_population.AddCellPopulationCountWriter<CellProliferativeTypesCountWriter>();
-
         
       // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
       simulation.SetEndTime(SIMULATOR_END_TIME + 40.0);
