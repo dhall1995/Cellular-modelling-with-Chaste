@@ -28,7 +28,9 @@
 #include "HoneycombMeshGenerator.hpp"
 
 // Force models
-#include "NissenForce.hpp"
+//#include "NissenForce.hpp"
+#include "NissenForceTrophectoderm.hpp"
+#include "NissenForceNoTroph.hpp"
 #include "NissenNoiseForce.hpp"
 
 // Division Rules
@@ -200,8 +202,8 @@ public:
         simulation.SetDt(dt);
     	simulation.SetEndTime(SIMULATOR_END_TIME);
 
-    	// Make pointer to the NissenForce and add it to the simulation
-    	MAKE_PTR(NissenForce<2>, p_force);
+    	// Make pointer to the NissenForceNoTroph and add it to the simulation
+    	MAKE_PTR(NissenForceNoTroph<2>, p_force); 
 	p_force->SetCutOffLength(2.5);
 
         simulation.AddForce(p_force);
@@ -229,10 +231,12 @@ public:
         LabelTrophectodermCells(cell_population);
         cell_population.AddCellPopulationCountWriter<CellProliferativeTypesCountWriter>();
 
-        // Make sure to add the simulation modifier for tracking cell polarity
-//        MAKE_PTR(CellPolarityTrackingModifier<2>, p_pol_tracking_modifier);
-//        simulation.AddSimulationModifier(p_pol_tracking_modifier);
-        
+        // Make pointer to the NissenForceTrophectoderm and add it to the simulation
+    	MAKE_PTR(NissenForceTrophectoderm<2>, p_force_troph); 
+	p_force_troph->SetCutOffLength(2.5);
+
+        simulation.AddForce(p_force);
+	
         // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
         simulation.SetEndTime(SIMULATOR_END_TIME + 40.0);
         simulation.Solve();
