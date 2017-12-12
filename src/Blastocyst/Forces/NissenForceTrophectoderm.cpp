@@ -71,7 +71,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
     c_vector<double, SPACE_DIM> potential_gradient_repulsion;
     potential_gradient = exp(-d/5.0)*unit_vector_from_A_to_B/5.0;
     potential_gradient_repulsion = -exp(-d)*unit_vector_from_A_to_B;
-    c_vector<double, SPACE_DIM> force;
     c_vector<double, SPACE_DIM> zeroes;
     
     /*
@@ -88,10 +87,29 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
     // CASE 1: Cell A is trophectoderm
     if(p_cell_A->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
     {
+       //Initialise vectors to hold each focus of trophectoderm A
+       c_vector<double, SPACE_DIM> p_cell_A_first_focus;
+       c_vector<double, SPACE_DIM> p_cell_A_second_focus;
+       
+       // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
+       CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(p_cell_A->GetSrnModel());
+       double angle_A = p_srn_model_A->GetPolarityAngle();
+       //initialise the perpendicular vector to the polarity of the trophectoderm cell A to define the axis of our pseudo-elipse
+       c_vector<double, SPACE_DIM> perp_polarity_vector_A;
+       perp_polarity_vector_A[0] = sin(angle_A);
+       perp_polarity_vector_A[1] = -cos(angle_A);
+          
+       p_cell_A_first_focus = r_node_A_location + 0.5*perp_polarity_vector_A;
+       p_cell_A_second_focus = r_node_A_location -0.5*perp_polarity_vector_A;
+       
        //CASE 1-1: Cell B is also trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
-          // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
+            //First thing we want to do is get the polarity angle for the trophectoderm cell B
+            CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
+            double angle_B = p_srn_model_B->GetPolarityAngle();
+          
+            // For POLAR throphectoderm cells we restrict the absolute distance of interaction to 2.5 cell radii (half of for normal cells)
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
@@ -100,29 +118,18 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                     return force;
                 }
             }
-
-            /*
-            * NOTE WE WANT POLAR TROPHECTODERM INTERACTIONS TO ONLY HAPPEN BETWEEN NEAREST NEIGHBOUR CELLS. 
-            * IN ORDER TO AVOID 'BUNCHING' WE SAY THAT TWO TROPHECTODERM CELLS HAVE A POLAR INTERACTION IF THERE IS NO
-            * CELL 'BETWEEN' THEM WITHIN THE INTERACTION DISTANCE I.E. FOR CELLS A AND B THERE DOES NOT EXIST A CELL C 
-            * SUCH THAT (DISTANCE_FROM_A_TO_C)
-            */
-            
-            // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
-            CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(p_cell_A->GetSrnModel());
-            double angle_A = p_srn_model_A->GetPolarityAngle();
-            CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
-            double angle_B = p_srn_model_B->GetPolarityAngle();
-            
-         
-            double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
-          
-            double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
           
             double s = mS_TE_TE;
             
+            //if each of the cells is young then we treat them as spherical with radius 2.0 whilst they grow
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
+               double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
+               double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
+               
+               potential_gradient = exp(-d/10.0)*unit_vector_from_A_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d/2.0)*unit_vector_from_A_to_B;
+               
                AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>* p_static_cast_cell_population = static_cast<AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>*>(&rCellPopulation);
 
                std::pair<CellPtr,CellPtr> cell_pair = p_static_cast_cell_population->CreateCellPair(p_cell_A, p_cell_B);
@@ -140,12 +147,104 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                   // This spring is about to go out of scope
                   p_static_cast_cell_population->UnmarkSpring(cell_pair);
                }
+               force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+               return force;
+            }
+
+            //otherwise we retrieve the focii of cell B
+            c_vector<double, SPACE_DIM> p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> p_cell_B_second_focus;
+          
+            //initialise the perpendicular vector to the polarity of the trophectoderm cell B
+            c_vector<double, SPACE_DIM> perp_polarity_vector_B;
+            perp_polarity_vector_B[0] = sin(angle_B);
+            perp_polarity_vector_B[1] = -cos(angle_B);
+            
+            //Define the two focii for cellB
+            p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
+            p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
+       
+            //Initialise the distances between the focii
+            double d_A1_B1;
+            double d_A2_B1;
+            double d_A1_B2;
+            double d_A2_B2;
+          
+            //Initialise the forces between each focus
+            c_vector<double, SPACE_DIM> force_first_A_focus_first_B_focus;
+            c_vector<double, SPACE_DIM> force_second_A_focus_second_B_focus;
+            c_vector<double, SPACE_DIM> force_first_A_focus_second_B_focus;
+            c_vector<double, SPACE_DIM> force_second_A_focus_first_B_focus;
+          
+            //Set up vectors between the various focii
+            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B1 = p_cell_A_first_focus - p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B1 = p_cell_A_second_focus - p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B2 = p_cell_A_second_focus - p_cell_B_second_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B2 = p_cell_A_first_focus - p_cell_B_second_focus;
+          
+            //set the distances between the various focii
+            d_A1_B1 = norm_2(unit_vector_from_A1_to_B1);
+            d_A2_B1 = norm_2(unit_vector_from_A2_to_B1);
+            d_A1_B2 = norm_2(unit_vector_from_A1_to_B2);
+            d_A2_B2 = norm_2(unit_vector_from_A2_to_B2);
+          
+            //normalise our vectors between the focii
+            unit_vector_from_A1_to_B1 /= d_A1_B1;
+            unit_vector_from_A2_to_B1 /= d_A2_B1;
+            unit_vector_from_A1_to_B2 /= d_A1_B2;
+            unit_vector_from_A2_to_B2 /= d_A2_B2;
+          
+            //Initialise polarity factors between the various focii
+            double polarity_factor_A1_B1;
+            double polarity_factor_A1_B2;
+            double polarity_factor_A2_B1;
+            double polarity_factor_A2_B2;
+          
+            //keep track of how many interactions are non-zero (we want the force normalised) as if it was the action of a single cell
+            double number_of_active_forces;
+          
+            //Now consider the forces generated by the action of each focus on each other
+            if(d_A1_B1/2.0 < this->GetCutOffLength())
+            {
+               double cell_difference_angle_A1_B1 = atan2(unit_vector_from_A1_to_B1[1],unit_vector_from_A1_to_B1[0]);
+               double polarity_factor_A1_B1 = -sin(cell_difference_angle_A1_B1 - angle_A)*sin(cell_difference_angle_A1_B1 - angle_B);
+               
+               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor_A1_B1*s + potential_gradient_repulsion;
+               number_of_active_forces += 1;
+            }
+            if(d_A1_B2/2.0 < this->GetCutOffLength())
+            {
+               double cell_difference_angle_A1_B2 = atan2(unit_vector_from_A1_to_B2[1],unit_vector_from_A1_to_B2[0]);
+               double polarity_factor_A1_B2 = -sin(cell_difference_angle_A1_B2 - angle_A)*sin(cell_difference_angle_A1_B2 - angle_B);
+               
+               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor_A1_B2*s + potential_gradient_repulsion;
+               number_of_active_forces += 1;
+            }
+            if(d_A2_B1/2.0 < this->GetCutOffLength())
+            {
+               double cell_difference_angle_A2_B1 = atan2(unit_vector_from_A2_to_B1[1],unit_vector_from_A2_to_B1[0]);
+               double polarity_factor_A2_B1 = -sin(cell_difference_angle_A2_B1 - angle_A)*sin(cell_difference_angle_A2_B1 - angle_B);
+               
+               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor_A2_B1*s + potential_gradient_repulsion;
+               number_of_active_forces += 1;
+            }
+            if(d_A2_B2/2.0 < this->GetCutOffLength())
+            {
+               double cell_difference_angle_A2_B2 = atan2(unit_vector_from_A2_to_B2[1],unit_vector_from_A2_to_B2[0]);
+               double polarity_factor_A2_B2 = -sin(cell_difference_angle_A2_B2 - angle_A)*sin(cell_difference_angle_A2_B2 - angle_B);
+               
+               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor_A2_B2*s + potential_gradient_repulsion;
+               number_of_active_forces += 1;
             }
             
-          
-          
-            force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
-            return force;
+            if(number_of_active_forces = 0)
+            {
+               return zeroes;
+            }
+            else
+            {
+               force = (force_first_A_focus_first_B_focus + force_first_A_focus_second_B_focus + force_second_A_focus_first_B_focus + force_second_A_focus_second_B_focus)/number_of_active_forces;
+            }
           
              
        }
