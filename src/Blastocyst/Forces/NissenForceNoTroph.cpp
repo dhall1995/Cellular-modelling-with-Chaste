@@ -84,7 +84,7 @@ c_vector<double, SPACE_DIM> NissenForceNoTroph<ELEMENT_DIM,SPACE_DIM>::Calculate
     * NOTE: whilst all cells carry a CellPolaritySrn Model it should have zero effect unless we specify in this force law
     */
     //CASE 2: Cell A is Undertermined ICM
-    else if(p_cell_A->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
+    if(p_cell_A->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
     {
        //CASE 2-1: Cell B is Undertermined ICM
        if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
