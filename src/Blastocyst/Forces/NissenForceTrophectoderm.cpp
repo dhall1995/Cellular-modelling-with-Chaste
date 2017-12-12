@@ -11,7 +11,7 @@
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::NissenForceTrophectoderm()
    : AbstractTwoBodyInteractionForce<ELEMENT_DIM,SPACE_DIM>(),
-     mS_TE_ICM(0.4),  // TE-ICM interaction strength
+     mS_TE_ICM(0.6),  // TE-ICM interaction strength
      mS_TE_EPI(0.6),  // TE-EPI interaction strength
      mS_TE_PrE(0.6),  // TE-PrE interaction strength
      mS_TE_TE(-1.4),  // TE-TE interaction strength - NOTE: This is just a prefactor and polarity effects will be included
@@ -144,7 +144,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             
           
           
-            force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+            force = 5.0*potential_gradient*polarity_factor*s + potential_gradient_repulsion;
             return force;
           
              
