@@ -12,10 +12,6 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 NissenForceNoTroph<ELEMENT_DIM,SPACE_DIM>::NissenForceNoTroph()
    : AbstractTwoBodyInteractionForce<ELEMENT_DIM,SPACE_DIM>(),
      mS_ICM_ICM(0.6), // ICM-ICM interaction strength - NOTE: Before TE specification all cells are considered ICM-like in their adhesion properties
-     mS_TE_ICM(0.4),  // TE-ICM interaction strength
-     mS_TE_EPI(0.6),  // TE-EPI interaction strength
-     mS_TE_PrE(0.6),  // TE-PrE interaction strength
-     mS_TE_TE(-1.4),  // TE-TE interaction strength - NOTE: This is just a prefactor and polarity effects will be included
      mS_PrE_PrE(0.4), // PrE-PrE interaction strength
      mS_PrE_EPI(0.4), // Pre-EPI interaction strength
      mS_PrE_ICM(0.4), // PrE-ICM interaxction strength
