@@ -232,7 +232,7 @@ public:
     	MAKE_PTR(NissenForceTrophectoderm<2>, p_force_troph); 
 	p_force_troph->SetCutOffLength(2.5);
 
-        simulation.AddForce(p_force);
+        simulation.AddForce(p_force_troph);
 	
         // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
         simulation.SetEndTime(SIMULATOR_END_TIME + 40.0);
