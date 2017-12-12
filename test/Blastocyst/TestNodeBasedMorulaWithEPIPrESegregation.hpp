@@ -89,6 +89,7 @@ private:
                 // Add cell properties for labels, and polarity
                 cell_iter->AddCellProperty(p_epi_label);
                 cell_iter->SetCellProliferativeType(p_epi);
+		cell_iter->GetCellData()->SetItem("target area", 2.0);
             }
             else
             {
