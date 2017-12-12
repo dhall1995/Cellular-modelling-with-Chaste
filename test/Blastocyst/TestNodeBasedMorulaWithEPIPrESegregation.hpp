@@ -72,7 +72,7 @@ private:
          *       registry, as implemented below.
          */
         CellPropertyRegistry* p_registry = cell_population.Begin()->rGetCellPropertyCollection().GetCellPropertyRegistry();
-        boost::shared_ptr<AbstractCellProperty> p__epi_label = p_registry->Get<CellLabel>();      
+        boost::shared_ptr<AbstractCellProperty> p_epi_label = p_registry->Get<CellLabel>();      
         boost::shared_ptr<AbstractCellProperty> p_pre_label = p_registry->Get<CellLabel>();
         boost::shared_ptr<AbstractCellProperty> p_epi = p_registry->Get<EpiblastCellProliferativeType>();
         boost::shared_ptr<AbstractCellProperty> p_pre = p_registry->Get<PrECellProliferativeType>();
