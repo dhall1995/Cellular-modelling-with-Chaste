@@ -34,9 +34,9 @@ private:
 
 public:
 
-    NissenForce();
+    NissenForceTrophectoderm();
 
-    virtual ~NissenForce();
+    virtual ~NissenForceTrophectoderm();
 
     c_vector<double, SPACE_DIM> CalculateForceBetweenNodes(unsigned nodeAGlobalIndex,
                                                            unsigned nodeBGlobalIndex,
