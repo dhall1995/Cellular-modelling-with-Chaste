@@ -72,6 +72,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
     potential_gradient = exp(-d/5.0)*unit_vector_from_A_to_B/5.0;
     potential_gradient_repulsion = -exp(-d)*unit_vector_from_A_to_B;
     c_vector<double, SPACE_DIM> zeroes;
+    c_vector<double, SPACE_DIM> force;
     
     /*
      * FIRST WE DEAL WITH TROPHECTODERM INTERACTIONS
@@ -256,7 +257,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             else
             {
                force = (force_first_A_focus_first_B_focus + force_first_A_focus_second_B_focus + force_second_A_focus_first_B_focus + force_second_A_focus_second_B_focus)/number_of_active_forces;
-               return force
+               return force;
             }
           
              
@@ -357,7 +358,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             unit_vector_from_A2_to_B /= d_A2_B;
           
             double s = mS_TE_ICM;
-            double number_of_active_forces == 0.0;
+            double number_of_active_forces = 0.0;
           
             if(d_A1_B/2.0 < this->GetCutOffLength())
             {
@@ -376,14 +377,14 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                number_of_active_forces += 1.0;
             }
           
-            if(number_of_active_forces = 0.0)
+            if(number_of_active_forces == 0.0)
             {
                return zeroes;
             }
             else
             {
                force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_forces;
-               return force
+               return force;
             }
 
        }
@@ -446,7 +447,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             else
             {
                force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_forces;
-               return force
+               return force;
             }
 
 
@@ -539,7 +540,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             else
             {
                force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_forces;
-               return force
+               return force;
             }
           
        }
@@ -623,7 +624,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             else
             {
                force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_forces;
-               return force
+               return force;
             }
        }
        else
@@ -706,7 +707,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             else
             {
                force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_forces;
-               return force
+               return force;
             }
 
        }
