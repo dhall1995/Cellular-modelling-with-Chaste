@@ -195,12 +195,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             unit_vector_from_A1_to_B2 /= d_A1_B2;
             unit_vector_from_A2_to_B2 /= d_A2_B2;
           
-            //Initialise polarity factors between the various focii
-            double polarity_factor_A1_B1;
-            double polarity_factor_A1_B2;
-            double polarity_factor_A2_B1;
-            double polarity_factor_A2_B2;
-          
             //keep track of how many interactions are non-zero (we want the force normalised) as if it was the action of a single cell
             double number_of_active_forces;
           
