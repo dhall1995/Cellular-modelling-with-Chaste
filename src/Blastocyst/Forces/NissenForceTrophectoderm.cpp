@@ -249,7 +249,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                number_of_active_forces += 1.0;
             }
             
-            if(number_of_active_forces = 0.0)
+            if(number_of_active_forces == 0.0)
             {
                return zeroes;
             }
@@ -313,7 +313,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                number_of_active_forces += 1.0;
             }
           
-            if(number_of_active_forces = 0.0)
+            if(number_of_active_forces == 0.0)
             {
                return zeroes;
             }
@@ -357,7 +357,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             unit_vector_from_A2_to_B /= d_A2_B;
           
             double s = mS_TE_ICM;
-            double number_of_active_forces = 0.0;
+            double number_of_active_forces == 0.0;
           
             if(d_A1_B/2.0 < this->GetCutOffLength())
             {
@@ -439,7 +439,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                number_of_active_forces += 1.0;
             }
           
-            if(number_of_active_forces = 0.0)
+            if(number_of_active_forces == 0.0)
             {
                return zeroes;
             }
@@ -532,7 +532,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                number_of_active_forces += 1.0;
             }
           
-            if(number_of_active_forces = 0.0)
+            if(number_of_active_forces == 0.0)
             {
                return zeroes;
             }
@@ -616,7 +616,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                number_of_active_forces += 1.0;
             }
           
-            if(number_of_active_forces = 0.0)
+            if(number_of_active_forces == 0.0)
             {
                return zeroes;
             }
@@ -699,7 +699,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                number_of_active_forces += 1.0;
             }
           
-            if(number_of_active_forces = 0.0)
+            if(number_of_active_forces == 0.0)
             {
                return zeroes;
             }
