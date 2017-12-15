@@ -321,7 +321,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             else
             {
                force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_forces;
-               return force
+               return force;
             }
  
        }
@@ -481,8 +481,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             perp_polarity_vector_B[1] = -cos(angle_B);
             
             //Define the two focii for cellB
-            p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
-            p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
+            c_vector<double, SPACE_DIM> p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
+            c_vector<double, SPACE_DIM> p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
           
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -565,8 +565,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             perp_polarity_vector_B[1] = -cos(angle_B);
             
             //Define the two focii for cellB
-            p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
-            p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
+            c_vector<double, SPACE_DIM> p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
+            c_vector<double, SPACE_DIM> p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
           
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
@@ -648,8 +648,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             perp_polarity_vector_B[1] = -cos(angle_B);
             
             //Define the two focii for cellB
-            p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
-            p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
+            c_vector<double, SPACE_DIM> p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
+            c_vector<double, SPACE_DIM> p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
           
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
