@@ -284,24 +284,32 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //Set up vectors between the various focii and the centre of cell B
             c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = p_cell_A_first_focus - r_node_B_location;
             c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = p_cell_A_second_focus - r_node_B_location;
+
+            //set the distances between the various focii
+            d_A1_B = norm_2(unit_vector_from_A1_to_B);
+            d_A2_B = norm_2(unit_vector_from_A2_to_B);
+          
+            //normalise our vectors between the focii
+            unit_vector_from_A1_to_B /= d_A1_B;
+            unit_vector_from_A2_to_B /= d_A2_B;
           
             double s = mS_TE_EPI;
             double number_of_active_forces = 0.0;
           
-            if(d_A1_B1/2.0 < this->GetCutOffLength())
+            if(d_A1_B/2.0 < this->GetCutOffLength())
             {
-               potential_gradient = exp(-d_A1_B1/5.0)*unit_vector_from_A1_to_B1/5.0;
-               potential_gradient_repulsion = -exp(-d_A1_B1)*unit_vector_from_A1_to_B1;
+               potential_gradient = exp(-d_A1_B/5.0)*unit_vector_from_A1_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d_A1_B)*unit_vector_from_A1_to_B;
                
                force_first_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
             }
-            if(d_A1_B2/2.0 < this->GetCutOffLength())
+            if(d_A2_B/2.0 < this->GetCutOffLength())
             {
-               potential_gradient = exp(-d_A1_B2/5.0)*unit_vector_from_A1_to_B2/5.0;
-               potential_gradient_repulsion = -exp(-d_A1_B2)*unit_vector_from_A1_to_B2;
+               potential_gradient = exp(-d_A2_B/5.0)*unit_vector_from_A2_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d_A2_B)*unit_vector_from_A2_to_B;
                
-               force_second_A_focus_B = potential_gradient*polarity_factor_A1_B2*s + potential_gradient_repulsion;
+               force_second_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
             }
           
@@ -311,7 +319,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_first_A_focus_Bs + force_second_A_focus_B)/number_of_active_forces;
+               force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_forces;
                return force
             }
  
@@ -339,24 +347,32 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //Set up vectors between the various focii and the centre of cell B
             c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = p_cell_A_first_focus - r_node_B_location;
             c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = p_cell_A_second_focus - r_node_B_location;
+
+            //set the distances between the various focii
+            d_A1_B = norm_2(unit_vector_from_A1_to_B);
+            d_A2_B = norm_2(unit_vector_from_A2_to_B);
+          
+            //normalise our vectors between the focii
+            unit_vector_from_A1_to_B /= d_A1_B;
+            unit_vector_from_A2_to_B /= d_A2_B;
           
             double s = mS_TE_ICM;
             double number_of_active_forces = 0.0;
           
-            if(d_A1_B1/2.0 < this->GetCutOffLength())
+            if(d_A1_B/2.0 < this->GetCutOffLength())
             {
-               potential_gradient = exp(-d_A1_B1/5.0)*unit_vector_from_A1_to_B1/5.0;
-               potential_gradient_repulsion = -exp(-d_A1_B1)*unit_vector_from_A1_to_B1;
+               potential_gradient = exp(-d_A1_B/5.0)*unit_vector_from_A1_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d_A1_B)*unit_vector_from_A1_to_B;
                
                force_first_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
             }
-            if(d_A1_B2/2.0 < this->GetCutOffLength())
+            if(d_A2_B/2.0 < this->GetCutOffLength())
             {
-               potential_gradient = exp(-d_A1_B2/5.0)*unit_vector_from_A1_to_B2/5.0;
-               potential_gradient_repulsion = -exp(-d_A1_B2)*unit_vector_from_A1_to_B2;
+               potential_gradient = exp(-d_A2_B/5.0)*unit_vector_from_A2_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d_A2_B)*unit_vector_from_A2_to_B;
                
-               force_second_A_focus_B = potential_gradient*polarity_factor_A1_B2*s + potential_gradient_repulsion;
+               force_second_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
             }
           
@@ -366,7 +382,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_first_A_focus_Bs + force_second_A_focus_B)/number_of_active_forces;
+               force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_forces;
                return force
             }
 
@@ -382,11 +398,57 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                     return force;
                 }
             }
-            
+          
+            //Initialise the distances between the focii and the centre of cell B
+            double d_A1_B;
+            double d_A2_B;
+          
+            //Initialise the forces between each focus and the centre of cell B
+            c_vector<double, SPACE_DIM> force_first_A_focus_B;
+            c_vector<double, SPACE_DIM> force_second_A_focus_B;
+          
+            //Set up vectors between the various focii and the centre of cell B
+            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = p_cell_A_first_focus - r_node_B_location;
+            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = p_cell_A_second_focus - r_node_B_location;
+
+            //set the distances between the various focii
+            d_A1_B = norm_2(unit_vector_from_A1_to_B);
+            d_A2_B = norm_2(unit_vector_from_A2_to_B);
+          
+            //normalise our vectors between the focii
+            unit_vector_from_A1_to_B /= d_A1_B;
+            unit_vector_from_A2_to_B /= d_A2_B;
+          
             double s = mS_TE_PrE;
-     
-            force = potential_gradient*s + potential_gradient_repulsion;
-            return force;
+            double number_of_active_forces = 0.0;
+          
+            if(d_A1_B/2.0 < this->GetCutOffLength())
+            {
+               potential_gradient = exp(-d_A1_B/5.0)*unit_vector_from_A1_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d_A1_B)*unit_vector_from_A1_to_B;
+               
+               force_first_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
+               number_of_active_forces += 1.0;
+            }
+            if(d_A2_B/2.0 < this->GetCutOffLength())
+            {
+               potential_gradient = exp(-d_A2_B/5.0)*unit_vector_from_A2_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d_A2_B)*unit_vector_from_A2_to_B;
+               
+               force_second_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
+               number_of_active_forces += 1.0;
+            }
+          
+            if(number_of_active_forces = 0.0)
+            {
+               return zeroes;
+            }
+            else
+            {
+               force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_forces;
+               return force
+            }
+
 
        }
        else
@@ -408,6 +470,19 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 2-1: Cell B is Trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
+            //First thing we want to do is get the polarity angle for the trophectoderm cell B
+            CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
+            double angle_B = p_srn_model_B->GetPolarityAngle();
+          
+            //initialise the perpendicular vector to the polarity of the trophectoderm cell B
+            c_vector<double, SPACE_DIM> perp_polarity_vector_B;
+            perp_polarity_vector_B[0] = sin(angle_B);
+            perp_polarity_vector_B[1] = -cos(angle_B);
+            
+            //Define the two focii for cellB
+            p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
+            p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
+          
             // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
             {
@@ -416,11 +491,56 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                     return force;
                 }
             }
-            
-            double s = mS_TE_ICM;
+          
+            //Initialise the distances between the focii and the centre of cell B
+            double d_A_B1;
+            double d_A_B2;
+          
+            //Initialise the forces between each focus and the centre of cell B
+            c_vector<double, SPACE_DIM> force_A_first_B_focus;
+            c_vector<double, SPACE_DIM> force_A_second_B_focus;
+          
+            //Set up vectors between the various focii and the centre of cell B
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B1 = r_node_A_location - p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = r_node_A_location - p_cell_B_second_focus ;
 
-            force = potential_gradient*s + potential_gradient_repulsion;
-            return force;
+            //set the distances between the various focii
+            d_A_B1 = norm_2(unit_vector_from_A_to_B1);
+            d_A_B2 = norm_2(unit_vector_from_A_to_B2);
+          
+            //normalise our vectors between the focii
+            unit_vector_from_A_to_B1 /= d_A_B1;
+            unit_vector_from_A_to_B2 /= d_A_B2;
+          
+            double s = mS_TE_ICM;
+            double number_of_active_forces = 0.0;
+          
+            if(d_A_B1/2.0 < this->GetCutOffLength())
+            {
+               potential_gradient = exp(-d_A_B1/5.0)*unit_vector_from_A_to_B1/5.0;
+               potential_gradient_repulsion = -exp(-d_A_B1)*unit_vector_from_A_to_B1;
+               
+               force_A_first_B_focus = potential_gradient*s + potential_gradient_repulsion;
+               number_of_active_forces += 1.0;
+            }
+            if(d_A_B2/2.0 < this->GetCutOffLength())
+            {
+               potential_gradient = exp(-d_A_B2/5.0)*unit_vector_from_A_to_B2/5.0;
+               potential_gradient_repulsion = -exp(-d_A_B2)*unit_vector_from_A_to_B2;
+               
+               force_A_second_B_focus = potential_gradient*s + potential_gradient_repulsion;
+               number_of_active_forces += 1.0;
+            }
+          
+            if(number_of_active_forces = 0.0)
+            {
+               return zeroes;
+            }
+            else
+            {
+               force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_forces;
+               return force
+            }
           
        }
        else
@@ -434,7 +554,20 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 3-1 Cell B is Trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
-          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+          //First thing we want to do is get the polarity angle for the trophectoderm cell B
+            CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
+            double angle_B = p_srn_model_B->GetPolarityAngle();
+          
+            //initialise the perpendicular vector to the polarity of the trophectoderm cell B
+            c_vector<double, SPACE_DIM> perp_polarity_vector_B;
+            perp_polarity_vector_B[0] = sin(angle_B);
+            perp_polarity_vector_B[1] = -cos(angle_B);
+            
+            //Define the two focii for cellB
+            p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
+            p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
+          
+            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
             {
                 if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
@@ -442,11 +575,56 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                     return force;
                 }
             }
-            
-            double s = mS_TE_EPI;
           
-            force = potential_gradient*s + potential_gradient_repulsion;
-            return force;
+            //Initialise the distances between the focii and the centre of cell B
+            double d_A_B1;
+            double d_A_B2;
+          
+            //Initialise the forces between each focus and the centre of cell B
+            c_vector<double, SPACE_DIM> force_A_first_B_focus;
+            c_vector<double, SPACE_DIM> force_A_second_B_focus;
+          
+            //Set up vectors between the various focii and the centre of cell B
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B1 = r_node_A_location - p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = r_node_A_location - p_cell_B_second_focus ;
+
+            //set the distances between the various focii
+            d_A_B1 = norm_2(unit_vector_from_A_to_B1);
+            d_A_B2 = norm_2(unit_vector_from_A_to_B2);
+          
+            //normalise our vectors between the focii
+            unit_vector_from_A_to_B1 /= d_A_B1;
+            unit_vector_from_A_to_B2 /= d_A_B2;
+          
+            double s = mS_TE_EPI;
+            double number_of_active_forces = 0.0;
+          
+            if(d_A_B1/2.0 < this->GetCutOffLength())
+            {
+               potential_gradient = exp(-d_A_B1/5.0)*unit_vector_from_A_to_B1/5.0;
+               potential_gradient_repulsion = -exp(-d_A_B1)*unit_vector_from_A_to_B1;
+               
+               force_A_first_B_focus = potential_gradient*s + potential_gradient_repulsion;
+               number_of_active_forces += 1.0;
+            }
+            if(d_A_B2/2.0 < this->GetCutOffLength())
+            {
+               potential_gradient = exp(-d_A_B2/5.0)*unit_vector_from_A_to_B2/5.0;
+               potential_gradient_repulsion = -exp(-d_A_B2)*unit_vector_from_A_to_B2;
+               
+               force_A_second_B_focus = potential_gradient*s + potential_gradient_repulsion;
+               number_of_active_forces += 1.0;
+            }
+          
+            if(number_of_active_forces = 0.0)
+            {
+               return zeroes;
+            }
+            else
+            {
+               force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_forces;
+               return force
+            }
        }
        else
        {
@@ -459,7 +637,20 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 4-1 Cell B is Trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
-          // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
+            //First thing we want to do is get the polarity angle for the trophectoderm cell B
+            CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
+            double angle_B = p_srn_model_B->GetPolarityAngle();
+          
+            //initialise the perpendicular vector to the polarity of the trophectoderm cell B
+            c_vector<double, SPACE_DIM> perp_polarity_vector_B;
+            perp_polarity_vector_B[0] = sin(angle_B);
+            perp_polarity_vector_B[1] = -cos(angle_B);
+            
+            //Define the two focii for cellB
+            p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
+            p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
+          
+            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
             if (this->mUseCutOffLength)
             {
                 if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
@@ -467,11 +658,56 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                     return force;
                 }
             }
-            
-            double s = mS_TE_PrE;
           
-            force = potential_gradient*s + potential_gradient_repulsion;
-            return force;
+            //Initialise the distances between the focii and the centre of cell B
+            double d_A_B1;
+            double d_A_B2;
+          
+            //Initialise the forces between each focus and the centre of cell B
+            c_vector<double, SPACE_DIM> force_A_first_B_focus;
+            c_vector<double, SPACE_DIM> force_A_second_B_focus;
+          
+            //Set up vectors between the various focii and the centre of cell B
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B1 = r_node_A_location - p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = r_node_A_location - p_cell_B_second_focus ;
+
+            //set the distances between the various focii
+            d_A_B1 = norm_2(unit_vector_from_A_to_B1);
+            d_A_B2 = norm_2(unit_vector_from_A_to_B2);
+          
+            //normalise our vectors between the focii
+            unit_vector_from_A_to_B1 /= d_A_B1;
+            unit_vector_from_A_to_B2 /= d_A_B2;
+          
+            double s = mS_TE_PrE;
+            double number_of_active_forces = 0.0;
+          
+            if(d_A_B1/2.0 < this->GetCutOffLength())
+            {
+               potential_gradient = exp(-d_A_B1/5.0)*unit_vector_from_A_to_B1/5.0;
+               potential_gradient_repulsion = -exp(-d_A_B1)*unit_vector_from_A_to_B1;
+               
+               force_A_first_B_focus = potential_gradient*s + potential_gradient_repulsion;
+               number_of_active_forces += 1.0;
+            }
+            if(d_A_B2/2.0 < this->GetCutOffLength())
+            {
+               potential_gradient = exp(-d_A_B2/5.0)*unit_vector_from_A_to_B2/5.0;
+               potential_gradient_repulsion = -exp(-d_A_B2)*unit_vector_from_A_to_B2;
+               
+               force_A_second_B_focus = potential_gradient*s + potential_gradient_repulsion;
+               number_of_active_forces += 1.0;
+            }
+          
+            if(number_of_active_forces = 0.0)
+            {
+               return zeroes;
+            }
+            else
+            {
+               force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_forces;
+               return force
+            }
 
        }
        else
