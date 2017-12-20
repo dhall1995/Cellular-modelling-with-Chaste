@@ -110,16 +110,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
             double angle_B = p_srn_model_B->GetPolarityAngle();
           
-            // For POLAR throphectoderm cells we restrict the absolute distance of interaction to 2.5 cell radii (half of for normal cells)
-            // No cells should ever interact beyond the cutoff length
-            if (this->mUseCutOffLength)
-            {
-                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-          
             double s = mS_TE_TE;
             
             //if each of the cells is young then we treat them as spherical with radius 2.0 whilst they grow
@@ -195,6 +185,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             unit_vector_from_A1_to_B2 /= d_A1_B2;
             unit_vector_from_A2_to_B2 /= d_A2_B2;
           
+          
             //keep track of how many interactions are non-zero (we want the force normalised) as if it was the action of a single cell
             double number_of_active_forces = 0.0;
           
@@ -250,7 +241,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_first_A_focus_first_B_focus + force_first_A_focus_second_B_focus + force_second_A_focus_first_B_focus + force_second_A_focus_second_B_focus);
+               force = (force_first_A_focus_first_B_focus + force_first_A_focus_second_B_focus + force_second_A_focus_first_B_focus + force_second_A_focus_second_B_focus)/number_of_active_zeroes;
                return force;
             }
           
@@ -314,7 +305,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_first_A_focus_B + force_second_A_focus_B);
+               force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_zeroes;
                return force;
             }
  
@@ -377,23 +368,14 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_first_A_focus_B + force_second_A_focus_B);
+               force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_zeroes;
                return force;
             }
 
        }
        //CASE 1-4: Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
-       {
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
-          
+       {          
             //Initialise the distances between the focii and the centre of cell B
             double d_A1_B;
             double d_A2_B;
@@ -440,7 +422,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_first_A_focus_B + force_second_A_focus_B);
+               force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_zeroes;
                return force;
             }
 
@@ -477,15 +459,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //Define the two focii for cellB
             c_vector<double, SPACE_DIM> p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
             c_vector<double, SPACE_DIM> p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
-          
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
           
             //Initialise the distances between the focii and the centre of cell B
             double d_A_B1;
@@ -533,7 +506,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_A_first_B_focus + force_A_second_B_focus);
+               force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_zeroes;
                return force;
             }
           
@@ -561,15 +534,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //Define the two focii for cellB
             c_vector<double, SPACE_DIM> p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
             c_vector<double, SPACE_DIM> p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
-          
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
           
             //Initialise the distances between the focii and the centre of cell B
             double d_A_B1;
@@ -617,7 +581,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_A_first_B_focus + force_A_second_B_focus);
+               force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_zeroes;
                return force;
             }
        }
@@ -644,15 +608,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //Define the two focii for cellB
             c_vector<double, SPACE_DIM> p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
             c_vector<double, SPACE_DIM> p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
-          
-            // No cells should ever interact beyond the cutoff length OF 5.0 Cell Radii
-            if (this->mUseCutOffLength)
-            {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
-                {
-                    return force;
-                }
-            }
           
             //Initialise the distances between the focii and the centre of cell B
             double d_A_B1;
@@ -700,7 +655,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_A_first_B_focus + force_A_second_B_focus);
+               force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_forces;
                return force;
             }
 
