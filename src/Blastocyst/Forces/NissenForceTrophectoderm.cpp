@@ -181,11 +181,22 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A1_B2 = norm_2(unit_vector_from_A1_to_B2);
             d_A2_B2 = norm_2(unit_vector_from_A2_to_B2);
           
+            PRINT_VARIABLE(d_A1_B2);
+            PRINT_VARIABLE(d_A2_B1);
+            PRINT_VARIABLE(d_A1_B1);
+            PRINT_VARIABLE(d_A2_B2);
+          
             //normalise our vectors between the focii
             unit_vector_from_A1_to_B1 /= d_A1_B1;
             unit_vector_from_A2_to_B1 /= d_A2_B1;
             unit_vector_from_A1_to_B2 /= d_A1_B2;
             unit_vector_from_A2_to_B2 /= d_A2_B2;
+          
+            //Nissen distances given in radii
+            d_A1_B1 *= 2.0;
+            d_A1_B2 *= 2.0;
+            d_A2_B1 *= 2.0;
+            d_A2_B2 *= 2.0;
           
           
             //keep track of how many interactions are non-zero (we want the force normalised) as if it was the action of a single cell
@@ -270,9 +281,16 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A1_B = norm_2(unit_vector_from_A1_to_B);
             d_A2_B = norm_2(unit_vector_from_A2_to_B);
           
+            PRINT_VARIABLE(d_A1_B);
+            PRINT_VARIABLE(d_A2_B);
+          
             //normalise our vectors between the focii
             unit_vector_from_A1_to_B /= d_A1_B;
             unit_vector_from_A2_to_B /= d_A2_B;
+          
+            //nissen distances given in radii
+            d_A1_B *= 2.0;
+            d_A1_B *= 2.0;
           
             double s = mS_TE_EPI;
             double number_of_active_forces = 0.0;
@@ -326,14 +344,16 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A1_B = norm_2(unit_vector_from_A1_to_B);
             d_A2_B = norm_2(unit_vector_from_A2_to_B);
           
-            TRACE("d_A1_B");
             PRINT_VARIABLE(d_A1_B);
-            TRACE("d_A2_B");
             PRINT_VARIABLE(d_A2_B);
           
             //normalise our vectors between the focii
             unit_vector_from_A1_to_B /= d_A1_B;
             unit_vector_from_A2_to_B /= d_A2_B;
+          
+            //distances given in terms of radii
+            d_A1_B *= 2.0;
+            d_A1_B *= 2.0;
           
             double s = mS_TE_ICM;
             double number_of_active_forces = 0.0;
@@ -389,9 +409,16 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A1_B = norm_2(unit_vector_from_A1_to_B);
             d_A2_B = norm_2(unit_vector_from_A2_to_B);
           
+            PRINT_VARIABLE(d_A1_B);
+            PRINT_VARIABLE(d_A2_B);
+          
             //normalise our vectors between the focii
             unit_vector_from_A1_to_B /= d_A1_B;
             unit_vector_from_A2_to_B /= d_A2_B;
+          
+            //nissen distances given in radii
+            d_A1_B *= 2.0;
+            d_A1_B *= 2.0;
           
             double s = mS_TE_PrE;
             double number_of_active_forces = 0.0;
@@ -474,9 +501,16 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A_B1 = norm_2(unit_vector_from_A_to_B1);
             d_A_B2 = norm_2(unit_vector_from_A_to_B2);
           
+            PRINT_VARIABLE(d_A_B1);
+            PRINT_VARIABLE(d_A_B2);
+          
             //normalise our vectors between the focii
             unit_vector_from_A_to_B1 /= d_A_B1;
             unit_vector_from_A_to_B2 /= d_A_B2;
+          
+            //Nissen distances given in radii
+            d_A_B1 *= 2.0;
+            d_A_B2 *= 2.0;
           
             double s = mS_TE_ICM;
             double number_of_active_forces = 0.0;
@@ -551,9 +585,16 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A_B1 = norm_2(unit_vector_from_A_to_B1);
             d_A_B2 = norm_2(unit_vector_from_A_to_B2);
           
+            PRINT_VARIABLE(d_A_B1);
+            PRINT_VARIABLE(d_A_B2);
+          
             //normalise our vectors between the focii
             unit_vector_from_A_to_B1 /= d_A_B1;
             unit_vector_from_A_to_B2 /= d_A_B2;
+          
+            //Nissen distances given in radii
+            d_A_B1 *= 2.0;
+            d_A_B2 *= 2.0;
           
             double s = mS_TE_EPI;
             double number_of_active_forces = 0.0;
@@ -627,9 +668,16 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A_B1 = norm_2(unit_vector_from_A_to_B1);
             d_A_B2 = norm_2(unit_vector_from_A_to_B2);
           
+            PRINT_VARIABLE(d_A_B1);
+            PRINT_VARIABLE(d_A_B2);
+          
             //normalise our vectors between the focii
             unit_vector_from_A_to_B1 /= d_A_B1;
             unit_vector_from_A_to_B2 /= d_A_B2;
+          
+            //Nissen distances given in radii
+            d_A_B1 *= 2.0;
+            d_A_B2 *= 2.0;
           
             double s = mS_TE_PrE;
             double number_of_active_forces = 0.0;
