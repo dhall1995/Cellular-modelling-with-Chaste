@@ -313,7 +313,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //Initialise the distances between the focii and the centre of cell B
             double d_A1_B;
             double d_A2_B;
-          
+    
             //Initialise the forces between each focus and the centre of cell B
             c_vector<double, SPACE_DIM> force_first_A_focus_B;
             c_vector<double, SPACE_DIM> force_second_A_focus_B;
@@ -325,6 +325,11 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //set the distances between the various focii
             d_A1_B = norm_2(unit_vector_from_A1_to_B);
             d_A2_B = norm_2(unit_vector_from_A2_to_B);
+          
+            TRACE("d_A1_B");
+            PRINT_VARIABLE(d_A1_B);
+            TRACE("d_A2_B");
+            PRINT_VARIABLE(d_A2_B);
           
             //normalise our vectors between the focii
             unit_vector_from_A1_to_B /= d_A1_B;
@@ -340,6 +345,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                force_first_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
+               PRINT_VARIABLE(number_of_active_forces);
             }
             if(d_A2_B/2.0 < this->GetCutOffLength())
             {
@@ -348,6 +354,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                force_second_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
+               PRINT_VARIABLE(number_of_active_forces);
             }
           
             if(number_of_active_forces == 0.0)
