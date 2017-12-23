@@ -236,7 +236,7 @@ public:
         simulation.AddForce(p_force_troph);
 	
         // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
-        simulation.SetEndTime(SIMULATOR_END_TIME + 40.0);
+        simulation.SetEndTime(SIMULATOR_END_TIME + 5.0);
         simulation.Solve();
     }
 };
