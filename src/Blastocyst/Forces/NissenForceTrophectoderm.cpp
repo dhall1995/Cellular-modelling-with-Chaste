@@ -276,8 +276,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             c_vector<double, SPACE_DIM> force_second_A_focus_B;
           
             //Set up vectors between the various focii and the centre of cell B
-            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = p_cell_A_first_focus - r_node_B_location;
-            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = p_cell_A_second_focus - r_node_B_location;
+            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = -p_cell_A_first_focus + r_node_B_location;
+            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = -p_cell_A_second_focus + r_node_B_location;
 
             //set the distances between the various focii
             d_A1_B = norm_2(unit_vector_from_A1_to_B);
@@ -339,8 +339,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             c_vector<double, SPACE_DIM> force_second_A_focus_B;
           
             //Set up vectors between the various focii and the centre of cell B
-            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = p_cell_A_first_focus - r_node_B_location;
-            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = p_cell_A_second_focus - r_node_B_location;
+            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = -p_cell_A_first_focus + r_node_B_location;
+            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = -p_cell_A_second_focus + r_node_B_location;
 
             //set the distances between the various focii
             d_A1_B = norm_2(unit_vector_from_A1_to_B);
@@ -404,8 +404,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             c_vector<double, SPACE_DIM> force_second_A_focus_B;
           
             //Set up vectors between the various focii and the centre of cell B
-            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = p_cell_A_first_focus - r_node_B_location;
-            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = p_cell_A_second_focus - r_node_B_location;
+            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = -p_cell_A_first_focus + r_node_B_location;
+            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = -p_cell_A_second_focus + r_node_B_location;
 
             //set the distances between the various focii
             d_A1_B = norm_2(unit_vector_from_A1_to_B);
@@ -580,8 +580,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             c_vector<double, SPACE_DIM> force_A_second_B_focus;
           
             //Set up vectors between the various focii and the centre of cell B
-            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B1 = r_node_A_location - p_cell_B_first_focus;
-            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = r_node_A_location - p_cell_B_second_focus ;
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B1 = -r_node_A_location + p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = -r_node_A_location + p_cell_B_second_focus ;
 
             //set the distances between the various focii
             d_A_B1 = norm_2(unit_vector_from_A_to_B1);
@@ -663,8 +663,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             c_vector<double, SPACE_DIM> force_A_second_B_focus;
           
             //Set up vectors between the various focii and the centre of cell B
-            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B1 = r_node_A_location - p_cell_B_first_focus;
-            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = r_node_A_location - p_cell_B_second_focus ;
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B1 = -r_node_A_location + p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = -r_node_A_location + p_cell_B_second_focus ;
 
             //set the distances between the various focii
             d_A_B1 = norm_2(unit_vector_from_A_to_B1);
