@@ -195,7 +195,7 @@ public:
     	OffLatticeSimulation<2> simulation(cell_population);
     	simulation.SetOutputDirectory("NodeBasedMorula");
     	simulation.SetSamplingTimestepMultiple(24);
-        double dt = 0.1*simulation.GetDt();
+        double dt = 0.5*simulation.GetDt();
         simulation.SetDt(dt);
     	simulation.SetEndTime(SIMULATOR_END_TIME);
 
