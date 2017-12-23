@@ -192,6 +192,16 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             unit_vector_from_A1_to_B2 /= d_A1_B2;
             unit_vector_from_A2_to_B2 /= d_A2_B2;
           
+            double len_d_A1_B1 = norm_2(unit_vector_from_A1_to_B1);
+            double len_d_A2_B1 = norm_2(unit_vector_from_A2_to_B1);
+            double len_d_A1_B2 = norm_2(unit_vector_from_A1_to_B2);
+            double len_d_A2_B2 = norm_2(unit_vector_from_A2_to_B2);
+          
+            PRINT_VARIABLE(len_d_A1_B2);
+            PRINT_VARIABLE(len_d_A2_B1);
+            PRINT_VARIABLE(len_d_A1_B1);
+            PRINT_VARIABLE(len_d_A2_B2);
+          
             //Nissen distances given in radii
             d_A1_B1 *= 2.0;
             d_A1_B2 *= 2.0;
