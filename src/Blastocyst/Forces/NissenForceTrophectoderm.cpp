@@ -328,6 +328,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 1-3: Cell B is Undetermined ICM
        else if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
        {
+            /*
             TRACE("calculating TE-ICM interaction");
           
             //Initialise the distances between the focii and the centre of cell B
@@ -388,7 +389,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_forces;
                return force;
             }
-
+*/
        }
        //CASE 1-4: Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
@@ -470,6 +471,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
     //CASE 2: Cell A is Undertermined ICM
     else if(p_cell_A->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
     {
+       /*
        //CASE 2-1: Cell B is Trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
@@ -549,6 +551,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        {
           return zeroes;
        }
+       */
     }
     //CASE 3 Cell A is Epiblast
     else if(p_cell_A->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
