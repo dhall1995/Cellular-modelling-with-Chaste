@@ -72,6 +72,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
     potential_gradient = exp(-d/5.0)*unit_vector_from_A_to_B/5.0;
     potential_gradient_repulsion = -exp(-d)*unit_vector_from_A_to_B;
     c_vector<double, SPACE_DIM> zeroes;
+    zeroes[0] = 0.0;
+    zeroes[1] = 0.0;
     c_vector<double, SPACE_DIM> force;
     
     /*
