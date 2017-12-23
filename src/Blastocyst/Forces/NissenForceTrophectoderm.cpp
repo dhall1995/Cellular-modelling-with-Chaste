@@ -115,34 +115,34 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             double s = mS_TE_TE;
             
             //if each of the cells is young then we treat them as spherical with radius 2.0 whilst they grow
-            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            {
-               double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
-               double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
+            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            //{
+               //double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
+               //double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
                
-               potential_gradient = exp(-d/10.0)*unit_vector_from_A_to_B/5.0;
-               potential_gradient_repulsion = -exp(-d/2.0)*unit_vector_from_A_to_B;
+               //potential_gradient = exp(-d/10.0)*unit_vector_from_A_to_B/5.0;
+               //potential_gradient_repulsion = -exp(-d/2.0)*unit_vector_from_A_to_B;
                
-               AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>* p_static_cast_cell_population = static_cast<AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>*>(&rCellPopulation);
+               //AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>* p_static_cast_cell_population = static_cast<AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>*>(&rCellPopulation);
 
-               std::pair<CellPtr,CellPtr> cell_pair = p_static_cast_cell_population->CreateCellPair(p_cell_A, p_cell_B);
+               //std::pair<CellPtr,CellPtr> cell_pair = p_static_cast_cell_population->CreateCellPair(p_cell_A, p_cell_B);
 
-               if (p_static_cast_cell_population->IsMarkedSpring(cell_pair))
-               {
+               //if (p_static_cast_cell_population->IsMarkedSpring(cell_pair))
+               //{
                   // Spring rest length increases from a small value to the normal rest length over 1 hour
-                  if(polarity_factor < 0.0)
-                  {
-                     s = -5.0 + (mS_TE_TE + 5.0) * ageA/mGrowthDuration;
-                  }
-               }
-               if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
-               {
+                  //if(polarity_factor < 0.0)
+                  //{
+                     //s = -5.0 + (mS_TE_TE + 5.0) * ageA/mGrowthDuration;
+                  //}
+               //}
+               //if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
+               //{
                   // This spring is about to go out of scope
-                  p_static_cast_cell_population->UnmarkSpring(cell_pair);
-               }
-               force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
-               return force;
-            }
+                  //p_static_cast_cell_population->UnmarkSpring(cell_pair);
+               //}
+               //force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+               //return force;
+            //}
 
             //otherwise we retrieve the focii of cell B
             c_vector<double, SPACE_DIM> p_cell_B_first_focus;
