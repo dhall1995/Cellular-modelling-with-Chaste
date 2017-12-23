@@ -101,7 +101,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
-                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
                 {
                     return force;
                 }
@@ -119,6 +119,9 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             double angle_A = p_srn_model_A->GetPolarityAngle();
             CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
             double angle_B = p_srn_model_B->GetPolarityAngle();
+          
+            potential_gradient = exp(-d/10.0)*unit_vector_from_A_to_B/5.0;
+            potential_gradient_repulsion = -exp(-d/2.0)*unit_vector_from_A_to_B;
             
          
             double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
