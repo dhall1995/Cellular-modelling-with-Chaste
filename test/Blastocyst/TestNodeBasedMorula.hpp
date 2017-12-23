@@ -54,7 +54,7 @@
 class TestNodeBasedMorula : public AbstractCellBasedWithTimingsTestSuite
 {
 private:
-    double SIMULATOR_END_TIME = 90.0;
+    double SIMULATOR_END_TIME = 135.0;
     
     /*
      * Function to call when we wish to make trophectoderm specification at E3.5. This is done by assigning
@@ -200,8 +200,8 @@ public:
     	simulation.SetEndTime(SIMULATOR_END_TIME);
 
     	// Make pointer to the NissenForceNoTroph and add it to the simulation
-	MAKE_PTR(NissenForce<2>, p_force);
-    	//MAKE_PTR(NissenForceNoTroph<2>, p_force); 
+	//MAKE_PTR(NissenForce<2>, p_force);
+    	MAKE_PTR(NissenForceNoTroph<2>, p_force); 
 	p_force->SetCutOffLength(2.5);
 
         simulation.AddForce(p_force);
@@ -230,13 +230,13 @@ public:
         cell_population.AddCellPopulationCountWriter<CellProliferativeTypesCountWriter>();
 
         // Make pointer to the NissenForceTrophectoderm and add it to the simulation
-    	//MAKE_PTR(NissenForceTrophectoderm<2>, p_force_troph); 
-	//p_force_troph->SetCutOffLength(2.5);
+    	MAKE_PTR(NissenForceTrophectoderm<2>, p_force_troph); 
+	p_force_troph->SetCutOffLength(2.5);
 
         //simulation.AddForce(p_force_troph);
 	
         // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
-        simulation.SetEndTime(SIMULATOR_END_TIME + 20.0);
+        simulation.SetEndTime(SIMULATOR_END_TIME + 30.0);
         simulation.Solve();
     }
 };
