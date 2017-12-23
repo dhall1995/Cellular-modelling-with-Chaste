@@ -129,7 +129,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
 
                if (p_static_cast_cell_population->IsMarkedSpring(cell_pair))
                {
-                   Spring rest length increases from a small value to the normal rest length over 1 hour
+                   //Spring rest length increases from a small value to the normal rest length over 1 hour
                    if(polarity_factor < 0.0)
                    {
                      s = -5.0 + (mS_TE_TE + 5.0) * ageA/mGrowthDuration;
