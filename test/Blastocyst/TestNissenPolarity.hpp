@@ -117,8 +117,8 @@ public:
         simulator.AddSimulationModifier(p_modifier);
 
         // Create a force law and pass it to the simulation
-        //MAKE_PTR(NissenForce<2>, p_force);
-        MAKE_PTR(NissenGeneralisedLinearSpringForce<2>, p_force);
+        MAKE_PTR(NissenForce<2>, p_force);
+        //MAKE_PTR(NissenGeneralisedLinearSpringForce<2>, p_force);
         p_force->SetCutOffLength(2.5);
         simulator.AddForce(p_force);
 
