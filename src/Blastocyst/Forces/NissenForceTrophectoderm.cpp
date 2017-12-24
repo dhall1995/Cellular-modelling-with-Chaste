@@ -115,7 +115,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
           
             //define the strength of attraction and the polarity factor for the two TE cells 
             double s = mS_TE_TE;
-            double polarity_factor;
             double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
             double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
             
