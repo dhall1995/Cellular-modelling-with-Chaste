@@ -449,7 +449,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_forces;
+               //force = (force_first_A_focus_B + force_second_A_focus_B)/number_of_active_forces;
                return force;
             }
 
@@ -624,7 +624,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
             else
             {
-               force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_forces;
+               //force = (force_A_first_B_focus + force_A_second_B_focus)/number_of_active_forces;
                return force;
             }
           
