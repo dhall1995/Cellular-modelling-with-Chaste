@@ -215,7 +215,20 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                force_first_A_focus_first_B_focus = potential_gradient*polarity_factor_A1_B1*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
+               //check the force exists
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  assert(!std::isnan(force_first_A_focus_first_B_focus[j]));
+               }
             }
+            else
+            {
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  force_first_A_focus_first_B_focus[j] = 0.0;
+               }
+            }
+          
             if(d_A1_B2 < this->GetCutOffLength())
             {
                potential_gradient = exp(-d_A1_B2/5.0)*unit_vector_from_A1_to_B2/5.0;
@@ -224,9 +237,22 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                double cell_difference_angle_A1_B2 = atan2(unit_vector_from_A1_to_B2[1],unit_vector_from_A1_to_B2[0]);
                double polarity_factor_A1_B2 = -sin(cell_difference_angle_A1_B2 - angle_A)*sin(cell_difference_angle_A1_B2 - angle_B);
                
-               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor_A1_B2*s + potential_gradient_repulsion;
+               force_first_A_focus_second_B_focus = potential_gradient*polarity_factor_A1_B2*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
+               //check the force exists
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  assert(!std::isnan(force_first_A_focus_second_B_focus[j]));
+               }
             }
+            else
+            {
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  force_first_A_focus_second_B_focus[j] = 0.0;
+               }
+            }
+          
             if(d_A2_B1 < this->GetCutOffLength())
             {
                potential_gradient = exp(-d_A2_B1/5.0)*unit_vector_from_A2_to_B1/5.0;
@@ -235,9 +261,22 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                double cell_difference_angle_A2_B1 = atan2(unit_vector_from_A2_to_B1[1],unit_vector_from_A2_to_B1[0]);
                double polarity_factor_A2_B1 = -sin(cell_difference_angle_A2_B1 - angle_A)*sin(cell_difference_angle_A2_B1 - angle_B);
                
-               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor_A2_B1*s + potential_gradient_repulsion;
+               force_second_A_focus_first_B_focus = potential_gradient*polarity_factor_A2_B1*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
+               //check the force exists
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  assert(!std::isnan(force_second_A_focus_first_B_focus[j]));
+               }
             }
+            else
+            {
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  force_second_A_focus_first_B_focus[j] = 0.0;
+               }
+            }
+          
             if(d_A2_B2 < this->GetCutOffLength())
             {
                potential_gradient = exp(-d_A2_B2/5.0)*unit_vector_from_A2_to_B2/5.0;
@@ -246,8 +285,20 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                double cell_difference_angle_A2_B2 = atan2(unit_vector_from_A2_to_B2[1],unit_vector_from_A2_to_B2[0]);
                double polarity_factor_A2_B2 = -sin(cell_difference_angle_A2_B2 - angle_A)*sin(cell_difference_angle_A2_B2 - angle_B);
                
-               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor_A2_B2*s + potential_gradient_repulsion;
+               force_second_A_focus_second_B_focus = potential_gradient*polarity_factor_A2_B2*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
+               //check the force exists
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  assert(!std::isnan(force_second_A_focus_second_B_focus[j]));
+               }
+            }
+            else
+            {
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  force_second_A_focus_second_B_focus[j] = 0.0;
+               }
             }
             
             if(number_of_active_forces == 0.0)
@@ -325,7 +376,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
  
        }
-       /*
+       
        //CASE 1-3: Cell B is Undetermined ICM
        else if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
        {
@@ -370,7 +421,19 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                force_first_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
                PRINT_VARIABLE(number_of_active_forces);
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  assert(!std::isnan(force_first_A_focus_B[j]));
+               }
             }
+            else
+            {
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  force_first_A_focus_B[j] = 0.0;
+               }
+            }
+          
             if(d_A2_B/2.0 < this->GetCutOffLength())
             {
                potential_gradient = exp(-d_A2_B/5.0)*unit_vector_from_A2_to_B/5.0;
@@ -379,6 +442,17 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                force_second_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
                PRINT_VARIABLE(number_of_active_forces);
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  assert(!std::isnan(force_second_A_focus_B[j]));
+               }
+            }
+            else
+            {
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  force_second_A_focus_B[j] = 0.0;
+               }
             }
           
             if(number_of_active_forces == 0.0)
@@ -392,7 +466,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             }
 
        }
-       */
+  
        //CASE 1-4: Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
        {          
@@ -473,7 +547,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
     //CASE 2: Cell A is Undertermined ICM
     else if(p_cell_A->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
     {
-       /*
        //CASE 2-1: Cell B is Trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
@@ -528,7 +601,20 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                force_A_first_B_focus = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  assert(!std::isnan(force_A_first_B_focus[j]));
+               }
             }
+            else
+            {
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  force_A_first_B_focus[j] = 0.0;
+               }
+            }
+          
+          
             if(d_A_B2/2.0 < this->GetCutOffLength())
             {
                potential_gradient = exp(-d_A_B2/5.0)*unit_vector_from_A_to_B2/5.0;
@@ -536,6 +622,17 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                force_A_second_B_focus = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  assert(!std::isnan(force_A_second_B_focus[j]));
+               }
+            }
+            else
+            {
+               for (unsigned j=0; j<SPACE_DIM; j++)
+               {
+                  force_A_second_B_focus[j] = 0.0;
+               }
             }
           
             if(number_of_active_forces == 0.0)
@@ -553,7 +650,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        {
           return zeroes;
        }
-       */
     }
     //CASE 3 Cell A is Epiblast
     else if(p_cell_A->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
