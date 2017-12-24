@@ -33,8 +33,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef PERPPOLARITYVECTORWRITER_HPP_
-#define PERPPOLARITYVECTORWRITER_HPP_
+#ifndef POLARITYFIRSTFOCUSVECTORWRITER_HPP_
+#define POLARITYFIRSTFOCUSVECTORWRITER_HPP_
 
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/base_object.hpp>
@@ -49,7 +49,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * the VTK cell data "Perpendicular Polarity Vector" by default.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-class PerpPolarityVectorWriter : public AbstractCellWriter<ELEMENT_DIM, SPACE_DIM>
+class PolarityFirstFocusVectorWriter : public AbstractCellWriter<ELEMENT_DIM, SPACE_DIM>
 {
 private:
     /** Needed for serialization. */
@@ -72,7 +72,7 @@ public:
     /**
      * Default constructor.
      */
-    PerpPolarityVectorWriter();
+    PolarityFirstFocusVectorWriter();
 
     /**
      * Overridden GetVectorCellDataForVtkOutput() method.
@@ -106,6 +106,6 @@ public:
 };
 
 #include "SerializationExportWrapper.hpp"
-EXPORT_TEMPLATE_CLASS_ALL_DIMS(PerpPolarityVectorWriter)
+EXPORT_TEMPLATE_CLASS_ALL_DIMS(PolarityFirstFocusVectorWriter)
 
-#endif /* PERPPOLARITYVECTORWRITER_HPP_ */
+#endif /* POLARITYFIRSTFOCUSVECTORWRITER_HPP_ */
