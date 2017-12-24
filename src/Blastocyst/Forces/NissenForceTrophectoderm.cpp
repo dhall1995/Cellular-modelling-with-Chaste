@@ -108,7 +108,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 1-1: Cell B is also trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
-            TRACE("calculating TE-TE interaction");
            
             //First thing we want to do is get the polarity angle for the trophectoderm cell B
             CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
@@ -311,7 +310,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 1-2: Cell B is epiblast
        else if(p_cell_B->GetCellProliferativeType()->template IsType<EpiblastCellProliferativeType>())
        {
-            TRACE("calculating TE-EPI interaction");
           
             //Initialise the distances between the focii and the centre of cell B
             double d_A1_B;
@@ -375,8 +373,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 1-3: Cell B is Undetermined ICM
        else if(p_cell_B->GetCellProliferativeType()->template IsType<TransitCellProliferativeType>())
        {
-            
-            TRACE("calculating TE-ICM interaction");
           
             //Initialise the distances between the focii and the centre of cell B
             double d_A1_B;
@@ -462,7 +458,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 1-4: Cell B is Primitive Endoderm
        else if(p_cell_B->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
        {          
-            TRACE("calculating TE-PrE interaction");
           
             //Initialise the distances between the focii and the centre of cell B
             double d_A1_B;
@@ -542,7 +537,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 2-1: Cell B is Trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
-            TRACE("calculating ICM-TE interaction");
             //First thing we want to do is get the polarity angle for the trophectoderm cell B
             CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
             double angle_B = p_srn_model_B->GetPolarityAngle();
@@ -646,7 +640,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 3-1 Cell B is Trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
-            TRACE("calculating EPI-TE interaction");
           
             //First thing we want to do is get the polarity angle for the trophectoderm cell B
             CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
@@ -726,7 +719,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
     //CASE 4 Cell A is Primitive Endoderm
     else if(p_cell_A->GetCellProliferativeType()->template IsType<PrECellProliferativeType>())
     {
-       TRACE("calculating PrE-TE interaction");
        
        //CASE 4-1 Cell B is Trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
