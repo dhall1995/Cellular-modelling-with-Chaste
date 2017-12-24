@@ -121,14 +121,9 @@ public:
         // Initialise pointer to the cell cycle model for the cell
         PreCompactionCellCycleModel* p_cc_model = new PreCompactionCellCycleModel();
         p_cc_model->SetDimension(2);
-        
-        CellPolaritySrnModel* p_srn_model = new CellPolaritySrnModel();
-        std::vector<double> initial_conditions;
-        initial_conditions.push_back(0.0);
-        p_srn_model->SetInitialConditions(initial_conditions);
 
         // Create a pointer to the cell with the given cell cycle and mutation state, set it's proliferative type to transit
-        CellPtr p_cell(new Cell(p_state, p_cc_model, p_srn_model));
+        CellPtr p_cell(new Cell(p_state, p_cc_model));
         p_cell->SetCellProliferativeType(p_prolif_type);
 	
         // Set the cell's birth time to 0.0
