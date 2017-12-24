@@ -51,7 +51,7 @@
 class TestNodeBasedMorulaWithEPIPrESegregation : public AbstractCellBasedWithTimingsTestSuite
 {
 private:
-    double SIMULATOR_END_TIME = 180.0;
+    double SIMULATOR_END_TIME = 240.0;
     
     /*
      * Function to call when we wish to make trophectoderm specification at E3.5. This is done by assigning
@@ -162,35 +162,28 @@ public:
     	NodeBasedCellPopulation<2> cell_population(mesh, rCells);
 
 	
-	    //Initialise the Nissen Division Rules and apply to the cell population
-	    boost::shared_ptr<AbstractCentreBasedDivisionRule<2,2> > Nissen_Division_Rule(new NissenBasedDivisionRule<2,2>());
-	    cell_population.SetCentreBasedDivisionRule(Nissen_Division_Rule);
 
     	// Instantiate the simulation, saving results in NodeBasedMorula, simulating for SIMULATOR_END_TIME hours
     	OffLatticeSimulation<2> simulation(cell_population);
     	simulation.SetOutputDirectory("NodeBasedMorulaWithEPIPrESegregation");
     	simulation.SetSamplingTimestepMultiple(24);
-      double dt = 0.5*simulation.GetDt();
-      simulation.SetDt(dt);
+        double dt = 0.5*simulation.GetDt();
+        simulation.SetDt(dt);
     	simulation.SetEndTime(SIMULATOR_END_TIME);
 
     	// Make pointer to the NissenForce and add it to the simulation
     	MAKE_PTR(NissenForce<2>, p_force);
-	    p_force->SetCutOffLength(2.5);
+	p_force->SetCutOffLength(2.5);
 
-      simulation.AddForce(p_force);
+        simulation.AddForce(p_force);
 
-      // Make pointer to the NissenNoiseForce and add it to the simulation
-      MAKE_PTR(NissenNoiseForce<2>, p_noise_force);
-      simulation.AddForce(p_noise_force);
-
-      // Make sure to add the simulation modifier for tracking cell polarity
-      MAKE_PTR(CellPolarityTrackingModifier<2>, p_pol_tracking_modifier);
-      simulation.AddSimulationModifier(p_pol_tracking_modifier);
+        // Make pointer to the NissenNoiseForce and add it to the simulation
+        MAKE_PTR(NissenNoiseForce<2>, p_noise_force);
+        simulation.AddForce(p_noise_force);
 
     	// Solve the simulation the first time round
     	simulation.Solve();
-      TRACE("finished first simulation up to early morula");
+        TRACE("finished first simulation up to early morula");
         
 	
       /*
@@ -204,7 +197,7 @@ public:
       cell_population.AddCellPopulationCountWriter<CellProliferativeTypesCountWriter>();
         
       // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
-      simulation.SetEndTime(SIMULATOR_END_TIME + 40.0);
+      simulation.SetEndTime(SIMULATOR_END_TIME + 80.0);
       simulation.Solve();
     }
 };
