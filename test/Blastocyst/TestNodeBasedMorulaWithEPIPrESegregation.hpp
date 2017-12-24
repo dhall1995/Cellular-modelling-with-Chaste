@@ -208,7 +208,7 @@ public:
             {
                  number_of_PrE_cells += 1.0;
 		 double number_of_neighbouring_PrE_cells = 0.0;
-		 for (typename AbstractCellPopulation<DIM>::Iterator cell_B_iter = neighbour_indices.begin();
+		 for (std::set<unsigned>::iterator cell_B_iter = neighbour_indices.begin();
 		 cell_B_iter != neighbour_indices.end(); ++cell_B_iter)
 		 {
 		 	if(cell_iter->GetCellProliferativeType()->template IsType<PrECellProliferativeType>() == true)
