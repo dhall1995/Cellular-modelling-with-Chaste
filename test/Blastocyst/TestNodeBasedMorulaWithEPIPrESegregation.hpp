@@ -194,6 +194,37 @@ public:
       // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
       simulation.SetEndTime(SIMULATOR_END_TIME + 40.0);
       simulation.Solve();
+      
+      double number_of_PrE_cells = 0.0;
+      double number_of_isolated_PrE_cells = 0.0;
+
+      for (typename AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
+             cell_iter != cell_population.End();
+             ++cell_iter)
+      {
+            unsigned node_index = cell_population.GetLocationIndexUsingCell(*cell_iter);
+	    std::set<unsigned> neighbour_indices = cell_population.GetNeighbouringNodeIndices(node_index);
+            if (cell_iter->GetCellProliferativeType()->template IsType<PrECellProliferativeType>() == true)
+            {
+                 number_of_PrE_cells += 1.0;
+		 double number_of_neighbouring_PrE_cells = 0.0
+		 for (typename AbstractCellPopulation<DIM>::Iterator cell_B_iter = neighbour_indices.Begin();
+		 cell_B_iter != neighbour_indices.End(); ++cell_B_iter)
+		 {
+		 	if(cell_iter->GetCellProliferativeType()->template IsType<PrECellProliferativeType>() == true)
+			{
+				number_of_neighbouring_PrE_cells += 1.0;
+			}
+		 }
+		 if(number_of_neighbouring_PrE_cells < 2.0)
+		 {
+		 	number_of_isolated_PrE_cells += 1.0;
+		}
+            }
+
+      }
+      double efficiency = 1.0 - (number_of_isolated_PrE_cells/number_of_PrE_cells);
+      PRINT_VARIABLE(efficiency);
     }
 };
 
