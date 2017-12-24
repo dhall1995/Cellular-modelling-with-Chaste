@@ -49,6 +49,7 @@
 // Visualising
 #include "CellProliferativeTypesCountWriter.hpp"
 #include "PolarityVectorWriter.hpp"
+#include "PerpPolarityVectorWriter.hpp"
 #include "Debug.hpp"
 
 class TestNodeBasedMorula : public AbstractCellBasedWithTimingsTestSuite
@@ -183,6 +184,7 @@ public:
 	
 	//Add a writer for cell polarity
 	cell_population.AddCellWriter<PolarityVectorWriter>();
+	cell_population.AddCellWriter<PerpPolarityVectorWriter>();
 	
 	//Initialise the Nissen Division Rules and apply to the cell population
 	boost::shared_ptr<AbstractCentreBasedDivisionRule<2,2> > Nissen_Division_Rule(new NissenBasedDivisionRule<2,2>());
