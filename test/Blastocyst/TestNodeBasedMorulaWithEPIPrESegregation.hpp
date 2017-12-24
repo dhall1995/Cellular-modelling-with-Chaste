@@ -225,6 +225,8 @@ public:
       }
       double efficiency = 1.0 - (number_of_isolated_PrE_cells/number_of_PrE_cells);
       PRINT_VARIABLE(efficiency);
+      PRINT_VARIABLE(number_of_PrE_cells);
+      PRINT_VARIABLE(number_of_isolated_PrE_cells);
     }
 };
 
