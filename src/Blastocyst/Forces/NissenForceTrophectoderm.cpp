@@ -183,11 +183,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A1_B2 = norm_2(unit_vector_from_A1_to_B2);
             d_A2_B2 = norm_2(unit_vector_from_A2_to_B2);
           
-            PRINT_VARIABLE(d_A1_B2);
-            PRINT_VARIABLE(d_A2_B1);
-            PRINT_VARIABLE(d_A1_B1);
-            PRINT_VARIABLE(d_A2_B2);
-          
             //normalise our vectors between the focii
             unit_vector_from_A1_to_B1 /= d_A1_B1;
             unit_vector_from_A2_to_B1 /= d_A2_B1;
@@ -399,9 +394,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A1_B = norm_2(unit_vector_from_A1_to_B);
             d_A2_B = norm_2(unit_vector_from_A2_to_B);
           
-            PRINT_VARIABLE(d_A1_B);
-            PRINT_VARIABLE(d_A2_B);
-          
             //normalise our vectors between the focii
             unit_vector_from_A1_to_B /= d_A1_B;
             unit_vector_from_A2_to_B /= d_A2_B;
@@ -420,7 +412,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                force_first_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
-               PRINT_VARIABLE(number_of_active_forces);
+               
                for (unsigned j=0; j<SPACE_DIM; j++)
                {
                   assert(!std::isnan(force_first_A_focus_B[j]));
@@ -441,7 +433,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                force_second_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
-               PRINT_VARIABLE(number_of_active_forces);
+              
                for (unsigned j=0; j<SPACE_DIM; j++)
                {
                   assert(!std::isnan(force_second_A_focus_B[j]));
@@ -579,9 +571,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //set the distances between the various focii
             d_A_B1 = norm_2(unit_vector_from_A_to_B1);
             d_A_B2 = norm_2(unit_vector_from_A_to_B2);
-          
-            PRINT_VARIABLE(d_A_B1);
-            PRINT_VARIABLE(d_A_B2);
           
             //normalise our vectors between the focii
             unit_vector_from_A_to_B1 /= d_A_B1;
