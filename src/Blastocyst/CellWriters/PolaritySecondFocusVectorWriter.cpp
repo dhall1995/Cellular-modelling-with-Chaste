@@ -81,8 +81,8 @@ void PolaritySecondFocusVectorWriter<ELEMENT_DIM, SPACE_DIM>::VisitCell(
 {
     unsigned location_index = pCellPopulation->GetLocationIndexUsingCell(pCell);
     unsigned cell_id = pCell->GetCellId();
-    c_vector<double, SPACE_DIM> cell_location_second_focus = pCellPopulation->GetLocationOfCellCentre(pCell) - 0.25*orientation;		
     c_vector<double, SPACE_DIM> cell_orientation = GetVectorCellDataForVtkOutput(pCell, pCellPopulation);
+    c_vector<double, SPACE_DIM> cell_location_second_focus = pCellPopulation->GetLocationOfCellCentre(pCell) - 0.25*cell_orientation;		
 
     *this->mpOutStream << location_index << " " << cell_id << " ";
     for (unsigned i=0; i<SPACE_DIM; i++)
