@@ -229,7 +229,7 @@ public:
 	
         // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum 
 	//and spread out a bit
-        simulation.SetEndTime(SIMULATOR_END_TIME + 5.0);
+        simulation.SetEndTime(SIMULATOR_END_TIME + 4.0);
         simulation.Solve();
 	
 	//remove our old force
