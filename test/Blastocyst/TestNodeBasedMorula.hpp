@@ -116,9 +116,6 @@ private:
 		cell_iter->GetCellData()->SetItem("target area", 1.5);
 
                 static_cast<CellPolaritySrnModel*>(cell_iter->GetSrnModel())->SetPolarityAngle(angle);
-    //            TRACE("Are we dealing with a trophectoderm cell?");
-//                bool variable = cell_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>();
-    //            PRINT_VARIABLE(variable);
             }
         }
     }
@@ -200,8 +197,7 @@ public:
     	simulation.SetEndTime(SIMULATOR_END_TIME);
 
     	// Make pointer to the NissenForceNoTroph and add it to the simulation
-	//MAKE_PTR(NissenForce<2>, p_force);
-    	MAKE_PTR(NissenForceNoTroph<2>, p_force); 
+	MAKE_PTR(NissenForce<2>, p_force); 
 	p_force->SetCutOffLength(2.5);
 
         simulation.AddForce(p_force);
@@ -228,16 +224,32 @@ public:
         // Make trophectoderm specification and add a writer for cell proliferative types
         LabelTrophectodermCells(cell_population);
         cell_population.AddCellPopulationCountWriter<CellProliferativeTypesCountWriter>();
-
-        // Make pointer to the NissenForceTrophectoderm and add it to the simulation
+	
+        // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum 
+	//and spread out a bit
+        simulation.SetEndTime(SIMULATOR_END_TIME + 3.0);
+        simulation.Solve();
+	
+	//remove our old force
+	simulation.RemoveAllForces();
+	
+	// Make pointer to the NissenForceTrophectoderm and add it to the simulation
     	MAKE_PTR(NissenForceTrophectoderm<2>, p_force_troph); 
 	p_force_troph->SetCutOffLength(2.5);
 
         simulation.AddForce(p_force_troph);
 	
-        // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
-        simulation.SetEndTime(SIMULATOR_END_TIME + 20.0);
+	// Make pointer to the NissenForceTrophectoderm and add it to the simulation
+    	MAKE_PTR(NissenForceNoTroph<2>, p_force_no_troph); 
+	p_force_no_troph->SetCutOffLength(2.5);
+
+        simulation.AddForce(p_force_no_troph);
+	
+	// Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
+        simulation.SetEndTime(SIMULATOR_END_TIME + 23.0);
         simulation.Solve();
+	
+	
     }
 };
 
