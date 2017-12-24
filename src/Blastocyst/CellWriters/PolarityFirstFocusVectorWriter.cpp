@@ -33,23 +33,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "PerpPolarityVectorWriter.hpp"
+#include "PolarityFirstFocusVectorWriter.hpp"
 #include "TrophectodermCellProliferativeType.hpp"
 #include "CellPolaritySrnModel.hpp"
 #include "NodeBasedCellPopulation.hpp"
 
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-PerpPolarityVectorWriter<ELEMENT_DIM, SPACE_DIM>::PerpPolarityVectorWriter()
-    : AbstractCellWriter<ELEMENT_DIM, SPACE_DIM>("PerpPolarityVector.dat")
+PolarityFirstFocusVectorWriter<ELEMENT_DIM, SPACE_DIM>::PolarityFirstFocusVectorWriter()
+    : AbstractCellWriter<ELEMENT_DIM, SPACE_DIM>("PolarityFirstFocusVector.dat")
 {
-    this->mVtkVectorCellDataName = "Perpendicular Polarity Vector";
+    this->mVtkVectorCellDataName = "Polarity First Focus Vector";
     this->mOutputScalarData = false;
     this->mOutputVectorData = true;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-c_vector<double, SPACE_DIM> PerpPolarityVectorWriter<ELEMENT_DIM, SPACE_DIM>::GetVectorCellDataForVtkOutput(
+c_vector<double, SPACE_DIM> PolarityFirstFocusVectorWriter<ELEMENT_DIM, SPACE_DIM>::GetVectorCellDataForVtkOutput(
         CellPtr pCell, AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>* pCellPopulation)
 {
     assert(this->mOutputVectorData);
@@ -76,18 +76,19 @@ c_vector<double, SPACE_DIM> PerpPolarityVectorWriter<ELEMENT_DIM, SPACE_DIM>::Ge
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void PerpPolarityVectorWriter<ELEMENT_DIM, SPACE_DIM>::VisitCell(
+void PolarityFirstFocusVectorWriter<ELEMENT_DIM, SPACE_DIM>::VisitCell(
         CellPtr pCell, AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>* pCellPopulation)
 {
     unsigned location_index = pCellPopulation->GetLocationIndexUsingCell(pCell);
     unsigned cell_id = pCell->GetCellId();
-    c_vector<double, SPACE_DIM> cell_location = pCellPopulation->GetLocationOfCellCentre(pCell);
+    c_vector<double, SPACE_DIM> cell_location_first_focus = pCellPopulation->GetLocationOfCellCentre(pCell) + 0.25*orientation;
+    c_vector<double, SPACE_DIM> cell_location_second_focus = pCellPopulation->GetLocationOfCellCentre(pCell) - 0.25*orientation;		
     c_vector<double, SPACE_DIM> cell_orientation = GetVectorCellDataForVtkOutput(pCell, pCellPopulation);
 
     *this->mpOutStream << location_index << " " << cell_id << " ";
     for (unsigned i=0; i<SPACE_DIM; i++)
     {
-        *this->mpOutStream << cell_location[i] << " ";
+        *this->mpOutStream << cell_location_first_focus[i] << " ";    
     }
 
     for (unsigned i=0; i<SPACE_DIM; i++)
@@ -97,13 +98,13 @@ void PerpPolarityVectorWriter<ELEMENT_DIM, SPACE_DIM>::VisitCell(
 }
 
 // Explicit instantiation
-template class PerpPolarityVectorWriter<1,1>;
-template class PerpPolarityVectorWriter<1,2>;
-template class PerpPolarityVectorWriter<2,2>;
-template class PerpPolarityVectorWriter<1,3>;
-template class PerpPolarityVectorWriter<2,3>;
-template class PerpPolarityVectorWriter<3,3>;
+template class PolarityFirstFocusVectorWriter<1,1>;
+template class PolarityFirstFocusVectorWriter<1,2>;
+template class PolarityFirstFocusVectorWriter<2,2>;
+template class PolarityFirstFocusVectorWriter<1,3>;
+template class PolarityFirstFocusVectorWriter<2,3>;
+template class PolarityFirstFocusVectorWriter<3,3>;
 
 #include "SerializationExportWrapperForCpp.hpp"
 // Declare identifier for the serializer
-EXPORT_TEMPLATE_CLASS_ALL_DIMS(PerpPolarityVectorWriter)
+EXPORT_TEMPLATE_CLASS_ALL_DIMS(PolarityFirstFocusVectorWriter)
