@@ -56,7 +56,7 @@
 class TestNodeBasedMorula : public AbstractCellBasedWithTimingsTestSuite
 {
 private:
-    double SIMULATOR_END_TIME = 180.0;
+    double SIMULATOR_END_TIME = 90.0;
     
     /*
      * Function to call when we wish to make trophectoderm specification at E3.5. This is done by assigning
