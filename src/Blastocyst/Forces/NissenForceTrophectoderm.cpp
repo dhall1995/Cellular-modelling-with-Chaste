@@ -392,8 +392,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
           
             if(d_A1_B/2.0 < this->GetCutOffLength())
             {
-               potential_gradient = exp(-d_A1_B/5.0)*unit_vector_from_A1_to_B/5.0;
-               potential_gradient_repulsion = -exp(-d_A1_B)*unit_vector_from_A1_to_B;
+               potential_gradient = exp(-d_A1_B/5.0)*unit_vector_from_A_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d_A1_B)*unit_vector_from_A_to_B;
                
                force_first_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
@@ -413,8 +413,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
           
             if(d_A2_B/2.0 < this->GetCutOffLength())
             {
-               potential_gradient = exp(-d_A2_B/5.0)*unit_vector_from_A2_to_B/5.0;
-               potential_gradient_repulsion = -exp(-d_A2_B)*unit_vector_from_A2_to_B;
+               potential_gradient = exp(-d_A2_B/5.0)*unit_vector_from_A_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d_A2_B)*unit_vector_from_A_to_B;
                
                force_second_A_focus_B = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
@@ -569,8 +569,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
           
             if(d_A_B1/2.0 < this->GetCutOffLength())
             {
-               potential_gradient = exp(-d_A_B1/5.0)*unit_vector_from_A_to_B1/5.0;
-               potential_gradient_repulsion = -exp(-d_A_B1)*unit_vector_from_A_to_B1;
+               potential_gradient = exp(-d_A_B1/5.0)*unit_vector_from_A_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d_A_B1)*unit_vector_from_A_to_B;
                
                force_A_first_B_focus = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
@@ -590,8 +590,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
           
             if(d_A_B2/2.0 < this->GetCutOffLength())
             {
-               potential_gradient = exp(-d_A_B2/5.0)*unit_vector_from_A_to_B2/5.0;
-               potential_gradient_repulsion = -exp(-d_A_B2)*unit_vector_from_A_to_B2;
+               potential_gradient = exp(-d_A_B2/5.0)*unit_vector_from_A_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d_A_B2)*unit_vector_from_A_to_B;
                
                force_A_second_B_focus = potential_gradient*s + potential_gradient_repulsion;
                number_of_active_forces += 1.0;
