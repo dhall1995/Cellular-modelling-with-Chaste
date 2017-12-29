@@ -5,8 +5,8 @@
 
 PreCompactionCellCycleModel::PreCompactionCellCycleModel()
     : AbstractSimpleCellCycleModel(),
-      mMinCellCycleDuration(9.0), // Hours
-      mMaxCellCycleDuration(11.0)  // Hours
+      mMinCellCycleDuration(18.0), // Hours
+      mMaxCellCycleDuration(22.0)  // Hours
 {
 }
 
