@@ -97,7 +97,7 @@ void CellPolarityTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
 
     	            // Distance between the two nodes
     		    double d = norm_2(vector_from_A_to_B);
-		    if (d < 1.25)
+		    if (d < 2.5)
 		    {
 			    if(cell_B_iter->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>() == true)
 			    {
