@@ -107,7 +107,7 @@ public:
     	EXIT_IF_PARALLEL;
 
         // Re-seed random number generator to run multiple ctest runs without recompiling
-        RandomNumberGenerator::Instance()->Reseed(52);
+        RandomNumberGenerator::Instance()->Reseed(54);
 
     	/*
 	     * Set of methods to generate our initial cell with WildTypeMutationState and TransitCellProliferativeType, the
