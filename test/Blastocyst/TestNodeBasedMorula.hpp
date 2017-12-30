@@ -230,7 +230,7 @@ public:
         simulation.SetEndTime(SIMULATOR_END_TIME + 4.0);
         simulation.Solve();
 	
-	remove our old force
+	//remove our old force
 	simulation.RemoveAllForces();
 	
 	// Make pointer to the NissenForceTrophectoderm and add it to the simulation
