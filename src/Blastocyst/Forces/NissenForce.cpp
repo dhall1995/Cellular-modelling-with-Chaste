@@ -162,7 +162,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             // Need expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the 
             // unit vector from cell c to cell d
-            for(j = 0; j != SPACE_DIM; j++)
+            for(int j = 0; j != SPACE_DIM; j++)
             {
                e_A_dot_r_AB += polarity_vector_A[j]*unit_vector_from_A_to_B[j];
                e_B_dot_r_AB += polarity_vector_B[j]*unit_vector_from_A_to_B[j];
