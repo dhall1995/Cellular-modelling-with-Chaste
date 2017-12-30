@@ -175,8 +175,8 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             //c_vector<double, SPACE_DIM> extra_polarity_contribution_B = -s*exp(-d/5.0)*e_A_dot_r_AB*(1/d)*polarity_vector_B;
           
             //force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution + extra_polarity_contribution_A + extra_polarity_contribution_B;
-            double s = 1.4;
-            force = potential gradient*s + potential_gradient_repulsion;
+            double s = mS_TE_TE;
+            force = -potential gradient*s + potential_gradient_repulsion;
             return force;
           
              
