@@ -133,7 +133,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
           
             //define the strength of attraction and the polarity factor for the two TE cells 
             double s = mS_TE_TE;
-            double normalised_distance = std::max(d,0.4);
+            double normalised_distance = std::max(d,1.0);
           
             double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
             double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
@@ -233,10 +233,10 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A2_B2 *= 2.0;
           
             //Normalised distances for polar force contributions
-            double normalised_d_A1_B1 = std::max(0.4, d_A1_B1);
-            double normalised_d_A1_B2 = std::max(0.4, d_A1_B2);
-            double normalised_d_A2_B1 = std::max(0.4, d_A2_B1);
-            double normalised_d_A2_B2 = std::max(0.4, d_A2_B2);
+            double normalised_d_A1_B1 = std::max(1.0, d_A1_B1);
+            double normalised_d_A1_B2 = std::max(1.0, d_A1_B2);
+            double normalised_d_A2_B1 = std::max(1.0, d_A2_B1);
+            double normalised_d_A2_B2 = std::max(1.0, d_A2_B2);
           
             //Initialise expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the
             //unit vector from cell c to cell d. In this case we need these values for all pairings between focii
