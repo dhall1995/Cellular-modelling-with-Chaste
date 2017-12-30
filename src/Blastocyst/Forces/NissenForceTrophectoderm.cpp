@@ -203,9 +203,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             double d_A1_B2;
             double d_A2_B2;
           
-            //Initialise the distances between the focii and the actuall cell centres (needed for stability)
-            double d_A1_B;
-            double d_A2_B;
           
             //Initialise the forces between each focus
             c_vector<double, SPACE_DIM> force_first_A_focus_first_B_focus;
