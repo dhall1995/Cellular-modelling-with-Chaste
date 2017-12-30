@@ -172,10 +172,10 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             c_vector<double, SPACE_DIM> force_second_A_focus_first_B_focus;
           
             //Set up vectors between the various focii
-            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B1 = p_cell_A_first_focus - p_cell_B_first_focus;
-            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B1 = p_cell_A_second_focus - p_cell_B_first_focus;
-            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B2 = p_cell_A_second_focus - p_cell_B_second_focus;
-            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B2 = p_cell_A_first_focus - p_cell_B_second_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B1 = -p_cell_A_first_focus + p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B1 = -p_cell_A_second_focus + p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B2 = -p_cell_A_second_focus + p_cell_B_second_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B2 = -p_cell_A_first_focus + p_cell_B_second_focus;
           
             //set the distances between the various focii
             d_A1_B1 = norm_2(unit_vector_from_A1_to_B1);
@@ -196,6 +196,41 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A2_B2 *= 2.0;
           
           
+            //Need to store the polarity vectors as they have direct effects on the forces between TE cells
+            c_vector<double, SPACE_DIM> polarity_vector_A;
+            polarity_vector_A[0] = cos(angle_A);
+            polarity_vector_A[1] = sin(angle_A);
+            c_vector<double, SPACE_DIM> polarity_vector_B;
+            polarity_vector_B[0] = cos(angle_B);
+            polarity_vector_B[1] = sin(angle_B);
+          
+            //Initialise expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the
+            //unit vector from cell c to cell d. In this case we need these values for all pairings between focii
+            double e_A_dot_r_A1B1 = 0.0;
+            double e_B_dot_r_A1B1 = 0.0;
+            double e_A_dot_r_A1B2 = 0.0;
+            double e_B_dot_r_A1B2 = 0.0;
+            double e_A_dot_r_A2B1 = 0.0;
+            double e_B_dot_r_A2B1 = 0.0;
+            double e_A_dot_r_A2B2 = 0.0;
+            double e_B_dot_r_A2B2 = 0.0;
+            
+          
+            // Need expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the 
+            // unit vector from cell c to cell d. All of these inner products will need to be calculated for all possible focii pairings
+            for(int j = 0; j != SPACE_DIM; j++)
+            {
+               e_A_dot_r_A1B1 += polarity_vector_A[j]*unit_vector_from_A1_to_B1[j];
+               e_B_dot_r_A1B1 += polarity_vector_B[j]*unit_vector_from_A1_to_B1[j];
+               e_A_dot_r_A1B2 += polarity_vector_A[j]*unit_vector_from_A1_to_B2[j];
+               e_B_dot_r_A1B2 += polarity_vector_B[j]*unit_vector_from_A1_to_B2[j];
+               e_A_dot_r_A2B1 += polarity_vector_A[j]*unit_vector_from_A2_to_B1[j];
+               e_B_dot_r_A2B1 += polarity_vector_B[j]*unit_vector_from_A2_to_B1[j];
+               e_A_dot_r_A2B2 += polarity_vector_A[j]*unit_vector_from_A2_to_B2[j];
+               e_B_dot_r_A2B2 += polarity_vector_B[j]*unit_vector_from_A2_to_B2[j];
+            }
+     
+          
             //keep track of how many interactions are non-zero (we want the force normalised) as if it was the action of a single cell
             double number_of_active_forces = 0.0;
             
@@ -205,7 +240,12 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                potential_gradient = exp(-d_A1_B1/5.0)*unit_vector_from_A1_to_B1/5.0;
                potential_gradient_repulsion = -exp(-d_A1_B1)*unit_vector_from_A1_to_B1;
                
-               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A1B1 = ((2*s)/d_A1_B1)*e_A_dot_r_A1B1*e_B_dot_r_A1B1*exp(-d_A1_B1/5.0)*unit_vector_from_A1_to_B1;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A1B1 = -s*exp(-d_A1_B1/5.0)*e_B_dot_r_A1B1*(1/d_A1_B1)*polarity_vector_A;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A1B1 = -s*exp(-d_A1_B1/5.0)*e_A_dot_r_A1B1*(1/d_A1_B1)*polarity_vector_B;
+               
+               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A1B1 
+                                                   + extra_polarity_contribution_A_A1B1 + extra_polarity_contribution_B_A1B1;
                number_of_active_forces += 1.0;
                //check the force exists
                for (unsigned j=0; j<SPACE_DIM; j++)
@@ -226,7 +266,12 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                potential_gradient = exp(-d_A1_B2/5.0)*unit_vector_from_A1_to_B2/5.0;
                potential_gradient_repulsion = -exp(-d_A1_B2)*unit_vector_from_A1_to_B2;
                
-               force_first_A_focus_second_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A1B2 = ((2*s)/d_A1_B12)*e_A_dot_r_A1B2*e_B_dot_r_A1B2*exp(-d_A1_B2/5.0)*unit_vector_from_A1_to_B2;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A1B2 = -s*exp(-d_A1_B2/5.0)*e_B_dot_r_A1B2*(1/d_A1_B2)*polarity_vector_A;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A1B2 = -s*exp(-d_A1_B2/5.0)*e_A_dot_r_A1B2*(1/d_A1_B2)*polarity_vector_B;
+               
+               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A1B2 
+                                                   + extra_polarity_contribution_A_A1B2 + extra_polarity_contribution_B_A1B2;
                number_of_active_forces += 1.0;
                //check the force exists
                for (unsigned j=0; j<SPACE_DIM; j++)
@@ -247,7 +292,12 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                potential_gradient = exp(-d_A2_B1/5.0)*unit_vector_from_A2_to_B1/5.0;
                potential_gradient_repulsion = -exp(-d_A2_B1)*unit_vector_from_A2_to_B1;
                
-               force_second_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A2B1 = ((2*s)/d_A2_B1)*e_A_dot_r_A2B1*e_B_dot_r_A2B1*exp(-d_A2_B1/5.0)*unit_vector_from_A2_to_B1;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A2B1 = -s*exp(-d_A2_B1/5.0)*e_B_dot_r_A2B1*(1/d_A2_B1)*polarity_vector_A;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A2B1 = -s*exp(-d_A2_B1/5.0)*e_A_dot_r_A2B1*(1/d_A2_B1)*polarity_vector_B;
+               
+               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A2B1 
+                                                   + extra_polarity_contribution_A_A2B1 + extra_polarity_contribution_B_A2B1;
                number_of_active_forces += 1.0;
                //check the force exists
                for (unsigned j=0; j<SPACE_DIM; j++)
@@ -268,7 +318,12 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                potential_gradient = exp(-d_A2_B2/5.0)*unit_vector_from_A2_to_B2/5.0;
                potential_gradient_repulsion = -exp(-d_A2_B2)*unit_vector_from_A2_to_B2;
                
-               force_second_A_focus_second_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A2B2 = ((2*s)/d_A2_B2)*e_A_dot_r_A2B2*e_B_dot_r_A2B2*exp(-d_A2_B2/5.0)*unit_vector_from_A2_to_B2;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A2B2 = -s*exp(-d_A2_B2/5.0)*e_B_dot_r_A2B2*(1/d_A2_B2)*polarity_vector_A;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A2B2 = -s*exp(-d_A2_B2/5.0)*e_A_dot_r_A2B2*(1/d_A2_B2)*polarity_vector_B;
+               
+               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A2B2 
+                                                   + extra_polarity_contribution_A_A2B2 + extra_polarity_contribution_B_A2B2;
                number_of_active_forces += 1.0;
                //check the force exists
                for (unsigned j=0; j<SPACE_DIM; j++)
@@ -372,8 +427,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             c_vector<double, SPACE_DIM> force_second_A_focus_B;
           
             //Set up vectors between the various focii and the centre of cell B
-            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = p_cell_A_first_focus - r_node_B_location;
-            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = p_cell_A_second_focus - r_node_B_location;
+            c_vector<double, SPACE_DIM> unit_vector_from_A1_to_B = -p_cell_A_first_focus + r_node_B_location;
+            c_vector<double, SPACE_DIM> unit_vector_from_A2_to_B = -p_cell_A_second_focus + r_node_B_location;
 
             //set the distances between the various focii
             d_A1_B = norm_2(unit_vector_from_A1_to_B);
@@ -549,8 +604,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             c_vector<double, SPACE_DIM> force_A_second_B_focus;
           
             //Set up vectors between the various focii and the centre of cell B
-            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B1 = r_node_A_location - p_cell_B_first_focus;
-            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = r_node_A_location - p_cell_B_second_focus ;
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B1 = -r_node_A_location + p_cell_B_first_focus;
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = -r_node_A_location + p_cell_B_second_focus ;
 
             //set the distances between the various focii
             d_A_B1 = norm_2(unit_vector_from_A_to_B1);
