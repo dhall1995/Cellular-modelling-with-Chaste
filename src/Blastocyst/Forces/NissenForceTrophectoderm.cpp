@@ -183,7 +183,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                c_vector<double, SPACE_DIM> extra_polarity_contribution_A = -s*exp(-normalised_distance/5.0)*e_B_dot_r_AB*(1/normalised_distance)*polarity_vector_A;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B = -s*exp(-normalised_distance/5.0)*e_A_dot_r_AB*(1/normalised_distance)*polarity_vector_B;
                
-               force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution + extra_polarity_contribution_A + extra_polarity_contribution_B;
+               //force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution + extra_polarity_contribution_A + extra_polarity_contribution_B;
+               force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + extra_polarity_contribution_A + extra_polarity_contribution_B;
                return force;
             }
 
