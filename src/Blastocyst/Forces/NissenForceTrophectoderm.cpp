@@ -266,7 +266,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                potential_gradient = exp(-d_A1_B2/5.0)*unit_vector_from_A1_to_B2/5.0;
                potential_gradient_repulsion = -exp(-d_A1_B2)*unit_vector_from_A1_to_B2;
                
-               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A1B2 = ((2*s)/d_A1_B12)*e_A_dot_r_A1B2*e_B_dot_r_A1B2*exp(-d_A1_B2/5.0)*unit_vector_from_A1_to_B2;
+               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A1B2 = ((2*s)/d_A1_B2)*e_A_dot_r_A1B2*e_B_dot_r_A1B2*exp(-d_A1_B2/5.0)*unit_vector_from_A1_to_B2;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A1B2 = -s*exp(-d_A1_B2/5.0)*e_B_dot_r_A1B2*(1/d_A1_B2)*polarity_vector_A;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A1B2 = -s*exp(-d_A1_B2/5.0)*e_A_dot_r_A1B2*(1/d_A1_B2)*polarity_vector_B;
                
