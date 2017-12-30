@@ -176,7 +176,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             //force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution + extra_polarity_contribution_A + extra_polarity_contribution_B;
             double s = mS_TE_TE;
-            force = -potential gradient*s + potential_gradient_repulsion;
+            force = -potential_gradient*s + potential_gradient_repulsion;
             return force;
           
              
