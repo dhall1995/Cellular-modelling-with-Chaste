@@ -179,12 +179,11 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                double normalised_distance = std::max(d,0.0);
                
-               //c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution = ((2*s)/normalised_distance)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-normalised_distance/5.0)*unit_vector_from_A_to_B;
+               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution = ((2*s)/normalised_distance)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-normalised_distance/5.0)*unit_vector_from_A_to_B;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_A = -s*exp(-normalised_distance/5.0)*e_B_dot_r_AB*(1/normalised_distance)*polarity_vector_A;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B = -s*exp(-normalised_distance/5.0)*e_A_dot_r_AB*(1/normalised_distance)*polarity_vector_B;
                
-               //force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution + extra_polarity_contribution_A + extra_polarity_contribution_B;
-               force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + extra_polarity_contribution_A + extra_polarity_contribution_B;
+               force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution + extra_polarity_contribution_A + extra_polarity_contribution_B;
                return force;
             }
 
@@ -207,6 +206,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             double d_A1_B2;
             double d_A2_B2;
           
+            //Initialise distances between focii and cell-centres (needed for stability)
+            
           
             //Initialise the forces between each focus
             c_vector<double, SPACE_DIM> force_first_A_focus_first_B_focus;
