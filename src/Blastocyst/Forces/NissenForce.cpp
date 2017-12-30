@@ -101,7 +101,7 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             // No cells should ever interact beyond the cutoff length
             if (this->mUseCutOffLength)
             {
-                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                if (d >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
                 {
                     return force;
                 }
@@ -113,8 +113,6 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
             * CELL 'BETWEEN' THEM WITHIN THE INTERACTION DISTANCE I.E. FOR CELLS A AND B THERE DOES NOT EXIST A CELL C 
             * SUCH THAT (DISTANCE_FROM_A_TO_C)
             */
-            potential_gradient = exp(-d/10.0)*unit_vector_from_A_to_B/5.0;
-            potential_gradient_repulsion = -exp(-d/2.0)*unit_vector_from_A_to_B;
             
             // Fill vectors using the polarity_vector data which should be stored when specifiying trophectoderm (See TestNodeBasedMorula.hpp)
             CellPolaritySrnModel* p_srn_model_A = static_cast<CellPolaritySrnModel*>(p_cell_A->GetSrnModel());
@@ -128,30 +126,52 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
           
             double s = mS_TE_TE;
             
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
-            //{
-               //AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>* p_static_cast_cell_population = static_cast<AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>*>(&rCellPopulation);
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            {
+               AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>* p_static_cast_cell_population = static_cast<AbstractCentreBasedCellPopulation<ELEMENT_DIM,SPACE_DIM>*>(&rCellPopulation);
 
-               //std::pair<CellPtr,CellPtr> cell_pair = p_static_cast_cell_population->CreateCellPair(p_cell_A, p_cell_B);
+               std::pair<CellPtr,CellPtr> cell_pair = p_static_cast_cell_population->CreateCellPair(p_cell_A, p_cell_B);
 
-               //if (p_static_cast_cell_population->IsMarkedSpring(cell_pair))
-               //{
-                  // Spring rest length increases from a small value to the normal rest length over 1 hour
-                  //if(polarity_factor < 0.0)
-                  //{
-                     //s = -5.0 + (mS_TE_TE + 5.0) * ageA/mGrowthDuration;
-                  //}
-               //}
-               //if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
-               //{
+               if (p_static_cast_cell_population->IsMarkedSpring(cell_pair))
+               {
+                  //Spring rest length increases from a small value to the normal rest length over 1 hour
+                  if(polarity_factor < 0.0)
+                  {
+                     s = -5.0 + (mS_TE_TE + 5.0) * ageA/mGrowthDuration;
+                  }
+               }
+               if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
+               {
                   // This spring is about to go out of scope
-                  //p_static_cast_cell_population->UnmarkSpring(cell_pair);
-               //}
-            //}
+                  p_static_cast_cell_population->UnmarkSpring(cell_pair);
+               }
+            }
             
+            //Need to store the polarity vectors as they have direct effects on the forces between TE cells
+            c_vector<double, SPACE_DIM> polarity_vector_A;
+            polarity_vector_A[0] = cos(angle_A);
+            polarity_vector_A[1] = sin(angle_A);
+            c_vector<double, SPACE_DIM> polarity_vector_B;
+            polarity_vector_B[0] = cos(angle_B);
+            polarity_vector_B[1] = sin(angle_B);
           
+            //Initialise expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the
+            //unit vector from cell c to cell d.
+            double e_A_dot_r_AB = 0.0;
+            double e_B_dot_r_AB = 0.0;
           
-            force = potential_gradient*polarity_factor*s + potential_gradient_repulsion;
+            // Need expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the 
+            // unit vector from cell c to cell d
+            for(j = 0; j != SPACE_DIM; j++)
+            {
+               e_A_dot_r_AB += polarity_vector_A[j]*unit_vector_from_A_to_B[j];
+               e_B_dot_r_AB += polarity_vector_B[j]*unit_vector_from_A_to_B[j];
+            }
+            double centrally_acting_polarity_contribution = ((2*s)/d)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-d/5.0)*unit_vector_from_A_to_B;
+            double extra_polarity_contribution_A = -s*exp(-d/5.0)*e_B_dot_r_AB*(1/d)*polarity_vector_A;
+            double extra_polarity_contribution_B = -s*exp(-d/5.0)*e_A_dot_r_AB*(1/d)*polarity_vector_B;
+          
+            force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution + extra_polarity_contribution_A + extra_polarity_contribution_B;
             return force;
           
              
