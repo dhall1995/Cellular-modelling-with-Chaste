@@ -246,8 +246,8 @@ public:
         simulation.AddForce(p_force_no_troph);
 	
 	// Make pointer to the NissenNoiseForce and add it to the simulation
-        MAKE_PTR(NissenNoiseForce<2>, p_noise_force);
-        simulation.AddForce(p_noise_force);
+        MAKE_PTR(NissenNoiseForce<2>, p_new_noise_force);
+        simulation.AddForce(p_new_noise_force);
 	
 	// Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
         simulation.SetEndTime(SIMULATOR_END_TIME + 25.0);
