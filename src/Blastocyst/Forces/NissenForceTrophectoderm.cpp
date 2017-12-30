@@ -320,7 +320,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A1B2 = -s*exp(-normalised_d_A1_B2/5.0)*e_A_dot_r_A1B2*(1/normalised_d_A1_B2)*polarity_vector_B;
                
                
-               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A1B2 
+               force_first_A_focus_second_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A1B2 
                                                    + extra_polarity_contribution_A_A1B2 + extra_polarity_contribution_B_A1B2;
                number_of_active_forces += 1.0;
                //check the force exists
@@ -350,7 +350,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A2B1 = -s*exp(-normalised_d_A2_B1/5.0)*e_A_dot_r_A2B1*(1/normalised_d_A2_B1)*polarity_vector_B;
                
                
-               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A2B1 
+               force_second_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A2B1 
                                                    + extra_polarity_contribution_A_A2B1 + extra_polarity_contribution_B_A2B1;
                number_of_active_forces += 1.0;
                //check the force exists
@@ -380,7 +380,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A2B2 = -s*exp(-normalised_d_A2_B2/5.0)*e_A_dot_r_A2B2*(1/normalised_d_A2_B2)*polarity_vector_B;
                
                
-               force_first_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A2B2 
+               force_second_A_focus_second_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A2B2 
                                                    + extra_polarity_contribution_A_A2B2 + extra_polarity_contribution_B_A2B2;
                number_of_active_forces += 1.0;
                //check the force exists
