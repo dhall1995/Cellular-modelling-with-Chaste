@@ -133,10 +133,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
           
             //define the strength of attraction and the polarity factor for the two TE cells 
             double s = mS_TE_TE;
-            double normalised_distance = std::max(d,1.0);
-            PRINT_VARIABLE(normalised_distance);
-          
-            
+            double normalised_distance = std::max(d,1.0);        
             
             //if each of the cells is young then we treat them as spherical with radius 2.0 whilst they grow
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
@@ -236,15 +233,10 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A2_B2 *= 2.0;
           
             //Normalised distances for polar force contributions
-            double normalised_d_A1_B1 = std::max(1.0, d_A1_B1);
-            double normalised_d_A1_B2 = std::max(1.0, d_A1_B2);
-            double normalised_d_A2_B1 = std::max(1.0, d_A2_B1);
-            double normalised_d_A2_B2 = std::max(1.0, d_A2_B2);
-          
-            PRINT_VARIABLE(normalised_d_A1_B1);
-            PRINT_VARIABLE(normalised_d_A1_B2);
-            PRINT_VARIABLE(normalised_d_A2_B1);
-            PRINT_VARIABLE(normalised_d_A2_B2);
+            double normalised_d_A1_B1 = std::max(0.5, d_A1_B1);
+            double normalised_d_A1_B2 = std::max(0.5, d_A1_B2);
+            double normalised_d_A2_B1 = std::max(0.5, d_A2_B1);
+            double normalised_d_A2_B2 = std::max(0.5, d_A2_B2);
           
             //Initialise expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the
             //unit vector from cell c to cell d. In this case we need these values for all pairings between focii
