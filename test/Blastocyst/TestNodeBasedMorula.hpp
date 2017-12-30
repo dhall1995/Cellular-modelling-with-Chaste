@@ -227,23 +227,27 @@ public:
 	
         // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum 
 	//and spread out a bit
-        //simulation.SetEndTime(SIMULATOR_END_TIME + 4.0);
-        //simulation.Solve();
+        simulation.SetEndTime(SIMULATOR_END_TIME + 4.0);
+        simulation.Solve();
 	
-	//remove our old force
-	//simulation.RemoveAllForces();
-	
-	// Make pointer to the NissenForceTrophectoderm and add it to the simulation
-    	//MAKE_PTR(NissenForceTrophectoderm<2>, p_force_troph); 
-	//p_force_troph->SetCutOffLength(2.5);
-
-        //simulation.AddForce(p_force_troph);
+	remove our old force
+	simulation.RemoveAllForces();
 	
 	// Make pointer to the NissenForceTrophectoderm and add it to the simulation
-    	//MAKE_PTR(NissenForceNoTroph<2>, p_force_no_troph); 
-	//p_force_no_troph->SetCutOffLength(2.5);
+    	MAKE_PTR(NissenForceTrophectoderm<2>, p_force_troph); 
+	p_force_troph->SetCutOffLength(2.5);
 
-        //simulation.AddForce(p_force_no_troph);
+        simulation.AddForce(p_force_troph);
+	
+	// Make pointer to the NissenForceTrophectoderm and add it to the simulation
+    	MAKE_PTR(NissenForceNoTroph<2>, p_force_no_troph); 
+	p_force_no_troph->SetCutOffLength(2.5);
+
+        simulation.AddForce(p_force_no_troph);
+	
+	// Make pointer to the NissenNoiseForce and add it to the simulation
+        MAKE_PTR(NissenNoiseForce<2>, p_noise_force);
+        simulation.AddForce(p_noise_force)
 	
 	// Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
         simulation.SetEndTime(SIMULATOR_END_TIME + 25.0);
