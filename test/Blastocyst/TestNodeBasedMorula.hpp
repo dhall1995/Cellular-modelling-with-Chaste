@@ -49,8 +49,6 @@
 // Visualising
 #include "CellProliferativeTypesCountWriter.hpp"
 #include "PolarityVectorWriter.hpp"
-#include "PolarityFirstFocusVectorWriter.hpp"
-#include "PolaritySecondFocusVectorWriter.hpp"
 #include "Debug.hpp"
 
 class TestNodeBasedMorula : public AbstractCellBasedWithTimingsTestSuite
@@ -185,10 +183,7 @@ public:
 	
 	//Add a writer for cell polarity
 	cell_population.AddCellWriter<PolarityVectorWriter>();
-	cell_population.AddCellWriter<PolarityFirstFocusVectorWriter>();
-	cell_population.AddCellWriter<PolaritySecondFocusVectorWriter>();
-	
-	
+
 	//Initialise the Nissen Division Rules and apply to the cell population
 	boost::shared_ptr<AbstractCentreBasedDivisionRule<2,2> > Nissen_Division_Rule(new NissenBasedDivisionRule<2,2>());
 	cell_population.SetCentreBasedDivisionRule(Nissen_Division_Rule);
@@ -232,23 +227,23 @@ public:
 	
         // Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum 
 	//and spread out a bit
-        simulation.SetEndTime(SIMULATOR_END_TIME + 4.0);
-        simulation.Solve();
+        //simulation.SetEndTime(SIMULATOR_END_TIME + 4.0);
+        //simulation.Solve();
 	
 	//remove our old force
-	simulation.RemoveAllForces();
+	//simulation.RemoveAllForces();
 	
 	// Make pointer to the NissenForceTrophectoderm and add it to the simulation
-    	MAKE_PTR(NissenForceTrophectoderm<2>, p_force_troph); 
-	p_force_troph->SetCutOffLength(2.5);
+    	//MAKE_PTR(NissenForceTrophectoderm<2>, p_force_troph); 
+	//p_force_troph->SetCutOffLength(2.5);
 
-        simulation.AddForce(p_force_troph);
+        //simulation.AddForce(p_force_troph);
 	
 	// Make pointer to the NissenForceTrophectoderm and add it to the simulation
-    	MAKE_PTR(NissenForceNoTroph<2>, p_force_no_troph); 
-	p_force_no_troph->SetCutOffLength(2.5);
+    	//MAKE_PTR(NissenForceNoTroph<2>, p_force_no_troph); 
+	//p_force_no_troph->SetCutOffLength(2.5);
 
-        simulation.AddForce(p_force_no_troph);
+        //simulation.AddForce(p_force_no_troph);
 	
 	// Run simulation for a small amount more time in order to allow trophectoderm cells to reach equilibirum
         simulation.SetEndTime(SIMULATOR_END_TIME + 25.0);
