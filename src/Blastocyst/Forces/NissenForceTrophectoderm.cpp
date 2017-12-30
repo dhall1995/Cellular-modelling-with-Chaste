@@ -170,7 +170,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                //Need expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the 
                // unit vector from cell c to cell d
-               for(int j = 0; j != SPACE_DIM; j++)
+               for(unsigned j = 0; j != SPACE_DIM; j++)
                {
                    e_A_dot_r_AB += polarity_vector_A[j]*unit_vector_from_A_to_B[j];
                    e_B_dot_r_AB += polarity_vector_B[j]*unit_vector_from_A_to_B[j];
@@ -252,7 +252,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
           
             // Need expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the 
             // unit vector from cell c to cell d. All of these inner products will need to be calculated for all possible focii pairings
-            for(int j = 0; j != SPACE_DIM; j++)
+            for(unsigned j = 0; j != SPACE_DIM; j++)
             {
                e_A_dot_r_A1B1 += polarity_vector_A[j]*unit_vector_from_A1_to_B1[j];
                e_B_dot_r_A1B1 += polarity_vector_B[j]*unit_vector_from_A1_to_B1[j];
