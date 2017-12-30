@@ -244,7 +244,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A1B1 = zeroes;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A1B1 = zeroes;
                
-               if(d_A1_B1 > 0.4)
+               if(d_A1_B1 > 0.2)
                {
                    c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A1B1 = ((2*s)/d_A1_B1)*e_A_dot_r_A1B1*e_B_dot_r_A1B1*exp(-d_A1_B1/5.0)*unit_vector_from_A1_to_B1;
                    c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A1B1 = -s*exp(-d_A1_B1/5.0)*e_B_dot_r_A1B1*(1/d_A1_B1)*polarity_vector_A;
@@ -277,7 +277,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A1B2 = zeroes;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A1B2 = zeroes;
                
-               if(d_A1_B2 > 0.4)
+               if(d_A1_B2 > 0.2)
                {
                    c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A1B2 = ((2*s)/d_A1_B2)*e_A_dot_r_A1B2*e_B_dot_r_A1B2*exp(-d_A1_B2/5.0)*unit_vector_from_A1_to_B2;
                    c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A1B2 = -s*exp(-d_A1_B2/5.0)*e_B_dot_r_A1B2*(1/d_A1_B2)*polarity_vector_A;
@@ -310,7 +310,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A2B1 = zeroes;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A2B1 = zeroes;
                
-               if(d_A2_B1 > 0.4)
+               if(d_A2_B1 > 0.2)
                {
                    c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A2B1 = ((2*s)/d_A2_B1)*e_A_dot_r_A2B1*e_B_dot_r_A2B1*exp(-d_A2_B1/5.0)*unit_vector_from_A2_to_B1;
                    c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A2B1 = -s*exp(-d_A2_B1/5.0)*e_B_dot_r_A2B1*(1/d_A2_B1)*polarity_vector_A;
@@ -343,7 +343,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A2B2 = zeroes;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A2B2 = zeroes;
                
-               if(d_A2_B2 > 0.4)
+               if(d_A2_B2 > 0.2)
                {
                   c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A2B2 = ((2*s)/d_A2_B2)*e_A_dot_r_A2B2*e_B_dot_r_A2B2*exp(-d_A2_B2/5.0)*unit_vector_from_A2_to_B2;
                   c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A2B2 = -s*exp(-d_A2_B2/5.0)*e_B_dot_r_A2B2*(1/d_A2_B2)*polarity_vector_A;
@@ -633,7 +633,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
           
             //Set up vectors between the various focii and the centre of cell B
             c_vector<double, SPACE_DIM> unit_vector_from_A_to_B1 = -r_node_A_location + p_cell_B_first_focus;
-            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = -r_node_A_location + p_cell_B_second_focus ;
+            c_vector<double, SPACE_DIM> unit_vector_from_A_to_B2 = -r_node_A_location + p_cell_B_second_focus;
 
             //set the distances between the various focii
             d_A_B1 = norm_2(unit_vector_from_A_to_B1);
