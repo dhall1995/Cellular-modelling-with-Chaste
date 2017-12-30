@@ -167,9 +167,9 @@ c_vector<double, SPACE_DIM> NissenForce<ELEMENT_DIM,SPACE_DIM>::CalculateForceBe
                e_A_dot_r_AB += polarity_vector_A[j]*unit_vector_from_A_to_B[j];
                e_B_dot_r_AB += polarity_vector_B[j]*unit_vector_from_A_to_B[j];
             }
-            double centrally_acting_polarity_contribution = ((2*s)/d)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-d/5.0)*unit_vector_from_A_to_B;
-            double extra_polarity_contribution_A = -s*exp(-d/5.0)*e_B_dot_r_AB*(1/d)*polarity_vector_A;
-            double extra_polarity_contribution_B = -s*exp(-d/5.0)*e_A_dot_r_AB*(1/d)*polarity_vector_B;
+            c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution = ((2*s)/d)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-d/5.0)*unit_vector_from_A_to_B;
+            c_vector<double, SPACE_DIM> extra_polarity_contribution_A = -s*exp(-d/5.0)*e_B_dot_r_AB*(1/d)*polarity_vector_A;
+            c_vector<double, SPACE_DIM> extra_polarity_contribution_B = -s*exp(-d/5.0)*e_A_dot_r_AB*(1/d)*polarity_vector_B;
           
             force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution + extra_polarity_contribution_A + extra_polarity_contribution_B;
             return force;
