@@ -151,7 +151,13 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                   // This spring is about to go out of scope
                   p_static_cast_cell_population->UnmarkSpring(cell_pair);
                }
-               
+               //Need expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the 
+               // unit vector from cell c to cell d
+               for(int j = 0; j != SPACE_DIM; j++)
+               {
+                   e_A_dot_r_AB += polarity_vector_A[j]*unit_vector_from_A_to_B[j];
+                   e_B_dot_r_AB += polarity_vector_B[j]*unit_vector_from_A_to_B[j];
+               }
                c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution = ((2*s)/normalised_distance)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-d/5.0)*unit_vector_from_A_to_B;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_A = -s*exp(-d/5.0)*e_B_dot_r_AB*(1/normalised_distance)*polarity_vector_A;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B = -s*exp(-d/5.0)*e_A_dot_r_AB*(1/normalised_distance)*polarity_vector_B;
