@@ -102,8 +102,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        perp_polarity_vector_A[0] = -sin(angle_A);
        perp_polarity_vector_A[1] = cos(angle_A);
           
-       p_cell_A_first_focus = r_node_A_location + 0.5*perp_polarity_vector_A;
-       p_cell_A_second_focus = r_node_A_location -0.5*perp_polarity_vector_A;
+       p_cell_A_first_focus = r_node_A_location + 0.3*perp_polarity_vector_A;
+       p_cell_A_second_focus = r_node_A_location -0.3*perp_polarity_vector_A;
        
        //CASE 1-1: Cell B is also trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
@@ -193,8 +193,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             perp_polarity_vector_B[1] = cos(angle_B);
             
             //Define the two focii for cellB
-            p_cell_B_first_focus = r_node_B_location + 0.5*perp_polarity_vector_B;
-            p_cell_B_second_focus = r_node_B_location -0.5*perp_polarity_vector_B;
+            p_cell_B_first_focus = r_node_B_location + 0.3*perp_polarity_vector_B;
+            p_cell_B_second_focus = r_node_B_location -0.3*perp_polarity_vector_B;
        
             //Initialise the distances between the focii
             double d_A1_B1;
