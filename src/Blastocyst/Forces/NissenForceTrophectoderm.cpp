@@ -108,7 +108,17 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
        //CASE 1-1: Cell B is also trophectoderm
        if(p_cell_B->GetCellProliferativeType()->template IsType<TrophectodermCellProliferativeType>())
        {
-           
+            // For POLAR throphectoderm cells we restrict the distance of interaction to 2.5 cell radii (half of for normal cells)
+            // No cells should ever interact beyond the cutoff length
+            if (this->mUseCutOffLength)
+            {
+                if (d/2.0 >= this->GetCutOffLength())  //remember chaste distances given in DIAMETERS
+                {
+                    return force;
+                }
+            }
+            
+          
             //First thing we want to do is get the polarity angle for the trophectoderm cell B
             CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
             double angle_B = p_srn_model_B->GetPolarityAngle();
@@ -124,7 +134,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //define the strength of attraction and the polarity factor for the two TE cells 
             double s = mS_TE_TE;
             double normalised_distance = std::max(d,0.2);
-            PRINT_VARIABLE(normalised_distance);
+          
             double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
             double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
             
@@ -165,9 +175,9 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                    e_A_dot_r_AB += polarity_vector_A[j]*unit_vector_from_A_to_B[j];
                    e_B_dot_r_AB += polarity_vector_B[j]*unit_vector_from_A_to_B[j];
                }
-               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution = ((2*s)/normalised_distance)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-d/5.0)*unit_vector_from_A_to_B;
-               c_vector<double, SPACE_DIM> extra_polarity_contribution_A = -s*exp(-d/5.0)*e_B_dot_r_AB*(1/normalised_distance)*polarity_vector_A;
-               c_vector<double, SPACE_DIM> extra_polarity_contribution_B = -s*exp(-d/5.0)*e_A_dot_r_AB*(1/normalised_distance)*polarity_vector_B;
+               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution = ((2*s)/normalised_distance)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-normalised_distance/5.0)*unit_vector_from_A_to_B;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_A = -s*exp(-normalised_distance/5.0)*e_B_dot_r_AB*(1/normalised_distance)*polarity_vector_A;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_B = -s*exp(-normalised_distance/5.0)*e_A_dot_r_AB*(1/normalised_distance)*polarity_vector_B;
                
                force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution + extra_polarity_contribution_A + extra_polarity_contribution_B;
                return force;
@@ -228,11 +238,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             double normalised_d_A2_B1 = std::max(0.2, d_A2_B1);
             double normalised_d_A2_B2 = std::max(0.2, d_A2_B2);
           
-            PRINT_VARIABLE(normalised_d_A1_B1);
-            PRINT_VARIABLE(normalised_d_A1_B2);
-            PRINT_VARIABLE(normalised_d_A2_B1);
-            PRINT_VARIABLE(normalised_d_A2_B2);
-          
             //Initialise expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the
             //unit vector from cell c to cell d. In this case we need these values for all pairings between focii
             double e_A_dot_r_A1B1 = 0.0;
@@ -269,9 +274,9 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                potential_gradient = exp(-d_A1_B1/5.0)*unit_vector_from_A1_to_B1/5.0;
                potential_gradient_repulsion = -exp(-d_A1_B1)*unit_vector_from_A1_to_B1;
                
-               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A1B1 = ((2*s)/normalised_d_A1_B1)*e_A_dot_r_A1B1*e_B_dot_r_A1B1*exp(-d_A1_B1/5.0)*unit_vector_from_A1_to_B1;
-               c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A1B1 = -s*exp(-d_A1_B1/5.0)*e_B_dot_r_A1B1*(1/normalised_d_A1_B1)*polarity_vector_A;
-               c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A1B1 = -s*exp(-d_A1_B1/5.0)*e_A_dot_r_A1B1*(1/normalised_d_A1_B1)*polarity_vector_B;
+               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution_A1B1 = ((2*s)/normalised_d_A1_B1)*e_A_dot_r_A1B1*e_B_dot_r_A1B1*exp(-normalised_d_A1_B1/5.0)*unit_vector_from_A1_to_B1;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_A_A1B1 = -s*exp(-normalise_d_A1_B1/5.0)*e_B_dot_r_A1B1*(1/normalised_d_A1_B1)*polarity_vector_A;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_B_A1B1 = -s*exp(-normalised_d_A1_B1/5.0)*e_A_dot_r_A1B1*(1/normalised_d_A1_B1)*polarity_vector_B;
                
                
                force_first_A_focus_first_B_focus = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution_A1B1 
