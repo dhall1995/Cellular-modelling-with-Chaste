@@ -113,6 +113,14 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             CellPolaritySrnModel* p_srn_model_B = static_cast<CellPolaritySrnModel*>(p_cell_B->GetSrnModel());
             double angle_B = p_srn_model_B->GetPolarityAngle();
           
+            //Need to store the polarity vectors as they have direct effects on the forces between TE cells
+            c_vector<double, SPACE_DIM> polarity_vector_A;
+            polarity_vector_A[0] = cos(angle_A);
+            polarity_vector_A[1] = sin(angle_A);
+            c_vector<double, SPACE_DIM> polarity_vector_B;
+            polarity_vector_B[0] = cos(angle_B);
+            polarity_vector_B[1] = sin(angle_B);
+          
             //define the strength of attraction and the polarity factor for the two TE cells 
             double s = mS_TE_TE;
             double normalised_distance = std::max(d,0.2);
@@ -207,14 +215,6 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             double normalised_d_A2_B1 = std::max(0.2, d_A2_B1);
             double normalised_d_A2_B2 = std::max(0.2, d_A2_B2);
           
-          
-            //Need to store the polarity vectors as they have direct effects on the forces between TE cells
-            c_vector<double, SPACE_DIM> polarity_vector_A;
-            polarity_vector_A[0] = cos(angle_A);
-            polarity_vector_A[1] = sin(angle_A);
-            c_vector<double, SPACE_DIM> polarity_vector_B;
-            polarity_vector_B[0] = cos(angle_B);
-            polarity_vector_B[1] = sin(angle_B);
           
             //Initialise expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the
             //unit vector from cell c to cell d. In this case we need these values for all pairings between focii
