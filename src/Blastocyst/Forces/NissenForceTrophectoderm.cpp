@@ -179,7 +179,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                double normalised_distance = std::max(d,0.0);
                
-               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution = ((2*s)/normalised_distance)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-normalised_distance/5.0)*unit_vector_from_A_to_B;
+               //c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution = ((2*s)/normalised_distance)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-normalised_distance/5.0)*unit_vector_from_A_to_B;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_A = -s*exp(-normalised_distance/5.0)*e_B_dot_r_AB*(1/normalised_distance)*polarity_vector_A;
                c_vector<double, SPACE_DIM> extra_polarity_contribution_B = -s*exp(-normalised_distance/5.0)*e_A_dot_r_AB*(1/normalised_distance)*polarity_vector_B;
                
