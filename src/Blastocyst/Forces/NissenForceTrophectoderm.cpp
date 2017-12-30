@@ -233,10 +233,10 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             d_A2_B2 *= 2.0;
           
             //Normalised distances for polar force contributions
-            double normalised_d_A1_B1 = std::max(0.5, d_A1_B1);
-            double normalised_d_A1_B2 = std::max(0.5, d_A1_B2);
-            double normalised_d_A2_B1 = std::max(0.5, d_A2_B1);
-            double normalised_d_A2_B2 = std::max(0.5, d_A2_B2);
+            double normalised_d_A1_B1 = std::max(0.1, d_A1_B1);
+            double normalised_d_A1_B2 = std::max(0.1, d_A1_B2);
+            double normalised_d_A2_B1 = std::max(0.1, d_A2_B1);
+            double normalised_d_A2_B2 = std::max(0.1, d_A2_B2);
           
             //Initialise expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the
             //unit vector from cell c to cell d. In this case we need these values for all pairings between focii
