@@ -138,7 +138,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //if each of the cells is young then we treat them as spherical with radius 2.0 whilst they grow
             if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
-               s /= 2.0;
+               s /= 3.0;
                
                double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
                double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
