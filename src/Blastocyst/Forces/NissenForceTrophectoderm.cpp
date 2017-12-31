@@ -136,7 +136,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                    
             
             //if each of the cells is young then we treat them as spherical with radius 2.0 whilst they grow
-            //if (ageA < mGrowthDuration && ageB < mGrowthDuration)
+            if (ageA < mGrowthDuration && ageB < mGrowthDuration)
             {
                s /= 3.0;
                
@@ -158,7 +158,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                       s = -5.0 + (mS_TE_TE + 5.0) * ageA/mGrowthDuration;
                    }
                }
-               //if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
+               if (ageA + SimulationTime::Instance()->GetTimeStep() >= mGrowthDuration)
                {
                   // This spring is about to go out of scope
                   p_static_cast_cell_population->UnmarkSpring(cell_pair);
