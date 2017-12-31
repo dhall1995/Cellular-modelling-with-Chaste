@@ -14,7 +14,7 @@ NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::NissenForceTrophectoderm()
      mS_TE_ICM(0.6),  // TE-ICM interaction strength
      mS_TE_EPI(0.6),  // TE-EPI interaction strength
      mS_TE_PrE(0.4),  // TE-PrE interaction strength
-     mS_TE_TE(-1.4),  // TE-TE interaction strength - NOTE: This is just a prefactor and polarity effects will be included
+     mS_TE_TE(-1.5),  // TE-TE interaction strength - NOTE: This is just a prefactor and polarity effects will be included
      mGrowthDuration(3.0)
 {
 }
