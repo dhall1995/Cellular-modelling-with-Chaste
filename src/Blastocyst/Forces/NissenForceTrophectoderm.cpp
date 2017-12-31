@@ -240,7 +240,7 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
             //NIssen specifies that cells only interact with their nearest neighbours so we need the minimum distance
             double min_A1 = std::min(d_A1_B1, d_A1_B2);
             double min_A2 = std::min(d_A2_B1, d_A2_B2);
-            double mininmum = std::min(min_A1, min_A2);
+            double minimum = std::min(min_A1, min_A2);
        
           
             //Normalised distances for polar force contributions
