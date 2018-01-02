@@ -139,8 +139,8 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                double cell_difference_angle = atan2(unit_vector_from_A_to_B[1],unit_vector_from_A_to_B[0]);
                double polarity_factor = -sin(cell_difference_angle - angle_A)*sin(cell_difference_angle - angle_B);
                
-               potential_gradient = exp(-d/10.0)*unit_vector_from_A_to_B/5.0;
-               potential_gradient_repulsion = -exp(-d/2.0)*unit_vector_from_A_to_B;
+               potential_gradient = exp(-d/15.0)*unit_vector_from_A_to_B/5.0;
+               potential_gradient_repulsion = -exp(-d/3.0)*unit_vector_from_A_to_B;
                
                //Initialise expressions for (e_c).(r_cd) where e_c is the polarity vector for cell c and r_cd is the
                //unit vector from cell c to cell d.
@@ -157,9 +157,9 @@ c_vector<double, SPACE_DIM> NissenForceTrophectoderm<ELEMENT_DIM,SPACE_DIM>::Cal
                
                double normalised_distance = std::max(d,0.0);
                
-               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution = ((4*s)/normalised_distance)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-normalised_distance/10.0)*unit_vector_from_A_to_B;
-               c_vector<double, SPACE_DIM> extra_polarity_contribution_A = -s*exp(-normalised_distance/10.0)*e_B_dot_r_AB*(2/normalised_distance)*polarity_vector_A;
-               c_vector<double, SPACE_DIM> extra_polarity_contribution_B = -s*exp(-normalised_distance/10.0)*e_A_dot_r_AB*(2/normalised_distance)*polarity_vector_B;
+               c_vector<double, SPACE_DIM> centrally_acting_polarity_contribution = ((6*s)/normalised_distance)*e_A_dot_r_AB*e_B_dot_r_AB*exp(-normalised_distance/15.0)*unit_vector_from_A_to_B;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_A = -s*exp(-normalised_distance/15.0)*e_B_dot_r_AB*(3/normalised_distance)*polarity_vector_A;
+               c_vector<double, SPACE_DIM> extra_polarity_contribution_B = -s*exp(-normalised_distance/15.0)*e_A_dot_r_AB*(3/normalised_distance)*polarity_vector_B;
                
                force = potential_gradient*polarity_factor*s + potential_gradient_repulsion + centrally_acting_polarity_contribution + extra_polarity_contribution_A + extra_polarity_contribution_B;
                return force;
