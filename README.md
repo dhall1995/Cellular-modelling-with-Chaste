@@ -1,4 +1,4 @@
-# DhallChasteProject
+# Cellular Modelling with Chaste
 
 Selection of scripts for a rotation project I spent in Prof. Jennifer Nichol's Lab in the University of Cambridge Stem Cell Institute
 attempting to model the early development of the mouse embryo. This project was done under the supervision of Dr. Sarah-Jane
